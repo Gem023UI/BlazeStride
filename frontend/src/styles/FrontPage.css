@@ -1,0 +1,285 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+:root {
+  --color1: #FFFFFF; /* Primary */
+  --color2: #FF1414; /* Accent */
+  --color3: #0029FF; /* Secondary */
+  --text-light: white;
+}
+
+.landing-page-wrapper {
+  font-family: "Poppins", "BBH Sans Hegarty";
+  width: 100%;
+  z-index: 1000;
+}
+
+.landing-page-wrapper .landing-page {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.landing-page-wrapper .landing-info-1 {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 0 10%;
+  margin-top: 25px;
+  height: 90vh;
+  width: 100%;
+}
+
+.landing-page-wrapper .landing-logo-container {
+  border-radius: 20px;
+  padding: 10px;
+  margin-right: 50px;
+}
+
+.landing-page-wrapper .landing-logo {
+  width: 300px;
+  height: auto;
+}
+
+.landing-page-wrapper .name-container {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  font-family: "Poppins";
+}
+
+.landing-page-wrapper .type {
+  font-size: 100px;
+  font-weight: 900;
+  color: #FFFFFF;
+  margin: 0px;
+  letter-spacing: 2px;
+}
+
+.landing-page-wrapper .venture {
+  font-size: 100px;
+  font-weight: 900;
+  color: transparent;
+  -webkit-text-stroke: 3px #FFFFFF;
+  padding-left: 5px;
+  margin: 0px;
+  letter-spacing: 2px;
+}
+
+.landing-page-wrapper .description {
+  font-size: 18px;
+  color: var(--text-light);
+  max-width: 700px;
+  margin-top: 0px;
+  text-align: left;
+  padding: 5px;
+}
+
+.landing-page-wrapper .btn-container {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+}
+
+.landing-page-wrapper .login-btn {
+  padding: 0.8rem 2rem;
+  border-radius: 999px;
+  border: 0px;
+  font-family: 'Poppins';
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  cursor: pointer;
+  color: var(--text-light);
+  background-color: #0029FF;
+  transition: all 0.3s ease;
+  margin-top: 0px;
+  margin-right: 20px;
+}
+
+.landing-page-wrapper .login-btn:hover {
+  transform: scale(1.05);
+  border: 3px solid #0029FF;
+  color: var(--text-light);
+  background-color: transparent;
+}
+
+.landing-page-wrapper .guest-btn {
+  padding: 0.8rem 2rem;
+  border-radius: 999px;
+  border: 0px;
+  font-family: 'Poppins';
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  cursor: pointer;
+  color: var(--text-light);
+  background-color: #FF1414;
+  transition: all 0.3s ease;
+  margin-top: 0px;
+}
+
+.landing-page-wrapper .guest-btn:hover {
+  transform: scale(1.05);
+  border: 3px solid #FF1414;
+  color: var(--text-light);
+  background-color: transparent;
+}
+
+.landing-page-wrapper .landing-info-2 {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  padding: 0 10%;
+  margin-bottom: 70px;
+  height: 90vh;
+  width: 100%;
+}
+
+.landing-page-wrapper .landing-info-2-texts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  margin-bottom: 30px;
+  height: 90vh;
+  width: 100%;
+}
+
+.landing-page-wrapper .tagline-1 {
+  font-size: 50px;
+  color: #FFFFFF;
+  margin: 0 0 5px 100px;
+}
+
+.landing-page-wrapper .tagline-2 {
+  font-size: 75px;
+  color: #FFFFFF;
+  margin: 0 0 10px 100px;
+}
+
+.landing-page-wrapper .highlight-pink {
+  color: #0029FF;
+  font-size: 75px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.landing-page-wrapper .highlight-yellow {
+  color: #FF1414;
+  font-size: 100px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.landing-page-wrapper .description-2 {
+  font-size: 20px;
+  max-width: 600px;
+  color: #FFFFFF;
+  margin-left: 100px;
+}
+
+.landing-page-wrapper .landing-info-3 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 0 10%;
+  margin-bottom: 100px;
+  height: 90vh;
+  width: 100%;
+}
+
+.landing-page-wrapper .landing-info-3-texts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  align-items: center;
+  color: #FFFFFF;
+  margin: 0%;
+  padding: 0%;
+}
+
+.landing-page-wrapper .tagline-3 {
+  font-size: 90px;
+  letter-spacing: 3px;
+  margin: 50px 0px 10px 0px;
+}
+
+.landing-page-wrapper .description-3 {
+  margin: 10px 0px 10px 0px;
+  padding: 0%;
+  font-size: 20px;
+  max-width: 600px;
+  color: #FFFFFF;
+  text-align: center;
+}
+
+.landing-page-wrapper .highlight-pink-letters {
+  color: #0029FF;
+  font-size: 90px;
+  font-weight: 900;
+}
+
+.landing-page-wrapper .highlight-yellow-lessons {
+  color: #FF1414;
+  font-size: 90px;
+  font-weight: 900;
+}
+
+.landing-page-wrapper .landing-info-4 {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  text-align: left;
+  padding: 0 10%;
+  margin: 30px 0px 50px 0px;
+  height: 90vh;
+  width: 100%;
+}
+
+.landing-page-wrapper .tagline-5 {
+  font-size: 50px;
+  color: #FFFFFF;
+  margin: 0 0 5px 125px;
+}
+
+.landing-page-wrapper .tagline-6 {
+  font-size: 75px;
+  color: #FFFFFF;;
+  margin: 0 0 10px 125px;
+}
+
+.landing-page-wrapper .description-4 {
+  font-size: 20px;
+  max-width: 600px;
+  color: #FFFFFF;
+  margin-left: 125px;
+}
+
+.landing-page-wrapper .texts {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-end;
+  text-align: right;
+  padding: 0 10%;
+  margin-bottom: 50px;
+  height: 90vh;
+  width: 100%;
+}
+
+.landing-page-wrapper .pioneer-image {
+  margin-left: 50px;
+  justify-content: center;
+  align-items: center;
+  padding-left: 75px;
+  margin-bottom: 50px;
+}

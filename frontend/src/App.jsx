@@ -1,34 +1,64 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Hyperspeed from '../reactbits/Hyperspeed/Hyperspeed';
+// import FrontPage from './components/FrontPage';
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+    <Router>
+      {/* HYPERSPEED BACKGROUND */}
+      <div className="App">
+        <Hyperspeed
+          effectOptions={{
+            onSpeedUp: () => { },
+            onSlowDown: () => { },
+            distortion: 'turbulentDistortion',
+            length: 400,
+            roadWidth: 10,
+            islandWidth: 2,
+            lanesPerRoad: 4,
+            fov: 90,
+            fovSpeedUp: 150,
+            speedUp: 2,
+            carLightsFade: 0.4,
+            totalSideLightSticks: 20,
+            lightPairsPerRoadWay: 40,
+            shoulderLinesWidthPercentage: 0.05,
+            brokenLinesWidthPercentage: 0.1,
+            brokenLinesLengthPercentage: 0.5,
+            lightStickWidth: [0.12, 0.5],
+            lightStickHeight: [1.3, 1.7],
+            movingAwaySpeed: [60, 80],
+            movingCloserSpeed: [-120, -160],
+            carLightsLength: [400 * 0.03, 400 * 0.2],
+            carLightsRadius: [0.05, 0.14],
+            carWidthPercentage: [0.3, 0.5],
+            carShiftX: [-0.8, 0.8],
+            carFloorSeparation: [0, 5],
+            colors: {
+              roadColor: 0x080808,
+              islandColor: 0x0a0a0a,
+              background: 0x000000,
+              shoulderLines: 0xFFFFFF,
+              brokenLines: 0xFFFFFF,
+              leftCars: [0xD856BF, 0x6750A2, 0xC247AC],
+              rightCars: [0x03B3C3, 0x0E5EA5, 0x324555],
+              sticks: 0x03B3C3,
+            }
+          }}
+        />
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+
+      {/* Foreground content */}
+      {/* <div className="app-content">
+        <Routes>
+          <Route path="/" element={<FrontPage logoUrl={logoUrl} consoleUrl={consoleUrl} />} />
+          </Routes>
+        </div> */}
+    </Router>
   )
 }
 
