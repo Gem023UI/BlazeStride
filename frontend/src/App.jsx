@@ -1,11 +1,15 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Hyperspeed from '../reactbits/Hyperspeed/Hyperspeed';
-// import FrontPage from './components/FrontPage';
+import Hyperspeed from './reactbits/Hyperspeed/Hyperspeed';
+import FrontPage from './components/FrontPage';
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
+
+  const [logoUrl] = useState(
+    "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189861/logo_sy4dgl.png"
+  );
 
   return (
     <Router>
@@ -53,11 +57,11 @@ function App() {
       </div>
 
       {/* Foreground content */}
-      {/* <div className="app-content">
+      <div className="app-content">
         <Routes>
-          <Route path="/" element={<FrontPage logoUrl={logoUrl} consoleUrl={consoleUrl} />} />
+          <Route path="/" element={<FrontPage logoUrl={logoUrl} />} />
           </Routes>
-        </div> */}
+        </div>
     </Router>
   )
 }
