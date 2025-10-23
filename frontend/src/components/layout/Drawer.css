@@ -1,0 +1,169 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --color1: #FFFFFF; /* Primary */
+  --color2: #FF1414; /* Accent */
+  --color3: #0029FF; /* Secondary */
+  --color4: #a200ff; /* Tertiary */
+  --text-light: white;
+}
+
+
+/* Overlay */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 1;
+  cursor: pointer;
+}
+
+/* Drawer Panel */
+.drawer-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 280px;
+  background-color: rgba(255, 255, 255, 0.7);
+  box-shadow: 0 0 25px rgba(0, 0, 0, 0.15);
+  z-index: 10000;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.drawer-panel.open {
+  transform: translateX(0);
+}
+
+/* Drawer content - centered vertically and horizontally */
+.drawer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+  gap: 1.5rem;
+}
+
+.avatar-image {
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  margin-bottom: 0px;
+  display: flex;
+  flex-direction: column;
+}
+
+.avatar-image img {
+  --border-gradient: linear-gradient(135deg, #ff1414, purple, #0029ff);
+  border-radius: 99%;
+  background:
+    linear-gradient(white, white) padding-box,
+    var(--border-gradient) border-box;
+  border: 3px solid transparent;
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+}
+
+.avatar-image h2 {
+  font-family: 'Poppins';
+  align-items: center;
+  margin-bottom: 0px;
+  padding: 5%;
+  --border-gradient: linear-gradient(135deg, #ff1414, purple, #0029ff);
+  background-image: var(--border-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.avatar-image p, .avatar-email {
+  font-family: 'Poppins';
+  font-size: 12px;
+  color: black;
+  padding: 0%;
+  margin: 0%;
+}
+
+/* Drawer Links */
+.drawer-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: center;
+  font-family: 'Poppins';
+}
+
+.drawer-links li {
+  margin: 10px;
+}
+
+.drawer-links a {
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.2s ease;
+  border-radius: 0.6rem;
+  padding: 10px;
+}
+
+.drawer-links li {
+  display: flex;
+  justify-content: center;
+  border-radius: 0.6rem;
+  text-decoration: none;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.12s ease, border 0.18s;
+  border: 1px solid transparent;
+  font-weight: 500;
+}
+
+.drawer-links li.red a,
+.drawer-links li.purple a, 
+.drawer-links li.blue a {
+  color: #FFFFFF;
+  padding: 10px;
+  border: 2px solid white;
+  width: 85%;
+}
+
+.drawer-links li.red a, 
+.drawer-links li.purple a, 
+.drawer-links li.blue a { 
+  --border-gradient: linear-gradient(135deg, #ff1414, purple, #0029ff); 
+  
+  background: var(--border-gradient) border-box; 
+  border: 5px solid transparent;  
+  transition: all 0.3s ease;
+}
+
+.drawer-links li.red a:hover,
+.drawer-links li.purple a:hover,
+.drawer-links li.blue a:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}
+
+
+/* Logout Button */
+.logout-btn {
+  background-color: #FF1414;
+  color: #fff;
+  border: none;
+  padding: 10px 28px;
+  width: 85%;
+  border-radius: 6px;
+  font-weight: 600;
+  font-family: 'Poppins';
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.logout-btn:hover {
+  opacity: 0.8;
+  transform: scale(1.05);
+}

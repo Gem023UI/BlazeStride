@@ -4,85 +4,100 @@ import styled from 'styled-components';
 const Input = () => {
   return (
     <StyledWrapper>
-      <form className="form">
+      <div className="form">
         <label htmlFor="search">
-          <input className="input" type="text" required placeholder="Search twitter" id="search" />
+          <input className="input" type="text" required placeholder="Search running gear..." id="search" />
           <div className="fancy-bg" />
           <div className="search">
-            <svg viewBox="0 0 24 24" aria-hidden="true" className="r-14j79pv r-4qtqp9 r-yyyyoo r-1xvli5t r-dnmrzs r-4wgw6l r-f727ji r-bnwqim r-1plcrui r-lrvibr">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
               <g>
                 <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z" />
               </g>
             </svg>
           </div>
           <button className="close-btn" type="reset">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>
           </button>
         </label>
-      </form>
+      </div>
     </StyledWrapper>
   );
 }
 
 const StyledWrapper = styled.div`
-  /* this is a recreation of twitter search in css */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
   .form {
     --input-text-color: #fff;
-    --input-bg-color: #283542;
-    --focus-input-bg-color: transparent;
-    --text-color: #949faa;
-    --active-color: #1b9bee;
-    --width-of-input: 200px;
-    --inline-padding-of-input: 1.2em;
+    --text-color: rgba(255, 255, 255, 0.6);
+    --active-color: #41b9ff;
+    --width-of-input: 600px;
+    --inline-padding-of-input: 1.5em;
     --gap: 0.9rem;
   }
+  
   /* form style */
   .form {
-    font-size: 0.9rem;
+    font-size: 1rem;
     display: flex;
     gap: 0.5rem;
     align-items: center;
     width: var(--width-of-input);
+    max-width: 90vw;
     position: relative;
     isolation: isolate;
+    margin: 0 auto;
   }
-  /* a fancy bg for showing background and border when focus. */
+  
+  /* Glassmorphism background */
   .fancy-bg {
     position: absolute;
     width: 100%;
     inset: 0;
-    background: var(--input-bg-color);
-    border-radius: 30px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-radius: 50px;
     height: 100%;
     z-index: -1;
     pointer-events: none;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+                0 2px 4px rgba(0, 0, 0, 0.3);
   }
+  
   /* label styling */
   label {
     width: 100%;
-    padding: 0.8em;
-    height: 40px;
+    padding: 1em;
+    height: 50px;
     padding-inline: var(--inline-padding-of-input);
     display: flex;
     align-items: center;
   }
 
-  .search,.close-btn {
+  .search, .close-btn {
     position: absolute;
   }
+  
   /* styling search-icon */
   .search {
     fill: var(--text-color);
     left: var(--inline-padding-of-input);
+    transition: fill 0.3s ease;
   }
+  
   /* svg -- size */
   svg {
-    width: 17px;
+    width: 20px;
     display: block;
   }
+  
   /* styling of close button */
   .close-btn {
     border: none;
@@ -93,20 +108,29 @@ const StyledWrapper = styled.div`
     justify-content: center;
     color: #fff;
     padding: 0.1em;
-    width: 20px;
-    height: 20px;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
     background: var(--active-color);
     opacity: 0;
     visibility: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease;
   }
+  
+  .close-btn:hover {
+    transform: scale(1.1);
+    background: #fe42b9;
+  }
+  
   /* styling of input */
   .input {
     color: var(--input-text-color);
     width: 100%;
-    margin-inline: min(2em,calc(var(--inline-padding-of-input) + var(--gap)));
+    margin-inline: min(2.5em, calc(var(--inline-padding-of-input) + var(--gap)));
     background: none;
     border: none;
+    font-size: 1rem;
   }
 
   .input:focus {
@@ -114,29 +138,37 @@ const StyledWrapper = styled.div`
   }
 
   .input::placeholder {
-    color: var(--text-color)
+    color: var(--text-color);
   }
+  
   /* input background change in focus */
   .input:focus ~ .fancy-bg {
-    border: 1px solid var(--active-color);
-    background: var(--focus-input-bg-color);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.08);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 2px 8px rgba(0, 0, 0, 0.4);
   }
+  
   /* search icon color change in focus */
   .input:focus ~ .search {
     fill: var(--active-color);
   }
+  
   /* showing close button when typing */
   .input:valid ~ .close-btn {
     opacity: 1;
     visibility: visible;
   }
-  /* this is for the default background in input,when selecting autofill options -- you can remove this code if you do not want to override the browser style.  */
+  
+  /* autofill styling */
   input:-webkit-autofill,
   input:-webkit-autofill:hover,
   input:-webkit-autofill:focus,
   input:-webkit-autofill:active {
-    -webkit-transition: "color 9999s ease-out, background-color 9999s ease-out";
-    -webkit-transition-delay: 9999s;
-  }`;
+    -webkit-text-fill-color: #fff;
+    -webkit-box-shadow: 0 0 0 30px rgba(255, 255, 255, 0.1) inset;
+    transition: background-color 5000s ease-in-out 0s;
+  }
+`;
 
 export default Input;

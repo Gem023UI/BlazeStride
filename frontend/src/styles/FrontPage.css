@@ -35,14 +35,14 @@ html, body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 1rem;
 }
 
 .front-searchbar {
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  padding: 0 1rem;
+  padding: 30px;
+  margin: 60px 20px 15px 20px;
 }
 
 .front-logo-container {
@@ -54,7 +54,7 @@ html, body {
 }
 
 .front-logo-container img {
-  width: 200px;
+  width: 250px;
   padding: 20px;
 }
 
@@ -67,7 +67,7 @@ html, body {
 
 .front-blaze {
   color: var(--color1);
-  font-size: 100px;
+  font-size: 120px;
   margin: 0;
 }
 
@@ -75,6 +75,15 @@ html, body {
   color: transparent;
   -webkit-text-stroke: 1px var(--text-light); /* 2px width, white color */
   -webkit-text-fill-color: transparent; /* Ensures fill is transparent */
-  font-size: 100px;
+  font-size: 120px;
   margin: 0;
+}
+
+.front-description {
+  text-align: center;
+  max-width: 900px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  color: var(--text-light);
+  z-index: 10;
 }

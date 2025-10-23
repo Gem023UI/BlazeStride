@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { href, useNavigate } from "react-router-dom";
 import LogoLoop from "../reactbits/LogoLoop/LogoLoop";
 import SearchBar from "../components/layout/SearchBar"
+import MainLayout from "./layout/MainLayout";
 import "../styles/FrontPage.css";
 
 export default function LandingSection({ logoUrl }) {
@@ -26,59 +27,62 @@ export default function LandingSection({ logoUrl }) {
   ];
     
   return (
-    <section className="front-page-wrapper">
-      <div className="front-page">
-        <div className="front-info-1">
-          <div className="front-searchbar">
-            <SearchBar onSearch={handleSearch} placeholder="Search forum topics..." />
-          </div>
-          <div className="front-logo-container">
-            <img src={logoUrl} alt="BlazeStride-Logo" className="front-logo" />
-            <div className="front-logo-text">
-              <h2 className="front-blaze">BLAZE</h2>
-              <h2 className="front-stride">STRIDE</h2>
+    <MainLayout>
+      <section className="front-page-wrapper">
+
+        <div className="front-page">
+          <div className="front-info-1">
+            <div className="front-searchbar">
+              <SearchBar onSearch={handleSearch} placeholder="Search forum topics..." />
+            </div>
+            <div className="front-logo-container">
+              <img src={logoUrl} alt="BlazeStride-Logo" className="front-logo" />
+              <div className="front-logo-text">
+                <h2 className="front-blaze">BLAZE</h2>
+                <h2 className="front-stride">STRIDE</h2>
+              </div>
+            </div>
+            <div className="front-description">
+              <p className="description-1">Ignite your run. Outpace your limits — without burning your wallet.</p>
             </div>
           </div>
-          <div className="front-description">
-            <p className="description-1">Ignite your run. Outpace your limits — without burning your wallet.</p>
-          </div>
-        </div>
 
-        <div className="front-info-2">
-          <div className="front-info-2-texts">
-            <h2 className="tagline-1">Browse Brand Varieties</h2>
-            <p className="front-description">
-              Discover several running and outdoor gear brands all in one place, without breaking your budget.
-            </p>
+          <div className="front-info-2">
+            <div className="front-info-2-texts">
+              <h2 className="tagline-1">Browse Brand Varieties</h2>
+              <p className="front-description">
+                Discover several running and outdoor gear brands all in one place, without breaking your budget.
+              </p>
+            </div>
           </div>
-        </div>
 
-        <div className="front-info-3">
-          <div className="pioneers">
+          <div className="front-info-3">
+            <div className="pioneers">
+            </div>
+            <div className="front-info-3-texts">
+              <h2 className="tagline-3">
+                <span className="highlight-pink-letters">Letters</span> into <span className="highlight-yellow-lessons">Lessons</span>
+              </h2>
+              <p className="description-3">
+                Meet the pioneers of turning typography into an engaging and interactive experience.
+              </p>
+            </div>
           </div>
-          <div className="front-info-3-texts">
-            <h2 className="tagline-3">
-              <span className="highlight-pink-letters">Letters</span> into <span className="highlight-yellow-lessons">Lessons</span>
+
+          <div className="front-info-4">
+            <h2 className="tagline-5">
+              Where <span className="highlight-pink">TYPOGRAPHY</span>
             </h2>
-            <p className="description-3">
-              Meet the pioneers of turning typography into an engaging and interactive experience.
+            <h2 className="tagline-6 float-in">
+              Meets <span className="highlight-yellow">GAMEPLAY</span>
+            </h2>
+            <p className="description-4">
+              Game - integrated typography lessons where learners can learn and enjoy altogether.
             </p>
           </div>
         </div>
 
-        <div className="front-info-4">
-          <h2 className="tagline-5">
-            Where <span className="highlight-pink">TYPOGRAPHY</span>
-          </h2>
-          <h2 className="tagline-6 float-in">
-            Meets <span className="highlight-yellow">GAMEPLAY</span>
-          </h2>
-          <p className="description-4">
-            Game - integrated typography lessons where learners can learn and enjoy altogether.
-          </p>
-        </div>
-      </div>
-
-    </section>
+      </section>
+    </MainLayout>
   );
 }

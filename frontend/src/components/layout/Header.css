@@ -1,0 +1,153 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap");
+
+:root {
+  --color1: #FFFFFF; /* Primary */
+  --color2: #fe42b9; /* Accent */
+  --color3: #41b9ff; /* Secondary */
+  --text-light: white;
+}
+
+/* ========== HEADER CONTAINER ========== */
+.header {
+  background: rgba(255, 255, 255, 0.164); /* semi-transparent white */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: relative;
+  top: 0;
+  z-index: 100;
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1.5rem;
+  font-family: "Poppins", sans-serif;
+  height: 60px;
+  width: 100%;
+  position: fixed;
+}
+
+/* ========== SCROLLED STATE ========== */
+.header.scrolled {
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* ========== LEFT SIDE (LOGO + ICON + TITLE) ========== */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-left img {
+  width: 30px;
+  height: auto;
+  margin-left: 30px;
+  margin-right: 5px;
+}
+
+.header-left h1 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #0029FF;
+}
+
+.header-left a {
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-decoration: none;
+
+  --border-gradient: linear-gradient(135deg, #ff1414, purple, #0029ff);
+  background-image: var(--border-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+}
+
+.header-left svg {
+  font-size: 1.25rem;
+  color: #FF1414;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  margin-left: 10px;
+}
+
+.header-left svg:hover {
+  transform: scale(1.1);
+}
+
+/* ========== RIGHT SIDE LINKS ========== */
+.header-right {
+  margin-right: 70px;
+}
+
+.header-right ul {
+  display: flex;
+  gap: 1.5rem;
+  list-style: none;
+  padding: 0;
+}
+
+.header-right a {
+  text-decoration: none;
+  color: var(--color1);
+  font-weight: 500;
+  transition: color 0.3s ease, transform 0.2s ease;
+  padding: 20px;
+}
+
+/* ---------------------------
+   Header right links & hovers
+   --------------------------- */
+.header-right .header-links {
+  display: flex;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  align-items: center;
+}
+
+/* Make <a> the clickable box so background and color changes apply nicely */
+.header-right .header-links li a {
+  display: inline-block;
+  padding: 0.45rem 0.9rem;
+  border-radius: 0.6rem;
+  text-decoration: none;
+  transition: background-color 0.18s ease, color 0.18s ease, transform 0.12s ease, border 0.18s;
+  border: 1px solid transparent; /* default transparent border to avoid layout shift on hover */
+  font-weight: 500;
+
+  --border-gradient: linear-gradient(135deg, #ff1414, purple, #0029ff);
+  background-image: var(--border-gradient);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+
+  transition: all 0.3s ease;
+}
+
+.header-right .header-links li a:hover {
+  transform: scale(1.05);
+}
+
+/* pointer + accessibility */
+.header-right .header-links li { cursor: default; }
+.header-right .header-links li:hover { cursor: pointer; }
+
+/* small screens: hide or stack if needed */
+@media (max-width: 768px) {
+  .header-right .header-links { display: none; }
+}
+
+
+/* ========== RESPONSIVE ========== */
+@media (max-width: 768px) {
+  .header-right ul {
+    display: none;
+  }
+}
+
+
