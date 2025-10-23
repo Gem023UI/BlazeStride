@@ -66,7 +66,7 @@ const StyledWrapper = styled.div`
     height: 100%;
     z-index: -1;
     pointer-events: none;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.5);
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1),
                 0 2px 4px rgba(0, 0, 0, 0.3);
   }

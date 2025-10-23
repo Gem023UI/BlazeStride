@@ -1,8 +1,6 @@
 import React from "react";
-import { useState } from "react";
-import { useEffect } from "react";
-import { href, useNavigate } from "react-router-dom";
-// import LogoLoop from "../reactbits/LogoLoop/LogoLoop";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";;
 import SearchBar from "../components/layout/SearchBar"
 import MainLayout from "./layout/MainLayout";
 import "../styles/FrontPage.css";
@@ -80,31 +78,6 @@ export default function LandingSection({ logoUrl }) {
                 ))}
               </div>
             </div>
-          </div>
-
-          <div className="front-info">
-            <div className="pioneers">
-            </div>
-            <div className="front-info-texts">
-              <h2 className="tagline-3">
-                <span className="highlight-pink-letters">Letters</span> into <span className="highlight-yellow-lessons">Lessons</span>
-              </h2>
-              <p className="description-3">
-                Meet the pioneers of turning typography into an engaging and interactive experience.
-              </p>
-            </div>
-          </div>
-
-          <div className="front-info">
-            <h2 className="tagline-5">
-              Where <span className="highlight-pink">TYPOGRAPHY</span>
-            </h2>
-            <h2 className="tagline-6 float-in">
-              Meets <span className="highlight-yellow">GAMEPLAY</span>
-            </h2>
-            <p className="description-4">
-              Game - integrated typography lessons where learners can learn and enjoy altogether.
-            </p>
           </div>
         </div>
 
