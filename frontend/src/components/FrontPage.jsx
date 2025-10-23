@@ -2,8 +2,7 @@ import React from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import { href, useNavigate } from "react-router-dom";
-import LogoLoop from "../reactbits/LogoLoop/LogoLoop";
-import { SiReact, SiNextdotjs, SiTypescript, SiTailwindcss } from 'react-icons/si';
+// import LogoLoop from "../reactbits/LogoLoop/LogoLoop";
 import SearchBar from "../components/layout/SearchBar"
 import MainLayout from "./layout/MainLayout";
 import "../styles/FrontPage.css";
@@ -37,10 +36,6 @@ export default function LandingSection({ logoUrl }) {
   { 
     src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189871/nike_pupp9s.png", 
     alt: "nike"
-  },
-  { 
-    src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189871/on_qy2dvl.png", 
-    alt: "on"
   },
   { 
     src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189871/underarmour_znxoio.png", 
@@ -77,18 +72,13 @@ export default function LandingSection({ logoUrl }) {
               </p>
             </div>
             <div className="front-logoloop">
-              <LogoLoop
-                logos={imageLogos}
-                speed={60}
-                direction="left"
-                logoHeight={100}
-                gap={100}
-                pauseOnHover
-                scaleOnHover
-                fadeOut
-                fadeOutColor="#ffffff"
-                ariaLabel="Technology partners"
-              />
+              <div className="brand-grid">
+                {imageLogos.map((logo, index) => (
+                  <div key={index} className="brand-item">
+                    <img src={logo.src} alt={logo.alt} />
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
