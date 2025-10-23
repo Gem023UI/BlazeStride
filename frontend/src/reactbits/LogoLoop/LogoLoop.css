@@ -1,21 +1,11 @@
+/* Add these fixes to your LogoLoop.css */
+
 .logoloop {
   position: relative;
-  overflow-x: hidden;
-
   --logoloop-gap: 32px;
   --logoloop-logoHeight: 28px;
   --logoloop-fadeColorAuto: #ffffff;
-}
-
-.logoloop--scale-hover {
-  padding-top: calc(var(--logoloop-logoHeight) * 0.1);
-  padding-bottom: calc(var(--logoloop-logoHeight) * 0.1);
-}
-
-@media (prefers-color-scheme: dark) {
-  .logoloop {
-    --logoloop-fadeColorAuto: #0b0b0b;
-  }
+  overflow: hidden; /* CRITICAL: Prevents visual glitches */
 }
 
 .logoloop__track {
@@ -23,11 +13,18 @@
   width: max-content;
   will-change: transform;
   user-select: none;
+  /* Performance optimization */
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 .logoloop__list {
   display: flex;
   align-items: center;
+  list-style: none; /* Remove default list dots */
+  margin: 0;
+  padding: 0;
 }
 
 .logoloop__item {
@@ -35,6 +32,15 @@
   margin-right: var(--logoloop-gap);
   font-size: var(--logoloop-logoHeight);
   line-height: 1;
+  list-style: none; /* Remove any list styling */
+  display: flex;
+  align-items: center;
+}
+
+.logoloop__item::before,
+.logoloop__item::marker {
+  display: none; /* Remove list bullets/markers */
+  content: none;
 }
 
 .logoloop__item:last-child {
@@ -53,8 +59,11 @@
   object-fit: contain;
   image-rendering: -webkit-optimize-contrast;
   -webkit-user-drag: none;
-  pointer-events: none; /* Links handle interaction */
+  pointer-events: none;
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Performance improvements */
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 .logoloop--scale-hover .logoloop__item {
@@ -63,7 +72,7 @@
 
 .logoloop--scale-hover .logoloop__item:hover img,
 .logoloop--scale-hover .logoloop__item:hover .logoloop__node {
-  transform: scale(1.2);
+  transform: scale(1.2) translateZ(0);
   transform-origin: center center;
 }
 

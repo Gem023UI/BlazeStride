@@ -77,19 +77,19 @@ const Drawer = ({ isOpen, onClose }) => {
           {/* Links */}
           <ul className="drawer-links">
             <li className="red">
-              <a href="/lessons" onClick={onClose}>Lessons</a>
+              <a href="/lessons" onClick={onClose}>Profile</a>
             </li>
             <li className="purple">
-              <a href="/profile" onClick={onClose}>Profile</a>
+              <a href="/profile" onClick={onClose}>Orders</a>
             </li>
             <li className="blue">
-              <a href="/leaderboards" onClick={onClose}>Leaderboards</a>
+              <a href="/leaderboards" onClick={onClose}>Reviews</a>
             </li>
           </ul>
 
           {/* Logout Button */}
           <button className="logout-btn" onClick={handleLogout}>
-            Log Out
+            LOG OUT
           </button>
         </div>
       </div>

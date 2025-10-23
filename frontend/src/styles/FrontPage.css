@@ -28,13 +28,15 @@ html, body {
   width: 100%;
 }
 
-.front-info-1 {
+.front-info-1,
+.front-info-2 {
   width: 100%;
   padding-top: 2rem;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-bottom: 130px;
 }
 
 .front-searchbar {
@@ -42,7 +44,7 @@ html, body {
   max-width: 600px;
   margin: 0 auto;
   padding: 30px;
-  margin: 60px 20px 15px 20px;
+  margin: 60px 20px 0px 20px;
 }
 
 .front-logo-container {
@@ -73,8 +75,8 @@ html, body {
 
 .front-stride {
   color: transparent;
-  -webkit-text-stroke: 1px var(--text-light); /* 2px width, white color */
-  -webkit-text-fill-color: transparent; /* Ensures fill is transparent */
+  -webkit-text-stroke: 1px var(--text-light);
+  -webkit-text-fill-color: transparent;
   font-size: 120px;
   margin: 0;
 }
@@ -86,4 +88,23 @@ html, body {
   font-size: 20px;
   color: var(--text-light);
   z-index: 10;
+}
+
+.front-info-2-texts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: var(--text-light);
+  padding: 30px;
+}
+
+.front-info-2-texts h2 {
+  font-family: 'Fugaz One';
+  font-size: 50px;
+}
+
+.front-logoloop {
+  margin-top: 30px;
 }
