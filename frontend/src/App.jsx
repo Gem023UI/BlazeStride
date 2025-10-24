@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Hyperspeed from './reactbits/Hyperspeed/Hyperspeed';
 import FrontPage from './components/FrontPage';
+import LoginRegister from './components/LoginRegister';
 import './App.css'
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
       <div className="app-content">
         <Routes>
           <Route path="/" element={<FrontPage logoUrl={logoUrl} />} />
+          <Route path="/login" element={<LoginRegister />} />
           </Routes>
         </div>
     </Router>

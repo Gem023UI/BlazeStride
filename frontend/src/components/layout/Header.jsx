@@ -1,17 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
-import "./Header.css";
+import { faBars, faCartShopping, faShoppingBag, faUser } from '@fortawesome/free-solid-svg-icons';
+import "../../styles/Header.css";
 
 const Header = ({ onMenuClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    // Check if token and userId exist in localStorage
+    const token = localStorage.getItem('token');
+    const userId = localStorage.getItem('userId');
+    setIsLoggedIn(token && userId);
+  }, []);
+
+  const handleAuthClick = () => {
+    if (isLoggedIn) {
+      localStorage.removeItem('token');
+      localStorage.removeItem('userId');
+      setIsLoggedIn(false);
+      navigate('/');
+    } else {
+      navigate('/login');
+    }
+  };
 
   return (
     <header className={`header ${isScrolled ? "scrolled" : ""}`}>
@@ -22,14 +42,19 @@ const Header = ({ onMenuClick }) => {
           alt="BlazeStride Logo"
           className="logo"
         />
-        <a href="./lessons">TypeVenture</a>
+        <a href="./">BlazeStride</a>
       </div>
 
       <div className="header-right">
         <ul className="header-links">
-          <li className="purple"><Link to="/about">Pioneers</Link></li>
-          <li className="green"><Link to="/games">Citations</Link></li>
-          <li className="orange"><Link to="/contact">About Us</Link></li>
+          <li><Link to="/cart"><FontAwesomeIcon icon={faCartShopping} onClick={onMenuClick} /></Link></li>
+          <li><Link to="/profile"><FontAwesomeIcon icon={faUser} onClick={onMenuClick} /></Link></li>
+          <li><Link to="/orders"><FontAwesomeIcon icon={faShoppingBag} onClick={onMenuClick} /></Link></li>
+          <li className="orange">
+            <a onClick={handleAuthClick} style={{ cursor: 'pointer' }}>
+              {isLoggedIn ? 'Log Out' : 'Log In'}
+            </a>
+          </li>
         </ul>
       </div>
     </header>

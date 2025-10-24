@@ -9,7 +9,7 @@
 
 /* ========== HEADER CONTAINER ========== */
 .header {
-  background: rgba(255, 255, 255, 0.223);
+  background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   top: 0;
@@ -26,8 +26,8 @@
 }
 
 .header.scrolled {
-  background: rgba(255, 255, 255, 0.04);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background: rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .header-left {
@@ -62,26 +62,26 @@
   -webkit-text-fill-color: transparent;
 }
 
-.header-left svg {
+.header-left svg,
+.header-right svg {
   font-size: 1.25rem;
   color: var(--color1);
   cursor: pointer;
   transition: transform 0.2s ease;
-  margin-left: 10px;
 }
 
-.header-left svg:hover {
+.header-left svg:hover,
+.header-right svg:hover {
   transform: scale(1.1);
 }
 
 /* ========== RIGHT SIDE LINKS ========== */
 .header-right {
-  margin-right: 70px;
+  margin-right: 10px;
 }
 
 .header-right ul {
   display: flex;
-  gap: 1.5rem;
   list-style: none;
   padding: 0;
 }
@@ -91,12 +91,10 @@
   color: var(--color1);
   font-weight: 500;
   transition: color 0.3s ease, transform 0.2s ease;
-  padding: 20px;
 }
 
 .header-right .header-links {
   display: flex;
-  gap: 1rem;
   list-style: none;
   margin: 0;
   padding: 0;
