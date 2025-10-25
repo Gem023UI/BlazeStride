@@ -2,7 +2,16 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCalendar, faClock, faPersonRunning, faShoePrints, faCircleInfo, faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import { 
+  faCalendarCheck, 
+  faClock, 
+  faPersonRunning, 
+  faShoePrints, 
+  faCircleInfo, 
+  faCartPlus,
+  faMoneyCheckDollar,
+  faUsers
+   } from '@fortawesome/free-solid-svg-icons';
 import SearchBar from "../components/layout/SearchBar"
 import MainLayout from "./layout/MainLayout";
 import "../styles/FrontPage.css";
@@ -10,7 +19,7 @@ import "../styles/FrontPage.css";
 export default function LandingSection({ logoUrl }) {
   const navigate = useNavigate();
 
-  const [showGuestModal, setShowGuestModal] = useState(false);
+  const [showProductModal, setShowProductModal] = useState(false);
 
   const handleSearch = (query) => {
     console.log("Searching for:", query);
@@ -84,16 +93,16 @@ export default function LandingSection({ logoUrl }) {
 
           <div className="front-product-section">
             <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faCalendar}/> DAILY</h2>
+              <h2><FontAwesomeIcon icon={faCalendarCheck}/> DAILY</h2>
               <p>Stay on track with our daily running essentials.</p>
             </div>
-            <div className="front-product-card">
+            <div className="front-product-card" onClick={() => setShowProductModal(true)}>
               <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
               <div className="front-product-details">
                 <h3>Brooks Ghost 14</h3>
                 <p>$120.00</p>
                 <div className="front-product-btn">
-                  <button className="info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCircleInfo} /></button>
+                  <button className="info-btn"  onClick={() => setShowProductModal(true)}><FontAwesomeIcon icon={faCircleInfo} /></button>
                   <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
                 </div>
               </div>
@@ -154,6 +163,33 @@ export default function LandingSection({ logoUrl }) {
             </div>
           </div>
         </div>
+
+        {/* View Product Modal */}
+        {showProductModal && (
+          <div className="product-modal-overlay" onClick={() => setShowProductModal(false)}>
+          <div className="product-modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="product-modal-image">
+              <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Product" />
+            </div>
+            <div className="product-modal-details">
+              <div className="product-modal-info">
+                <h2>Brooks Ghost 14</h2>
+                <p className="product-category">DAILY</p>
+                <p>The Brooks Ghost 14 is a versatile running shoe designed for neutral runners seeking a balance of cushioning and responsiveness. Featuring DNA Loft cushioning for a soft ride, BioMoGo DNA midsole for adaptive support, and a segmented crash pad for smooth heel-to-toe transitions, this shoe is perfect for daily training and long runs. The engineered mesh upper provides breathability and a secure fit, while the durable outsole ensures traction on various surfaces. Ideal for runners looking to enhance their performance with comfort and style.</p>
+                <div className="product-rate">
+                  <p className="product-price">PRICE: $120.00</p>
+                  <p className="product-ratings">RATING: <span>★★★★☆</span></p>
+                </div>
+                <div className="product-modal-actions">
+                  <button className="modal-info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faMoneyCheckDollar} /> BUY NOW</button>
+                  <button className="modal-cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /> ADD TO CART</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        )}
 
       </section>
     </MainLayout>
