@@ -323,16 +323,27 @@ html, body {
   width: 100%;
   height: auto;
   border-radius: 12px;
-  contain: cover;
+  object-fit: cover;
 }
 
 .product-modal-details {
+  position: relative;
   width: 55%;
+  height: fit-content !important; 
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  max-height: 450px;
+  padding-top: 20px !important;
+  box-sizing: border-box;
   /* border: 1px solid var(--text-dark); */
+}
+
+.product-modal-details::-webkit-scrollbar {
+  width: 0;
 }
 
 .product-modal-info {
@@ -418,7 +429,104 @@ html, body {
   color: var(--text-dark);
 }
 
+.product-modal-reviews,
+.review-section {
+  width: 100%;
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
 
+.review-header {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+  padding: 10px;
+}
+
+.review-header h3 {
+  font-family: 'Fugaz One', cursive;
+  color: var(--text-dark);
+  font-size: 22px;
+}
+
+.customerIcon {
+  color: var(--text-dark);
+  font-size: 40px;
+}
+
+.review-items {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 20px;
+  gap: 15px;
+  border: 1px solid var(--text-dark);
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.review-avatar {
+  width: fit-content;
+  height: fit-content;
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.review-avatar img {
+  width: 60px;
+  height: fit-content;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.review-info {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+}
+
+.review-info h4,
+.review-info p,
+.review-rating {
+  font-family: 'Poppins', sans-serif;
+  color: var(--text-dark);
+  margin: 5px 0;
+  text-align: justify;
+}
+
+.review-info p {
+  font-size: 14px;
+}
+
+.review-media {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.review-media img {
+  width: 100%;
+  max-width: 160px;
+  height: auto;
+  border-radius: 12px;
+  object-fit: cover;
+  margin-bottom: 10px;
+}
 
 @keyframes slideUp {
   from {

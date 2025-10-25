@@ -21,6 +21,14 @@ export default function LandingSection({ logoUrl }) {
 
   const [showProductModal, setShowProductModal] = useState(false);
 
+  useEffect(() => {
+    if (showProductModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }, [showProductModal]);
+
   const handleSearch = (query) => {
     console.log("Searching for:", query);
   };
@@ -166,7 +174,7 @@ export default function LandingSection({ logoUrl }) {
 
         {/* View Product Modal */}
         {showProductModal && (
-          <div className="product-modal-overlay" onClick={() => setShowProductModal(false)}>
+        <div className="product-modal-overlay" onClick={() => setShowProductModal(false)}>
           <div className="product-modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="product-modal-image">
               <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Product" />
@@ -185,7 +193,30 @@ export default function LandingSection({ logoUrl }) {
                   <button className="modal-cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /> ADD TO CART</button>
                 </div>
               </div>
-
+              <div className="product-modal-reviews">
+                <div className="review-header">
+                  <h3>CUSTOMER</h3>
+                  <FontAwesomeIcon className="customerIcon" icon={faUsers} />
+                  <h3>REVIEWS</h3>
+                </div>
+                <div className="review-section">
+                  <div className="review-items">
+                    <div className="review-avatar">
+                      <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761398407/pioneer1_uvhbaj.png" alt="review-avatar" />
+                    </div>
+                    <div className="review-info">
+                      <h4 className="reviewer-name">Alex M.</h4>
+                      <div className="review-rating">★★★★☆</div>
+                      <p className="review-text">"The Brooks Ghost 14 has transformed my daily runs! The cushioning is perfect, providing just the right amount of support without feeling bulky. I've noticed a significant improvement in my pace and overall comfort. Highly recommend for any runner looking for a reliable shoe!"</p>
+                      <div className="review-media">
+                        <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="review-1" />
+                        <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="review-2" />
+                        <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="review-3" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
