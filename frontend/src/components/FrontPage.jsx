@@ -1,6 +1,7 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { fetchProducts } from "../api/products";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { 
   faCalendarCheck, 
@@ -20,6 +21,13 @@ export default function LandingSection({ logoUrl }) {
   const navigate = useNavigate();
 
   const [showProductModal, setShowProductModal] = useState(false);
+  const [dailyProducts, setDailyProducts] = useState([]);
+  const [tempoProducts, setTempoProducts] = useState([]);
+  const [marathonProducts, setMarathonProducts] = useState([]);
+  const [raceProducts, setRaceProducts] = useState([]);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
 
   useEffect(() => {
     if (showProductModal) {
@@ -29,36 +37,74 @@ export default function LandingSection({ logoUrl }) {
     }
   }, [showProductModal]);
 
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        setDailyProducts(await fetchProducts("daily"));
+        setTempoProducts(await fetchProducts("tempo"));
+        setMarathonProducts(await fetchProducts("marathon"));
+        setRaceProducts(await fetchProducts("race"));
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    loadProducts();
+  }, []);
+
+  useEffect(() => {
+    if (!selectedProduct) return;
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) =>
+        (prev + 1) % selectedProduct.productimage.length
+      );
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [selectedProduct]);
+
+  const nextImage = () => {
+    setCurrentImageIndex((prev) =>
+      (prev + 1) % selectedProduct.productimage.length
+    );
+  };
+
+  const prevImage = () => {
+    setCurrentImageIndex((prev) =>
+      (prev - 1 + selectedProduct.productimage.length) %
+      selectedProduct.productimage.length
+    );
+  };
+
   const handleSearch = (query) => {
     console.log("Searching for:", query);
   };
 
   const imageLogos = [
-  { 
-    src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189870/adidas_hvbm6y.png", 
-    alt: "adidas"
-  },
-  { 
-    src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189870/asics_dtf6dv.png", 
-    alt: "asics"
-  },
-  { 
-    src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189870/mizuno_ja8u5w.png", 
-    alt: "mizuno"
-  },
-  { 
-    src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189871/newbalance_hagivu.png", 
-    alt: "newbalance"
-  },
-  { 
-    src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189871/nike_pupp9s.png", 
-    alt: "nike"
-  },
-  { 
-    src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189871/underarmour_znxoio.png", 
-    alt: "underarmour"
-  },
-];
+    { 
+      src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189870/adidas_hvbm6y.png", 
+      alt: "adidas"
+    },
+    { 
+      src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189870/asics_dtf6dv.png", 
+      alt: "asics"
+    },
+    { 
+      src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189870/mizuno_ja8u5w.png", 
+      alt: "mizuno"
+    },
+    { 
+      src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189871/newbalance_hagivu.png", 
+      alt: "newbalance"
+    },
+    { 
+      src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189871/nike_pupp9s.png", 
+      alt: "nike"
+    },
+    { 
+      src: "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189871/underarmour_znxoio.png", 
+      alt: "underarmour"
+    },
+  ];
+  
     
   return (
     <MainLayout>
@@ -99,93 +145,170 @@ export default function LandingSection({ logoUrl }) {
             </div>
           </div>
 
+          {/* DAILY PRODUCTS */}
           <div className="front-product-section">
             <div className="front-product-info">
               <h2><FontAwesomeIcon icon={faCalendarCheck}/> DAILY</h2>
               <p>Stay on track with our daily running essentials.</p>
             </div>
-            <div className="front-product-card" onClick={() => setShowProductModal(true)}>
-              <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
-              <div className="front-product-details">
-                <h3>Brooks Ghost 14</h3>
-                <p>$120.00</p>
-                <div className="front-product-btn">
-                  <button className="info-btn"  onClick={() => setShowProductModal(true)}><FontAwesomeIcon icon={faCircleInfo} /></button>
-                  <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
+
+            {dailyProducts.map((product) => (
+              <div 
+                key={product._id}
+                className="front-product-card"
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setShowProductModal(true);
+                }}
+              >
+                <img src={product.productimage[0]} alt={product.productname} />
+                <div className="front-product-details">
+                  <h3>{product.productname}</h3>
+                  <p>${product.price}</p>
+                  <div className="front-product-btn">
+                    <button className="info-btn" onClick={() => {
+                      setSelectedProduct(product);
+                      setShowProductModal(true);
+                    }}>
+                      <FontAwesomeIcon icon={faCircleInfo} />
+                    </button>
+                    <button className="cart-btn" onClick={() => navigate('/products')}>
+                      <FontAwesomeIcon icon={faCartPlus} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
 
+          {/* TEMPO PRODUCTS */}
           <div className="front-product-section">
             <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faClock}/> TEMPO</h2>
+              <h2><FontAwesomeIcon icon={faCalendarCheck}/> TEMPO</h2>
               <p>Ensure consistent tempo during your runs.</p>
             </div>
-            <div className="front-product-card" onClick={() => setShowProductModal(true)}>
-              <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
-              <div className="front-product-details">
-                <h3>Brooks Ghost 14</h3>
-                <p>$120.00</p>
-                <div className="front-product-btn">
-                  <button className="info-btn"  onClick={() => setShowProductModal(true)}><FontAwesomeIcon icon={faCircleInfo} /></button>
-                  <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
+
+            {tempoProducts.map((product) => (
+              <div 
+                key={product._id}
+                className="front-product-card"
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setShowProductModal(true);
+                }}
+              >
+                <img src={product.productimage[0]} alt={product.productname} />
+                <div className="front-product-details">
+                  <h3>{product.productname}</h3>
+                  <p>${product.price}</p>
+                  <div className="front-product-btn">
+                    <button className="info-btn" onClick={() => {
+                      setSelectedProduct(product);
+                      setShowProductModal(true);
+                    }}>
+                      <FontAwesomeIcon icon={faCircleInfo} />
+                    </button>
+                    <button className="cart-btn" onClick={() => navigate('/products')}>
+                      <FontAwesomeIcon icon={faCartPlus} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
 
+          {/* MARATHON PRODUCTS */}
           <div className="front-product-section">
             <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faPersonRunning}/> MARATHON</h2>
+              <h2><FontAwesomeIcon icon={faCalendarCheck}/> MARATHON</h2>
               <p>Finish strong with our marathon essentials.</p>
             </div>
-            <div className="front-product-card" onClick={() => setShowProductModal(true)}>
-              <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
-              <div className="front-product-details">
-                <h3>Brooks Ghost 14</h3>
-                <p>$120.00</p>
-                <div className="front-product-btn">
-                  <button className="info-btn"  onClick={() => setShowProductModal(true)}><FontAwesomeIcon icon={faCircleInfo} /></button>
-                  <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
+
+            {marathonProducts.map((product) => (
+              <div 
+                key={product._id}
+                className="front-product-card"
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setShowProductModal(true);
+                }}
+              >
+                <img src={product.productimage[0]} alt={product.productname} />
+                <div className="front-product-details">
+                  <h3>{product.productname}</h3>
+                  <p>${product.price}</p>
+                  <div className="front-product-btn">
+                    <button className="info-btn" onClick={() => {
+                      setSelectedProduct(product);
+                      setShowProductModal(true);
+                    }}>
+                      <FontAwesomeIcon icon={faCircleInfo} />
+                    </button>
+                    <button className="cart-btn" onClick={() => navigate('/products')}>
+                      <FontAwesomeIcon icon={faCartPlus} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
 
+
+          {/* RACE PRODUCTS */}
           <div className="front-product-section">
             <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faShoePrints}/> RACE</h2>
-              <p>Sprint to the finish line with our race-day essentials.</p>
+              <h2><FontAwesomeIcon icon={faCalendarCheck}/> RACE</h2>
+              <p>Sprint to the finish line with our race-day gears</p>
             </div>
-            <div className="front-product-card" onClick={() => setShowProductModal(true)}>
-              <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
-              <div className="front-product-details">
-                <h3>Brooks Ghost 14</h3>
-                <p>$120.00</p>
-                <div className="front-product-btn">
-                  <button className="info-btn"  onClick={() => setShowProductModal(true)}><FontAwesomeIcon icon={faCircleInfo} /></button>
-                  <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
+
+            {raceProducts.map((product) => (
+              <div 
+                key={product._id}
+                className="front-product-card"
+                onClick={() => {
+                  setSelectedProduct(product);
+                  setShowProductModal(true);
+                }}
+              >
+                <img src={product.productimage[0]} alt={product.productname} />
+                <div className="front-product-details">
+                  <h3>{product.productname}</h3>
+                  <p>${product.price}</p>
+                  <div className="front-product-btn">
+                    <button className="info-btn" onClick={() => {
+                      setSelectedProduct(product);
+                      setShowProductModal(true);
+                    }}>
+                      <FontAwesomeIcon icon={faCircleInfo} />
+                    </button>
+                    <button className="cart-btn" onClick={() => navigate('/products')}>
+                      <FontAwesomeIcon icon={faCartPlus} />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
           </div>
         </div>
 
         {/* View Product Modal */}
-        {showProductModal && (
+        {showProductModal && selectedProduct && (
         <div className="product-modal-overlay" onClick={() => setShowProductModal(false)}>
           <div className="product-modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="product-modal-image">
-              <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Product" />
+               <div className="carousel">
+                <button className="carousel-btn left" onClick={prevImage}>‹</button>
+                <img src={selectedProduct.productimage[currentImageIndex]} alt="product" />
+                <button className="carousel-btn right" onClick={nextImage}>›</button>
+              </div>
             </div>
             <div className="product-modal-details">
               <div className="product-modal-info">
-                <h2>Brooks Ghost 14</h2>
-                <p className="product-category">DAILY</p>
-                <p>The Brooks Ghost 14 is a versatile running shoe designed for neutral runners seeking a balance of cushioning and responsiveness. Featuring DNA Loft cushioning for a soft ride, BioMoGo DNA midsole for adaptive support, and a segmented crash pad for smooth heel-to-toe transitions, this shoe is perfect for daily training and long runs. The engineered mesh upper provides breathability and a secure fit, while the durable outsole ensures traction on various surfaces. Ideal for runners looking to enhance their performance with comfort and style.</p>
+                 <h2>{selectedProduct.productname}</h2>
+                <p className="product-category">{selectedProduct.category.join(", ").toUpperCase()}</p>
+                <p>{selectedProduct.description}</p>
                 <div className="product-rate">
-                  <p className="product-price">PRICE: $120.00</p>
+                  <p className="product-price">PRICE: ${selectedProduct.price}</p>
                   <p className="product-ratings">RATING: <span>★★★★☆</span></p>
                 </div>
                 <div className="product-modal-actions">

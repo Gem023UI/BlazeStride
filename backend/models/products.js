@@ -22,13 +22,6 @@ const productSchema = new mongoose.Schema({
       message: 'Product must have at least one category'
     }
   },
-  brand: {
-    type: String,
-    enum: ['adidas', 'asics', 'brooks', 'hoka', 'nike', 'new balance', 'saucony'],
-    required: [true, 'Brand is required'],
-    lowercase: true,
-    trim: true
-  },
   price: {
     type: Number,
     required: [true, 'Price is required'],

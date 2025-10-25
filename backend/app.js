@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import userRoutes from "./routes/user.js";
+import productRoutes from "./routes/products.js";
 
 const app = express();
 
@@ -34,6 +35,10 @@ app.use((req, res, next) => {
 console.log("🔧 Registering routes...");
 app.use("/api/user", userRoutes);
 console.log("✅ User routes registered");
+
+console.log("🔧 Registering routes...");
+app.use("/api/products", productRoutes);
+console.log("✅ Product routes registered");
 
 // Test endpoint to verify server is running
 app.get("/api/test", (req, res) => {
