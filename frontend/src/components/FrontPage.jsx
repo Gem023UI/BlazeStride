@@ -1,6 +1,8 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";;
+import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCalendar, faClock, faPersonRunning, faShoePrints, faCircleInfo, faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import SearchBar from "../components/layout/SearchBar"
 import MainLayout from "./layout/MainLayout";
 import "../styles/FrontPage.css";
@@ -76,6 +78,78 @@ export default function LandingSection({ logoUrl }) {
                     <img src={logo.src} alt={logo.alt} />
                   </div>
                 ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="front-product-section">
+            <div className="front-product-info">
+              <h2><FontAwesomeIcon icon={faCalendar}/> DAILY</h2>
+              <p>Stay on track with our daily running essentials.</p>
+            </div>
+            <div className="front-product-card">
+              <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
+              <div className="front-product-details">
+                <h3>Brooks Ghost 14vsgsbdrgrb</h3>
+                <p>$120.00</p>
+                <div className="front-product-btn">
+                  <button className="info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCircleInfo} /></button>
+                  <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="front-product-section">
+            <div className="front-product-info">
+              <h2><FontAwesomeIcon icon={faClock}/> TEMPO</h2>
+              <p>Ensure consistent tempo during your runs.</p>
+            </div>
+            <div className="front-product-card">
+              <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
+              <div className="front-product-details">
+                <h3>Brooks Ghost 14</h3>
+                <p>$120.00</p>
+                <div className="front-product-btn">
+                  <button className="info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCircleInfo} /></button>
+                  <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="front-product-section">
+            <div className="front-product-info">
+              <h2><FontAwesomeIcon icon={faPersonRunning}/> MARATHON</h2>
+              <p>Finish strong with our marathon essentials.</p>
+            </div>
+            <div className="front-product-card">
+              <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
+              <div className="front-product-details">
+                <h3>Brooks Ghost 14</h3>
+                <p>$120.00</p>
+                <div className="front-product-btn">
+                  <button className="info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCircleInfo} /></button>
+                  <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="front-product-section">
+            <div className="front-product-info">
+              <h2><FontAwesomeIcon icon={faShoePrints}/> RACE</h2>
+              <p>Sprint to the finish line with our race-day essentials.</p>
+            </div>
+            <div className="front-product-card">
+              <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
+              <div className="front-product-details">
+                <h3>Brooks Ghost 14</h3>
+                <p>$120.00</p>
+                <div className="front-product-btn">
+                  <button className="info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCircleInfo} /></button>
+                  <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
+                </div>
               </div>
             </div>
           </div>
