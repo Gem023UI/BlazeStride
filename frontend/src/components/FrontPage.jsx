@@ -90,7 +90,7 @@ export default function LandingSection({ logoUrl }) {
             <div className="front-product-card">
               <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
               <div className="front-product-details">
-                <h3>Brooks Ghost 14vsgsbdrgrb</h3>
+                <h3>Brooks Ghost 14</h3>
                 <p>$120.00</p>
                 <div className="front-product-btn">
                   <button className="info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCircleInfo} /></button>
