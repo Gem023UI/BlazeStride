@@ -172,7 +172,7 @@ html, body {
 .front-product-info h2 {
   font-family: 'Fugaz One', cursive;
   color: var(--text-light);
-  font-size: 36px;
+  font-size: 40px;
   letter-spacing: 5px;
   width: 50%;
   justify-items: start;
@@ -193,11 +193,11 @@ html, body {
   border: 1px solid var(--color1);
   border-radius: 20px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.35);
-  padding: 40px;
+  padding: 20px;
   margin: 20px 0;
   width: 100%;
   height: fit-content;
-  max-width: 300px;
+  max-width: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
