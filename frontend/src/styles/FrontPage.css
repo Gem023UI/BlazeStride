@@ -179,6 +179,17 @@ html, body {
   justify-items: start;
 }
 
+.front-product-grid {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  justify-items: center;
+  align-items: center;
+  padding: 20px;
+  overflow-x: auto;
+}
+
 .front-product-info p {
   font-family: 'Poppins', sans-serif;
   color: var(--text-light);
@@ -197,12 +208,13 @@ html, body {
   padding: 20px;
   margin: 20px 0;
   width: 100%;
-  height: fit-content;
+  height: 100%;
   max-width: 250px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  align-content: space-between;
 }
 
 .front-product-card:hover {
@@ -466,7 +478,7 @@ html, body {
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: 20px;
+  padding: px;
   gap: 15px;
   border: 1px solid var(--text-dark);
   border-radius: 12px;

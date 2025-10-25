@@ -151,34 +151,35 @@ export default function LandingSection({ logoUrl }) {
               <h2><FontAwesomeIcon icon={faCalendarCheck}/> DAILY</h2>
               <p>Stay on track with our daily running essentials.</p>
             </div>
-
-            {dailyProducts.map((product) => (
-              <div 
-                key={product._id}
-                className="front-product-card"
-                onClick={() => {
-                  setSelectedProduct(product);
-                  setShowProductModal(true);
-                }}
-              >
-                <img src={product.productimage[0]} alt={product.productname} />
-                <div className="front-product-details">
-                  <h3>{product.productname}</h3>
-                  <p>${product.price}</p>
-                  <div className="front-product-btn">
-                    <button className="info-btn" onClick={() => {
-                      setSelectedProduct(product);
-                      setShowProductModal(true);
-                    }}>
-                      <FontAwesomeIcon icon={faCircleInfo} />
-                    </button>
-                    <button className="cart-btn" onClick={() => navigate('/products')}>
-                      <FontAwesomeIcon icon={faCartPlus} />
-                    </button>
+            <div className="front-product-grid">
+              {dailyProducts.map((product) => (
+                <div 
+                  key={product._id}
+                  className="front-product-card"
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setShowProductModal(true);
+                  }}
+                >
+                  <img src={product.productimage[0]} alt={product.productname} />
+                  <div className="front-product-details">
+                    <h3>{product.productname}</h3>
+                    <p>${product.price}</p>
+                    <div className="front-product-btn">
+                      <button className="info-btn" onClick={() => {
+                        setSelectedProduct(product);
+                        setShowProductModal(true);
+                      }}>
+                        <FontAwesomeIcon icon={faCircleInfo} />
+                      </button>
+                      <button className="cart-btn" onClick={() => navigate('/products')}>
+                        <FontAwesomeIcon icon={faCartPlus} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* TEMPO PRODUCTS */}
@@ -187,34 +188,35 @@ export default function LandingSection({ logoUrl }) {
               <h2><FontAwesomeIcon icon={faCalendarCheck}/> TEMPO</h2>
               <p>Ensure consistent tempo during your runs.</p>
             </div>
-
-            {tempoProducts.map((product) => (
-              <div 
-                key={product._id}
-                className="front-product-card"
-                onClick={() => {
-                  setSelectedProduct(product);
-                  setShowProductModal(true);
-                }}
-              >
-                <img src={product.productimage[0]} alt={product.productname} />
-                <div className="front-product-details">
-                  <h3>{product.productname}</h3>
-                  <p>${product.price}</p>
-                  <div className="front-product-btn">
-                    <button className="info-btn" onClick={() => {
-                      setSelectedProduct(product);
-                      setShowProductModal(true);
-                    }}>
-                      <FontAwesomeIcon icon={faCircleInfo} />
-                    </button>
-                    <button className="cart-btn" onClick={() => navigate('/products')}>
-                      <FontAwesomeIcon icon={faCartPlus} />
-                    </button>
+            <div className="front-product-grid">
+              {tempoProducts.map((product) => (
+                <div 
+                  key={product._id}
+                  className="front-product-card"
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setShowProductModal(true);
+                  }}
+                >
+                  <img src={product.productimage[0]} alt={product.productname} />
+                  <div className="front-product-details">
+                    <h3>{product.productname}</h3>
+                    <p>${product.price}</p>
+                    <div className="front-product-btn">
+                      <button className="info-btn" onClick={() => {
+                        setSelectedProduct(product);
+                        setShowProductModal(true);
+                      }}>
+                        <FontAwesomeIcon icon={faCircleInfo} />
+                      </button>
+                      <button className="cart-btn" onClick={() => navigate('/products')}>
+                        <FontAwesomeIcon icon={faCartPlus} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
           {/* MARATHON PRODUCTS */}
@@ -223,34 +225,35 @@ export default function LandingSection({ logoUrl }) {
               <h2><FontAwesomeIcon icon={faCalendarCheck}/> MARATHON</h2>
               <p>Finish strong with our marathon essentials.</p>
             </div>
-
-            {marathonProducts.map((product) => (
-              <div 
-                key={product._id}
-                className="front-product-card"
-                onClick={() => {
-                  setSelectedProduct(product);
-                  setShowProductModal(true);
-                }}
-              >
-                <img src={product.productimage[0]} alt={product.productname} />
-                <div className="front-product-details">
-                  <h3>{product.productname}</h3>
-                  <p>${product.price}</p>
-                  <div className="front-product-btn">
-                    <button className="info-btn" onClick={() => {
-                      setSelectedProduct(product);
-                      setShowProductModal(true);
-                    }}>
-                      <FontAwesomeIcon icon={faCircleInfo} />
-                    </button>
-                    <button className="cart-btn" onClick={() => navigate('/products')}>
-                      <FontAwesomeIcon icon={faCartPlus} />
-                    </button>
+            <div className="front-product-grid">
+              {marathonProducts.map((product) => (
+                <div 
+                  key={product._id}
+                  className="front-product-card"
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setShowProductModal(true);
+                  }}
+                >
+                  <img src={product.productimage[0]} alt={product.productname} />
+                  <div className="front-product-details">
+                    <h3>{product.productname}</h3>
+                    <p>${product.price}</p>
+                    <div className="front-product-btn">
+                      <button className="info-btn" onClick={() => {
+                        setSelectedProduct(product);
+                        setShowProductModal(true);
+                      }}>
+                        <FontAwesomeIcon icon={faCircleInfo} />
+                      </button>
+                      <button className="cart-btn" onClick={() => navigate('/products')}>
+                        <FontAwesomeIcon icon={faCartPlus} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
 
 
@@ -260,34 +263,35 @@ export default function LandingSection({ logoUrl }) {
               <h2><FontAwesomeIcon icon={faCalendarCheck}/> RACE</h2>
               <p>Sprint to the finish line with our race-day gears</p>
             </div>
-
-            {raceProducts.map((product) => (
-              <div 
-                key={product._id}
-                className="front-product-card"
-                onClick={() => {
-                  setSelectedProduct(product);
-                  setShowProductModal(true);
-                }}
-              >
-                <img src={product.productimage[0]} alt={product.productname} />
-                <div className="front-product-details">
-                  <h3>{product.productname}</h3>
-                  <p>${product.price}</p>
-                  <div className="front-product-btn">
-                    <button className="info-btn" onClick={() => {
-                      setSelectedProduct(product);
-                      setShowProductModal(true);
-                    }}>
-                      <FontAwesomeIcon icon={faCircleInfo} />
-                    </button>
-                    <button className="cart-btn" onClick={() => navigate('/products')}>
-                      <FontAwesomeIcon icon={faCartPlus} />
-                    </button>
+            <div className="front-product-grid">
+              {raceProducts.map((product) => (
+                <div 
+                  key={product._id}
+                  className="front-product-card"
+                  onClick={() => {
+                    setSelectedProduct(product);
+                    setShowProductModal(true);
+                  }}
+                >
+                  <img src={product.productimage[0]} alt={product.productname} />
+                  <div className="front-product-details">
+                    <h3>{product.productname}</h3>
+                    <p>${product.price}</p>
+                    <div className="front-product-btn">
+                      <button className="info-btn" onClick={() => {
+                        setSelectedProduct(product);
+                        setShowProductModal(true);
+                      }}>
+                        <FontAwesomeIcon icon={faCircleInfo} />
+                      </button>
+                      <button className="cart-btn" onClick={() => navigate('/products')}>
+                        <FontAwesomeIcon icon={faCartPlus} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
