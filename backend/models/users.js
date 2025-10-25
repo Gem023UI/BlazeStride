@@ -2,15 +2,10 @@ import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
   role: {
-    type: [String],
-    enum: [ 'customer', 'admin'],
-    required: [true, 'At least one role is required'],
-    validate: {
-      validator: function(v) {
-        return v && v.length > 0;
-      },
-      message: 'User should have a role'
-    }
+    type: String,
+    enum: ['customer', 'admin'],
+    required: [true, 'Role is required'],
+    default: 'customer'
   },
   firstname: {
     type: String,
@@ -30,15 +25,19 @@ const userSchema = new mongoose.Schema({
     trim: true,
     match: [/^\S+@\S+\.\S+$/, 'Please provide a valid email address']
   },
+  password: {
+    type: String,
+    required: [true, 'Password is required'],
+    minlength: [6, 'Password must be at least 6 characters long'],
+    select: true
+  },
   phoneNumber: {
     type: String,
-    required: [true, 'Phone number is required'],
-    trim: true
+    default: null
   },
   address: {
     type: String,
-    required: [true, 'Address is required'],
-    trim: true
+    default: null
   },
   token: {
     type: String,

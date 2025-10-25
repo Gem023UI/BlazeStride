@@ -3,15 +3,28 @@ import styled from 'styled-components';
 
 const Loader = () => {
   return (
-    <StyledWrapper>
-      <div className="loader">
-        <div className="leaf" />
-        <div className="leaf" />
-        <div className="leaf" />
-      </div>
-    </StyledWrapper>
+    <Overlay>
+      <StyledWrapper>
+        <div className="loader">
+          <div className="leaf" />
+          <div className="leaf" />
+          <div className="leaf" />
+        </div>
+      </StyledWrapper>
+    </Overlay>
   );
 }
+
+const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8); /* transparent background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999999999; /* on top of everything */
+`;
+
 
 const StyledWrapper = styled.div`
   .loader {

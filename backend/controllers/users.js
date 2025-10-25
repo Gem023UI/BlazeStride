@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import validator from "validator";
 import { uploadToCloudinary } from "../utils/multer.js";
-import User from "../models/user.js";
+import User from "../models/users.js";
 
 // GET USER BY ID
 export const getUserById = async (req, res) => {
@@ -41,25 +41,7 @@ export const registerUser = async (req, res) => {
   console.log("🔵 Register endpoint hit");
 
   try {
-    let { username, email, password, profilePicture, hobbies } = req.body;
-
-    // ✅ Basic username validation
-    if (!username || username.length < 5) {
-      return res.status(400).json({ error: "Username must be at least 5 characters long" });
-    }
-
-    // ✅ No spaces allowed
-    if (/\s/.test(username)) {
-      return res.status(400).json({ error: "Username cannot contain spaces" });
-    }
-
-    // ✅ Check if username already exists (case-insensitive)
-    const existingUserByUsername = await User.findOne({
-      username: { $regex: new RegExp(`^${username}$`, "i") },
-    });
-    if (existingUserByUsername) {
-      return res.status(400).json({ error: "Username already taken" });
-    }
+    let { role, firstname, lastname, email, password, phoneNumber, address, useravatar } = req.body;
 
     // ✅ Normalize & validate email
     email = validator.normalizeEmail(email);
@@ -81,49 +63,51 @@ export const registerUser = async (req, res) => {
       });
     }
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    const defaultProfilePicture = "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1759649430/user_icon_ze74ys.jpg";
-    const defaultHobbies = ["None yet."];
+    const hashedPassword = await bcrypt.hash(password.trim(), 10);
 
-    profilePicture = defaultProfilePicture;
+    const defaultRole = 'customer';
+    if (!role) role = defaultRole;
 
-    if (typeof hobbies === "string") {
-      try {
-        hobbies = JSON.parse(hobbies);
-      } catch (e) {
-        hobbies = defaultHobbies;
-      }
-    }
+    const defaultUserAvatar = "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1759649430/user_icon_ze74ys.jpg";
+    if (!useravatar) useravatar = defaultUserAvatar;
 
-    if (!hobbies || !Array.isArray(hobbies) || hobbies.length === 0) {
-      hobbies = defaultHobbies;
-    }
+    if (!phoneNumber) phoneNumber = null;
+    if (!address) address = null;
 
     console.log("🔍 FINAL VALUES BEFORE SAVING:");
-    console.log("  username:", username);
+    console.log("  role:", role);
+    console.log("  firstname:", firstname);
+    console.log("  lastname:", lastname);
     console.log("  email:", email);
-    console.log("  profilePicture:", profilePicture);
-    console.log("  hobbies:", hobbies);
+    console.log("  address:", address);
+    console.log("  phoneNumber:", phoneNumber);
+    console.log("  useravatar:", useravatar);
 
     const newUser = new User({
-      username,
+      role,
+      firstname,
+      lastname,
       email,
       password: hashedPassword,
-      profilePicture,
-      hobbies,
+      phoneNumber,
+      address,
+      useravatar
     });
 
     await newUser.save();
-      console.log("✅ User registered successfully:", username);
+      console.log("✅ User registered successfully:", firstname + " " + lastname);
 
       res.status(201).json({
         message: "User registered successfully",
         user: {
           _id: newUser._id,
-          username: newUser.username,
+          firstname: newUser.firstname,
+          lastname: newUser.lastname,
           email: newUser.email,
-          profilePicture: newUser.profilePicture,
-          hobbies: newUser.hobbies,
+          role: newUser.role,
+          useravatar: newUser.useravatar,
+          phoneNumber: newUser.phoneNumber,
+          address: newUser.address
         },
       });
   } catch (err) {
@@ -147,18 +131,22 @@ export const loginUser = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
+    if (!user.password) {
+      return res.status(400).json({ error: "Account has no password set" });
+    }
+
     if (!user) {
       return res.status(400).json({ error: "No existing email" });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password.trim(), user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Incorrect Password" });
     }
 
     // ✅ Generate JWT
     const token = jwt.sign(
-      { id: user._id, username: user.username, email: user.email },
+      { id: user._id, firstname: user.firstname, lastname: user.lastname, email: user.email, role: user.role },
       process.env.JWT_SECRET || "defaultsecret",
       { expiresIn: "1d" }
     );
@@ -173,10 +161,13 @@ export const loginUser = async (req, res) => {
       token,
       user: {
         _id: user._id,
-        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
-        profilePicture: user.profilePicture,
-        hobbies: user.hobbies,
+        role: user.role,
+        useravatar: user.useravatar,
+        phoneNumber: user.phoneNumber,
+        address: user.address
       },
     });
 

@@ -7,6 +7,7 @@ import "../../styles/Header.css";
 const Header = ({ onMenuClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,13 +25,22 @@ const Header = ({ onMenuClick }) => {
 
   const handleAuthClick = () => {
     if (isLoggedIn) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('userId');
-      setIsLoggedIn(false);
-      navigate('/');
+      setShowLogoutModal(true);
     } else {
       navigate('/login');
     }
+  };
+
+  const confirmLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
+    setIsLoggedIn(false);
+    setShowLogoutModal(false);
+    navigate('/');
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutModal(false);
   };
 
   return (
@@ -57,6 +67,19 @@ const Header = ({ onMenuClick }) => {
           </li>
         </ul>
       </div>
+
+      {showLogoutModal && (
+        <div className="logout-modal-overlay">
+          <div className="logout-modal">
+            <h3>Are you sure you want to log out?</h3>
+            <div className="logout-modal-buttons">
+              <button onClick={confirmLogout} className="confirm-btn">Yes</button>
+              <button onClick={cancelLogout} className="cancel-btn">Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </header>
   );
 };

@@ -39,7 +39,8 @@ export default function LoginRegister({ logoUrl }) {
     const formData = new FormData();
 
     const payload = {
-      username: username.trim(),
+      firstname: firstname.trim(),
+      lastname: lastname.trim(),
       email: email.trim(),
       password: password,
     };
@@ -61,11 +62,11 @@ export default function LoginRegister({ logoUrl }) {
       });
 
       // Optional reset
-      setUsername("");
+      setFirstname("");
+      setLastname("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-      setHobbies([]);
     } catch (err) {
       console.error("❌ Registration error:", err.response?.data || err);
       Swal.fire({
@@ -100,15 +101,13 @@ export default function LoginRegister({ logoUrl }) {
 
       console.log("✅ Login response:", response.data);
 
-      // Store token, userId, and username in localStorage
+      // Store token, userId in localStorage
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", response.data.user._id);
-      localStorage.setItem("username", response.data.user.username);
 
       console.log("💾 Stored in localStorage:");
       console.log("  token:", localStorage.getItem("token"));
       console.log("  userId:", localStorage.getItem("userId"));
-      console.log("  username:", localStorage.getItem("username"));
 
       Swal.fire({
         icon: "success",
@@ -116,7 +115,7 @@ export default function LoginRegister({ logoUrl }) {
         timer: 2000,
         showConfirmButton: false,
       });
-      setTimeout(() => navigate("/lessons"), 2000);
+      setTimeout(() => navigate("../"), 2000);
     } catch (err) {
       Swal.fire({
         icon: "error",
