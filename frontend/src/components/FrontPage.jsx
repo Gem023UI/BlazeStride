@@ -122,13 +122,13 @@ export default function LandingSection({ logoUrl }) {
               <h2><FontAwesomeIcon icon={faClock}/> TEMPO</h2>
               <p>Ensure consistent tempo during your runs.</p>
             </div>
-            <div className="front-product-card">
+            <div className="front-product-card" onClick={() => setShowProductModal(true)}>
               <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
               <div className="front-product-details">
                 <h3>Brooks Ghost 14</h3>
                 <p>$120.00</p>
                 <div className="front-product-btn">
-                  <button className="info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCircleInfo} /></button>
+                  <button className="info-btn"  onClick={() => setShowProductModal(true)}><FontAwesomeIcon icon={faCircleInfo} /></button>
                   <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
                 </div>
               </div>
@@ -140,13 +140,13 @@ export default function LandingSection({ logoUrl }) {
               <h2><FontAwesomeIcon icon={faPersonRunning}/> MARATHON</h2>
               <p>Finish strong with our marathon essentials.</p>
             </div>
-            <div className="front-product-card">
+            <div className="front-product-card" onClick={() => setShowProductModal(true)}>
               <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
               <div className="front-product-details">
                 <h3>Brooks Ghost 14</h3>
                 <p>$120.00</p>
                 <div className="front-product-btn">
-                  <button className="info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCircleInfo} /></button>
+                  <button className="info-btn"  onClick={() => setShowProductModal(true)}><FontAwesomeIcon icon={faCircleInfo} /></button>
                   <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
                 </div>
               </div>
@@ -158,13 +158,13 @@ export default function LandingSection({ logoUrl }) {
               <h2><FontAwesomeIcon icon={faShoePrints}/> RACE</h2>
               <p>Sprint to the finish line with our race-day essentials.</p>
             </div>
-            <div className="front-product-card">
+            <div className="front-product-card" onClick={() => setShowProductModal(true)}>
               <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="Sample Product Image" />
               <div className="front-product-details">
                 <h3>Brooks Ghost 14</h3>
                 <p>$120.00</p>
                 <div className="front-product-btn">
-                  <button className="info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCircleInfo} /></button>
+                  <button className="info-btn"  onClick={() => setShowProductModal(true)}><FontAwesomeIcon icon={faCircleInfo} /></button>
                   <button className="cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /></button>
                 </div>
               </div>
@@ -210,8 +210,8 @@ export default function LandingSection({ logoUrl }) {
                       <p className="review-text">"The Brooks Ghost 14 has transformed my daily runs! The cushioning is perfect, providing just the right amount of support without feeling bulky. I've noticed a significant improvement in my pace and overall comfort. Highly recommend for any runner looking for a reliable shoe!"</p>
                       <div className="review-media">
                         <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="review-1" />
-                        <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="review-2" />
-                        <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="review-3" />
+                        <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks1_kyngav.png" alt="review-2" />
+                        <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks2_h0xpex.png" alt="review-3" />
                       </div>
                     </div>
                   </div>

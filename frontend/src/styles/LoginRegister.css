@@ -8,24 +8,17 @@
   --text-light: white;
 }
 
-/* Prevent Loader component from being affected by Login/Register styles */
 .login-register-wrapper .loader,
 .login-register-wrapper .loader * {
   all: unset;
   display: inline-block;
 }
 
-/* ============================= */
-/* GLOBAL STYLES */
-/* ============================= */
 .login-register-wrapper * {
   font-family: "Poppins", sans-serif;
   box-sizing: border-box;
 }
 
-/* ============================= */
-/* MAIN WRAPPER */
-/* ============================= */
 .login-register-wrapper {
   position: fixed;
   z-index: 0;
@@ -39,9 +32,6 @@
   transition: all 1.0s ease-in-out;
 }
 
-/* ============================= */
-/* CONTAINER */
-/* ============================= */
 .login-register-wrapper .container {
   background-color: var(--text-light);
   border-radius: 30px;
@@ -54,7 +44,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all 1.0s ease-in-out;
+  animation: slideUp 0.5s ease forwards;
 }
 
 .login-register-wrapper .container p {
@@ -76,9 +66,6 @@
   margin: 15px 0 10px;
 }
 
-/* ============================= */
-/* BUTTONS */
-/* ============================= */
 .login-register-wrapper .container button {
   background-color: #000000;
   color: var(--text-light);
@@ -112,9 +99,6 @@
   border: 2px solid #000000;
 }
 
-/* ============================= */
-/* FORMS */
-/* ============================= */
 .login-register-wrapper .container form {
   background-color: var(--text-light);
   display: flex;
@@ -127,9 +111,6 @@
   text-align: center;
 }
 
-/* ============================= */
-/* INPUT FIELDS */
-/* ============================= */
 .login-register-wrapper .input-box {
   width: 100%;
   max-width: 300px;
@@ -139,8 +120,14 @@
   justify-content: center;
 }
 
+.login-register-wrapper .names,
+.login-register-wrapper .passwords {
+  display: flex;
+  gap: 10px;
+}
+
 .login-register-wrapper .container input {
-  background-color: var(--color1);
+  background-color: #d8d8d8;
   border: none;
   margin: 8px 0;
   padding: 12px 15px;
@@ -151,9 +138,6 @@
   text-align: center;
 }
 
-/* ============================= */
-/* FORM CONTAINERS */
-/* ============================= */
 .login-register-wrapper .form-container {
   position: absolute;
   top: 0;
@@ -202,9 +186,6 @@
   }
 }
 
-/* ============================= */
-/* SOCIAL ICONS */
-/* ============================= */
 .login-register-wrapper .social-icons {
   margin: 20px 0;
 }
@@ -221,9 +202,6 @@
   height: 40px;
 }
 
-/* ============================= */
-/* TOGGLE CONTAINER */
-/* ============================= */
 .login-register-wrapper .toggle-container {
   position: absolute;
   top: 0;
@@ -241,9 +219,6 @@
   border-radius: 0 150px 100px 0;
 }
 
-/* ============================= */
-/* LOGO */
-/* ============================= */
 .login-register-wrapper .trademark {
   width: 50px;
   margin-top: 5px;
@@ -251,9 +226,6 @@
   padding: 5px;
 }
 
-/* ============================= */
-/* TOGGLE BACKGROUND */
-/* ============================= */
 .login-register-wrapper .toggle {
   background: linear-gradient(135deg, var(--color2), var(--color1), var(--color3));
   color: var(--text-dark);
@@ -272,9 +244,6 @@
   transform: translateX(50%);
 }
 
-/* ============================= */
-/* TOGGLE PANELS */
-/* ============================= */
 .login-register-wrapper .toggle-panel {
   position: absolute;
   width: 50%;
@@ -297,7 +266,6 @@
   color: var(--text-dark);
 }
 
-/* LEFT PANEL */
 .login-register-wrapper .toggle-left {
   transform: translateX(-200%);
   background: linear-gradient(135deg, var(--color2), var(--color1), var(--color3));
@@ -307,7 +275,6 @@
   transform: translateX(-50%);
 }
 
-/* RIGHT PANEL */
 .login-register-wrapper .toggle-right {
   right: 0;
   transform: translateX(0);
@@ -319,9 +286,6 @@
   transform: translateX(200%);
 }
 
-/* ============================= */
-/* INPUT CONSISTENCY */
-/* ============================= */
 .login-register-wrapper .input-box,
 .login-register-wrapper .dropdown-btn {
   width: 100%;
@@ -345,3 +309,13 @@
   background-color: #fff;
 }
 
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

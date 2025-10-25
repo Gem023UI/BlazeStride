@@ -6,18 +6,17 @@ import "../styles/LoginRegister.css"
 import Loader from "./layout/Loader.jsx";
 
 // API base URL
-// const API_URL = import.meta.env.VITE_BACKEND_URL || "https://typeventure.onrender.com";
+// const API_URL = import.meta.env.VITE_BACKEND_URL || "https://blazestride.onrender.com";
 const API_URL = import.meta.env.VITE_LOCAL_URL || "http://localhost:5000";
 
 export default function LoginRegister({ logoUrl }) {
+  const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
-  const [username, setUsername] = useState("");
+  const [firstname, setFirstname] = useState("");
+  const [lastname, setLastname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [hobbies, setHobbies] = useState([]);
-  const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [confirmPassword, setConfirmPassword] = useState("");
 
   // REGISTER FUNCTION
@@ -165,15 +164,26 @@ export default function LoginRegister({ logoUrl }) {
           <form id="registerForm" onSubmit={handleRegister}>
             <h1>REGISTER</h1>
             <div className="input-box">
-              <input
-                type="text"
-                name="username"
-                placeholder="User Name"
-                required
-                disabled={loading}
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              />
+              <div className="names">
+                <input
+                  type="text"
+                  name="firstname"
+                  placeholder="First Name"
+                  required
+                  disabled={loading}
+                  value={firstname}
+                  onChange={(e) => setFirstname(e.target.value)}
+                />
+                <input
+                  type="text"
+                  name="lastname"
+                  placeholder="Last Name"
+                  required
+                  disabled={loading}
+                  value={lastname}
+                  onChange={(e) => setLastname(e.target.value)}
+                />
+              </div>
               <input
                 type="email"
                 name="email"
@@ -183,24 +193,26 @@ export default function LoginRegister({ logoUrl }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                required
-                disabled={loading}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <input
-                type="password"
-                name="confirmPassword"
-                placeholder="Confirm Password"
-                required
-                disabled={loading}
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
+              <div className="passwords"> 
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required
+                  disabled={loading}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                />
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  required
+                  disabled={loading}
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                />
+              </div>
             </div>
             <button type="submit" className="btn2" disabled={loading}>
               REGISTER

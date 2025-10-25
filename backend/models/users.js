@@ -1,6 +1,17 @@
 import mongoose from 'mongoose';
 
 const userSchema = new mongoose.Schema({
+  role: {
+    type: [String],
+    enum: [ 'customer', 'admin'],
+    required: [true, 'At least one role is required'],
+    validate: {
+      validator: function(v) {
+        return v && v.length > 0;
+      },
+      message: 'User should have a role'
+    }
+  },
   firstname: {
     type: String,
     required: [true, 'First name is required'],
