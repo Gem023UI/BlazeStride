@@ -538,11 +538,17 @@ html, body {
   flex-direction: row;
   align-items: flex-start;
   justify-content: flex-start;
-  padding: px;
+  padding: 15px;
   gap: 15px;
-  border: 1px solid var(--text-dark);
+  border: 1px solid var(--text-light);
   border-radius: 12px;
   margin-bottom: 20px;
+}
+
+.review-items:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.276);
+  transform: translateY(-5px);
+  transition: all 0.5s ease;
 }
 
 .review-avatar {
