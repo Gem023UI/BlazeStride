@@ -99,115 +99,118 @@ export default function Cart() {
     <MainLayout>
         <section className="cart-page-wrapper">
             <div className="cart-page">
-                <div className="cart-header">
-                <h1>Shopping Cart</h1>
-                </div>
-
                 <div className="cart-container">
-                {/* Cart Table - 60% */}
-                <div className="cart-table-section">
-                    {cartItems.length === 0 ? (
-                    <div className="empty-cart">
-                        <p>Your cart is empty</p>
-                        <button onClick={() => navigate('/products')} className="shop-now-btn">
-                        Shop Now
-                        </button>
-                    </div>
-                    ) : (
-                    <table className="cart-table">
-                        <thead>
-                        <tr>
-                            <th></th>
-                            <th>Product</th>
-                            <th>Quantity</th>
-                            <th>Price</th>
-                            <th>Actions</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {cartItems.map((item) => (
-                            <tr key={item._id}>
-                            <td>
-                                <input
-                                type="checkbox"
-                                checked={selectedItems[item._id] || false}
-                                onChange={() => handleCheckboxChange(item._id)}
-                                className="cart-checkbox"
-                                />
-                            </td>
-                            <td className="product-cell">
-                                <img src={item.productimage} alt={item.productname} />
-                                <span>{item.productname}</span>
-                            </td>
-                            <td className="quantity-cell">
-                                <button 
-                                onClick={() => handleQuantityChange(item._id, -1)}
-                                className="quantity-btn"
-                                >
-                                <FontAwesomeIcon icon={faMinus} />
-                                </button>
-                                <span className="quantity-value">{item.quantity}</span>
-                                <button 
-                                onClick={() => handleQuantityChange(item._id, 1)}
-                                className="quantity-btn"
-                                >
-                                <FontAwesomeIcon icon={faPlus} />
-                                </button>
-                            </td>
-                            <td className="price-cell">
-                                ${(item.price * item.quantity).toFixed(2)}
-                            </td>
-                            <td className="actions-cell">
-                                <button 
-                                onClick={() => handleDeleteClick(item._id)}
-                                className="delete-btn"
-                                >
-                                <FontAwesomeIcon icon={faTrash} />
-                                </button>
-                            </td>
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                    )}
-                </div>
-
-                {/* Order Summary - 40% */}
-                {cartItems.length > 0 && (
-                    <div className="order-summary-section">
-                    <div className="order-summary">
-                        <h2>Order Summary</h2>
-                        <div className="summary-items">
-                        {getSelectedItems().length === 0 ? (
-                            <p className="no-selection">No items selected</p>
-                        ) : (
-                            getSelectedItems().map((item) => (
-                            <div key={item._id} className="summary-item">
-                                <div className="summary-item-info">
-                                <p className="summary-item-name">{item.productname}</p>
-                                <p className="summary-item-quantity">Qty: {item.quantity}</p>
-                                </div>
-                                <p className="summary-item-price">
-                                ${(item.price * item.quantity).toFixed(2)}
-                                </p>
+                    {/* Cart Table */}
+                    <div className="cart-table-container">
+                        <div className="cart-table-section">
+                            <div className="cart-header">
+                                <h2>Cart Items</h2>
                             </div>
-                            ))
+                            {cartItems.length === 0 ? (
+                            <div className="empty-cart">
+                                <p>Your cart is empty</p>
+                                <button onClick={() => navigate('/products')} className="shop-now-btn">
+                                Shop Now
+                                </button>
+                            </div>
+                            ) : (
+                            <table className="cart-table">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {cartItems.map((item) => (
+                                    <tr key={item._id}>
+                                    <td>
+                                        <input
+                                        type="checkbox"
+                                        checked={selectedItems[item._id] || false}
+                                        onChange={() => handleCheckboxChange(item._id)}
+                                        className="cart-checkbox"
+                                        />
+                                    </td>
+                                    <td className="product-cell">
+                                        <img src={item.productimage} alt={item.productname} />
+                                        <span>{item.productname}</span>
+                                    </td>
+                                    <td className="quantity-cell">
+                                        <button 
+                                        onClick={() => handleQuantityChange(item._id, -1)}
+                                        className="quantity-btn"
+                                        >
+                                        <FontAwesomeIcon icon={faMinus} />
+                                        </button>
+                                        <span className="quantity-value">{item.quantity}</span>
+                                        <button 
+                                        onClick={() => handleQuantityChange(item._id, 1)}
+                                        className="quantity-btn"
+                                        >
+                                        <FontAwesomeIcon icon={faPlus} />
+                                        </button>
+                                    </td>
+                                    <td className="price-cell">
+                                        ${(item.price * item.quantity).toFixed(2)}
+                                    </td>
+                                    <td className="actions-cell">
+                                        <button 
+                                        onClick={() => handleDeleteClick(item._id)}
+                                        className="delete-btn"
+                                        >
+                                        <FontAwesomeIcon icon={faTrash} />
+                                        </button>
+                                    </td>
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                            )}
+                        </div>
+                    </div>
+
+                    <div className="order-section">
+                        {/* Order Summary - 40% */}
+                        {cartItems.length > 0 && (
+                        <div className="order-summary-section">
+                            <div className="order-summary">
+                                <h2>Order Summary</h2>
+                                <div className="summary-items">
+                                {getSelectedItems().length === 0 ? (
+                                    <p className="no-selection">No items selected</p>
+                                ) : (
+                                    getSelectedItems().map((item) => (
+                                    <div key={item._id} className="summary-item">
+                                        <div className="summary-item-info">
+                                        <p className="summary-item-name">{item.productname}</p>
+                                        <p className="summary-item-quantity">Qty: {item.quantity}</p>
+                                        </div>
+                                        <p className="summary-item-price">
+                                        ${(item.price * item.quantity).toFixed(2)}
+                                        </p>
+                                    </div>
+                                    ))
+                                )}
+                                </div>
+                                <div className="summary-total">
+                                <h3>Total</h3>
+                                <h3>${calculateTotal().toFixed(2)}</h3>
+                                </div>
+                                <button 
+                                onClick={handleProceedToPayment}
+                                className="proceed-btn"
+                                disabled={getSelectedItems().length === 0}
+                                >
+                                Proceed to Payment
+                                </button>
+                            </div>
+                        </div>
                         )}
-                        </div>
-                        <div className="summary-total">
-                        <h3>Total</h3>
-                        <h3>${calculateTotal().toFixed(2)}</h3>
-                        </div>
-                        <button 
-                        onClick={handleProceedToPayment}
-                        className="proceed-btn"
-                        disabled={getSelectedItems().length === 0}
-                        >
-                        Proceed to Payment
-                        </button>
                     </div>
-                    </div>
-                )}
                 </div>
 
                 {/* Delete Confirmation Modal */}
