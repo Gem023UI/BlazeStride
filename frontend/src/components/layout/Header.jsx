@@ -8,6 +8,7 @@ const Header = ({ onMenuClick }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showLogoutModal, setShowLogoutModal] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,10 +18,37 @@ const Header = ({ onMenuClick }) => {
   }, []);
 
   useEffect(() => {
-    // Check if token and userId exist in localStorage
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('userId');
     setIsLoggedIn(token && userId);
+  }, []);
+
+  useEffect(() => {
+    const updateCartCount = () => {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      console.log('Header - Cart from localStorage:', cart);
+      console.log('Header - Cart count:', cart.length);
+      setCartCount(cart.length);
+    };
+    
+    // Initial count
+    updateCartCount();
+    
+    // Listen for custom cart update event
+    const handleCartUpdate = (e) => {
+      console.log('Header - cartUpdated event received:', e.detail);
+      if (e.detail && e.detail.count !== undefined) {
+        setCartCount(e.detail.count);
+      } else {
+        updateCartCount();
+      }
+    };
+    
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+    };
   }, []);
 
   const handleAuthClick = () => {
@@ -34,9 +62,10 @@ const Header = ({ onMenuClick }) => {
   const confirmLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
+    localStorage.removeItem('cart');
     setIsLoggedIn(false);
     setShowLogoutModal(false);
-    navigate('/');
+    window.location.href = '/';
   };
 
   const cancelLogout = () => {
@@ -57,9 +86,35 @@ const Header = ({ onMenuClick }) => {
 
       <div className="header-right">
         <ul className="header-links">
-          <li><Link to="/cart"><FontAwesomeIcon icon={faCartShopping} onClick={onMenuClick} /></Link></li>
           <li><Link to="/profile"><FontAwesomeIcon icon={faUser} onClick={onMenuClick} /></Link></li>
           <li><Link to="/orders"><FontAwesomeIcon icon={faShoppingBag} onClick={onMenuClick} /></Link></li>
+          <li style={{ position: 'relative' }}>
+            <Link to="/cart">
+              <FontAwesomeIcon icon={faCartShopping} onClick={onMenuClick} />
+            </Link>
+            {cartCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '5px',
+                right: '5px',
+                backgroundColor: '#fe42b9',
+                color: 'black',
+                borderRadius: '50%',
+                minWidth: '18px',
+                height: '18px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '11px',
+                fontWeight: 'bold',
+                padding: '0 4px',
+                zIndex: 1000,
+                pointerEvents: 'none'
+              }}>
+                {cartCount}
+              </span>
+            )}
+          </li>
           <li className="orange">
             <a onClick={handleAuthClick} style={{ cursor: 'pointer' }}>
               {isLoggedIn ? 'Log Out' : 'Log In'}

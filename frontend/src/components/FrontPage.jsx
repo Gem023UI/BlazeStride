@@ -13,7 +13,8 @@ import {
   faMoneyCheckDollar,
   faUsers,
   faChevronLeft,
-  faChevronRight
+  faChevronRight,
+  faXmark
    } from '@fortawesome/free-solid-svg-icons';
 import SearchBar from "../components/layout/SearchBar"
 import MainLayout from "./layout/MainLayout";
@@ -29,6 +30,8 @@ export default function LandingSection({ logoUrl }) {
   const [raceProducts, setRaceProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showLoginModal, setShowLoginModal] = useState(false);
+  const [cartCount, setCartCount] = useState(0);
 
 
   useEffect(() => {
@@ -62,6 +65,18 @@ export default function LandingSection({ logoUrl }) {
     }, 10000);
     return () => clearInterval(interval);
   }, [selectedProduct]);
+
+  useEffect(() => {
+    const updateCartCount = () => {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+      setCartCount(cart.length);
+    };
+    
+    updateCartCount();
+    window.addEventListener('storage', updateCartCount);
+    
+    return () => window.removeEventListener('storage', updateCartCount);
+  }, []);
 
   const nextImage = () => {
     setCurrentImageIndex((prev) =>
@@ -106,7 +121,52 @@ export default function LandingSection({ logoUrl }) {
       alt: "underarmour"
     },
   ];
-  
+
+  const handleAddToCart = (e, product) => {
+    e.stopPropagation();
+    
+    const token = localStorage.getItem('token');
+    console.log('Token exists:', !!token);
+    
+    if (!token) {
+      setShowLoginModal(true);
+      return;
+    }
+    
+    // Get existing cart or initialize empty array
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    console.log('Current cart before add:', cart);
+    
+    // Check if product already exists in cart
+    const existingItemIndex = cart.findIndex(item => item._id === product._id);
+    
+    if (existingItemIndex > -1) {
+      // Update quantity if product exists
+      cart[existingItemIndex].quantity = (cart[existingItemIndex].quantity || 1) + 1;
+    } else {
+      // Add new product to cart
+      cart.push({
+        _id: product._id,
+        productname: product.productname,
+        price: product.price,
+        productimage: product.productimage[0], // Already storing first image
+        quantity: 1
+      });
+    }
+    
+    localStorage.setItem('cart', JSON.stringify(cart));
+    console.log('Cart after add:', cart);
+    console.log('Cart length:', cart.length);
+    setCartCount(cart.length);
+    
+    // Dispatch custom event to update header
+    const event = new CustomEvent('cartUpdated', { detail: { count: cart.length } });
+    console.log('Dispatching cartUpdated event with count:', cart.length);
+    window.dispatchEvent(event);
+    
+    // Optional: Show success feedback
+    alert('Product added to cart!');
+  };
     
   return (
     <MainLayout>
@@ -174,7 +234,7 @@ export default function LandingSection({ logoUrl }) {
                       }}>
                         <FontAwesomeIcon icon={faCircleInfo} />
                       </button>
-                      <button className="cart-btn" onClick={() => navigate('/products')}>
+                      <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
                         <FontAwesomeIcon icon={faCartPlus} />
                       </button>
                     </div>
@@ -211,7 +271,7 @@ export default function LandingSection({ logoUrl }) {
                       }}>
                         <FontAwesomeIcon icon={faCircleInfo} />
                       </button>
-                      <button className="cart-btn" onClick={() => navigate('/products')}>
+                      <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
                         <FontAwesomeIcon icon={faCartPlus} />
                       </button>
                     </div>
@@ -248,7 +308,7 @@ export default function LandingSection({ logoUrl }) {
                       }}>
                         <FontAwesomeIcon icon={faCircleInfo} />
                       </button>
-                      <button className="cart-btn" onClick={() => navigate('/products')}>
+                      <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
                         <FontAwesomeIcon icon={faCartPlus} />
                       </button>
                     </div>
@@ -286,7 +346,7 @@ export default function LandingSection({ logoUrl }) {
                       }}>
                         <FontAwesomeIcon icon={faCircleInfo} />
                       </button>
-                      <button className="cart-btn" onClick={() => navigate('/products')}>
+                      <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
                         <FontAwesomeIcon icon={faCartPlus} />
                       </button>
                     </div>
@@ -302,7 +362,7 @@ export default function LandingSection({ logoUrl }) {
         <div className="product-modal-overlay" onClick={() => setShowProductModal(false)}>
           <div className="product-modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="product-modal-image">
-               <div className="carousel">
+              <div className="carousel">
                 {selectedProduct.productimage.map((img, index) => (
                   <img
                     key={index}
@@ -327,7 +387,7 @@ export default function LandingSection({ logoUrl }) {
                 </div>
                 <div className="product-modal-actions">
                   <button className="modal-info-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faMoneyCheckDollar} /> BUY NOW</button>
-                  <button className="modal-cart-btn" onClick={() => navigate('/products')}><FontAwesomeIcon icon={faCartPlus} /> ADD TO CART</button>
+                  <button className="modal-cart-btn" onClick={(e) => handleAddToCart(e, selectedProduct)}><FontAwesomeIcon icon={faCartPlus} /> ADD TO CART</button>
                 </div>
               </div>
               <div className="product-modal-reviews">
@@ -357,6 +417,18 @@ export default function LandingSection({ logoUrl }) {
             </div>
           </div>
         </div>
+        )}
+
+        {showLoginModal && (
+          <div className="logout-modal-overlay" onClick={() => setShowLoginModal(false)}>
+            <div className="logout-modal" onClick={(e) => e.stopPropagation()}>
+              <h3>Please log in to add items to your cart</h3>
+              <div className="logout-modal-buttons">
+                <button onClick={() => navigate('/login')} className="confirm-btn">Log In</button>
+                <button onClick={() => setShowLoginModal(false)} className="cancel-btn">Cancel</button>
+              </div>
+            </div>
+          </div>
         )}
 
       </section>
