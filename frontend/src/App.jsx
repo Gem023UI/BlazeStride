@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Hyperspeed from './reactbits/Hyperspeed/Hyperspeed';
-import FrontPage from './components/FrontPage';
-import LoginRegister from './components/LoginRegister';
+import Hyperspeed from './reactbits/Hyperspeed/Hyperspeed.jsx';
+import FrontPage from './components/FrontPage.jsx';
+import LoginRegister from './components/LoginRegister.jsx';
+import Cart from './components/CartItems.jsx';
 import './App.css'
 
 function App() {
@@ -62,7 +63,8 @@ function App() {
         <Routes>
           <Route path="/" element={<FrontPage logoUrl={logoUrl} />} />
           <Route path="/login" element={<LoginRegister />} />
-          </Routes>
+          <Route path="/cart" element={<Cart />} />
+        </Routes>
         </div>
     </Router>
   )
