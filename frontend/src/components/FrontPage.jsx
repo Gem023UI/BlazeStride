@@ -14,7 +14,6 @@ import {
   faUsers,
   faChevronLeft,
   faChevronRight,
-  faXmark
    } from '@fortawesome/free-solid-svg-icons';
 import SearchBar from "../components/layout/SearchBar"
 import MainLayout from "./layout/MainLayout";
@@ -32,6 +31,9 @@ export default function LandingSection({ logoUrl }) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('alert-success');
+
 
 
   useEffect(() => {
@@ -133,25 +135,25 @@ export default function LandingSection({ logoUrl }) {
       return;
     }
     
-    // Get existing cart or initialize empty array
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     console.log('Current cart before add:', cart);
     
-    // Check if product already exists in cart
     const existingItemIndex = cart.findIndex(item => item._id === product._id);
     
     if (existingItemIndex > -1) {
-      // Update quantity if product exists
       cart[existingItemIndex].quantity = (cart[existingItemIndex].quantity || 1) + 1;
+      setToastMessage('Increased product quantity in your cart.');
+      setToastType('alert-info');
     } else {
-      // Add new product to cart
       cart.push({
         _id: product._id,
         productname: product.productname,
         price: product.price,
-        productimage: product.productimage[0], // Already storing first image
+        productimage: product.productimage[0],
         quantity: 1
       });
+      setToastMessage('Product added to cart!');
+      setToastType('alert-success');
     }
     
     localStorage.setItem('cart', JSON.stringify(cart));
@@ -159,13 +161,12 @@ export default function LandingSection({ logoUrl }) {
     console.log('Cart length:', cart.length);
     setCartCount(cart.length);
     
-    // Dispatch custom event to update header
     const event = new CustomEvent('cartUpdated', { detail: { count: cart.length } });
     console.log('Dispatching cartUpdated event with count:', cart.length);
     window.dispatchEvent(event);
     
-    // Optional: Show success feedback
-    alert('Product added to cart!');
+    // alert('Product added to cart!');
+    setTimeout(() => setToastMessage(''), 2000);
   };
     
   return (
@@ -428,6 +429,13 @@ export default function LandingSection({ logoUrl }) {
                 <button onClick={() => setShowLoginModal(false)} className="cancel-btn">Cancel</button>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Toast Notification */}
+        {toastMessage && (
+          <div className={`custom-toast ${toastType}`}>
+            <span>{toastMessage}</span>
           </div>
         )}
 
