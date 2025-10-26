@@ -11,7 +11,9 @@ import {
   faCircleInfo, 
   faCartPlus,
   faMoneyCheckDollar,
-  faUsers
+  faUsers,
+  faChevronLeft,
+  faChevronRight
    } from '@fortawesome/free-solid-svg-icons';
 import SearchBar from "../components/layout/SearchBar"
 import MainLayout from "./layout/MainLayout";
@@ -57,7 +59,7 @@ export default function LandingSection({ logoUrl }) {
       setCurrentImageIndex((prev) =>
         (prev + 1) % selectedProduct.productimage.length
       );
-    }, 2000);
+    }, 10000);
     return () => clearInterval(interval);
   }, [selectedProduct]);
 
@@ -185,7 +187,7 @@ export default function LandingSection({ logoUrl }) {
           {/* TEMPO PRODUCTS */}
           <div className="front-product-section">
             <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faCalendarCheck}/> TEMPO</h2>
+              <h2><FontAwesomeIcon icon={faClock}/> TEMPO</h2>
               <p>Ensure consistent tempo during your runs.</p>
             </div>
             <div className="front-product-grid">
@@ -222,7 +224,7 @@ export default function LandingSection({ logoUrl }) {
           {/* MARATHON PRODUCTS */}
           <div className="front-product-section">
             <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faCalendarCheck}/> MARATHON</h2>
+              <h2><FontAwesomeIcon icon={faPersonRunning}/> MARATHON</h2>
               <p>Finish strong with our marathon essentials.</p>
             </div>
             <div className="front-product-grid">
@@ -260,8 +262,8 @@ export default function LandingSection({ logoUrl }) {
           {/* RACE PRODUCTS */}
           <div className="front-product-section">
             <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faCalendarCheck}/> RACE</h2>
-              <p>Sprint to the finish line with our race-day gears</p>
+              <h2><FontAwesomeIcon icon={faShoePrints}/> RACE</h2>
+              <p>Sprint to the finish line with our race-day gears.</p>
             </div>
             <div className="front-product-grid">
               {raceProducts.map((product) => (
@@ -301,9 +303,17 @@ export default function LandingSection({ logoUrl }) {
           <div className="product-modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="product-modal-image">
                <div className="carousel">
-                <button className="carousel-btn left" onClick={prevImage}>‹</button>
-                <img src={selectedProduct.productimage[currentImageIndex]} alt="product" />
-                <button className="carousel-btn right" onClick={nextImage}>›</button>
+                {selectedProduct.productimage.map((img, index) => (
+                  <img
+                    key={index}
+                    src={img}
+                    alt={`product-${index}`}
+                    className={index === currentImageIndex ? "active" : ""}
+                  />
+                ))}
+
+                <button className="carousel-btn left" onClick={prevImage}><FontAwesomeIcon icon={faChevronLeft} /></button>
+                <button className="carousel-btn right" onClick={nextImage}><FontAwesomeIcon icon={faChevronRight} /></button>
               </div>
             </div>
             <div className="product-modal-details">
