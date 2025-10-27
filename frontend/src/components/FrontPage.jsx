@@ -166,7 +166,7 @@ export default function LandingSection({ logoUrl }) {
     window.dispatchEvent(event);
     
     // alert('Product added to cart!');
-    setTimeout(() => setToastMessage(''), 2000);
+    setTimeout(() => setToastMessage(''), 5000);
   };
     
   return (

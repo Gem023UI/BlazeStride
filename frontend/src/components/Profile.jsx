@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import MainLayout from "./layout/MainLayout";
 import Lanyard from "../reactbits/Lanyard/Lanyard";
 import { getUserById, editProfile, deleteAccount } from "../api/users";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHouse, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import "../styles/Profile.css";
 
 const Profile = () => {
@@ -144,7 +146,7 @@ const Profile = () => {
       
       // Update localStorage with new avatar
       if (response.user.useravatar) {
-        localStorage.setItem("useravatar", response.user.useravatar);
+        localStorage.setItem("avatar", response.user.useravatar);
         setAvatar(response.user.useravatar);
         window.dispatchEvent(new Event('avatarUpdated'));
       }
@@ -212,24 +214,14 @@ const Profile = () => {
           <div className="profile-details-section">
             <h2>Profile Details</h2>
             
-            <div className="detail-item">
-              <label>Name:</label>
+            <div className="detail-name">
               <p>{firstname} {lastname}</p>
             </div>
 
-            <div className="detail-item">
-              <label>Email:</label>
-              <p>{email}</p>
-            </div>
-
-            <div className="detail-item">
-              <label>Phone Number:</label>
-              <p>{phoneNumber || "Not provided"}</p>
-            </div>
-
-            <div className="detail-item">
-              <label>Address:</label>
-              <p>{address || "Not provided"}</p>
+            <div className="detail-contact">
+              <p><FontAwesomeIcon className="detail-svg" icon={faEnvelope}/> {email}</p>
+              <p><FontAwesomeIcon className="detail-svg"icon={faPhone}/> {phoneNumber || "Phone: Not provided"}</p>
+              <p><FontAwesomeIcon className="detail-svg"icon={faHouse}/> {address || "Not provided"}</p>
             </div>
 
             <div className="profile-buttons">
