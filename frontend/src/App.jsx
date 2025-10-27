@@ -4,6 +4,7 @@ import Hyperspeed from './reactbits/Hyperspeed/Hyperspeed.jsx';
 import FrontPage from './components/FrontPage.jsx';
 import LoginRegister from './components/LoginRegister.jsx';
 import Cart from './components/CartItems.jsx';
+import Profile from './components/Profile.jsx';
 import './App.css'
 
 function App() {
@@ -64,6 +65,7 @@ function App() {
           <Route path="/" element={<FrontPage logoUrl={logoUrl} />} />
           <Route path="/login" element={<LoginRegister />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="/profile" element={<Profile />} />
         </Routes>
         </div>
     </Router>

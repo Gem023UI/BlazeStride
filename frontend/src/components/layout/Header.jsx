@@ -63,6 +63,7 @@ const Header = ({ onMenuClick }) => {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('cart');
+    localStorage.removeItem('avatar');
     setIsLoggedIn(false);
     setShowLogoutModal(false);
     window.location.href = '/';

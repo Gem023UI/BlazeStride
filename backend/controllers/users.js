@@ -15,16 +15,17 @@ export const getUserById = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    console.log("📦 USER FETCHED:", user); // just for debugging
+    console.log("📦 USER FETCHED:", user);
 
     res.json({
       user: {
         _id: user._id,
-        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
-        profilePicture: user.profilePicture,
-        hobbies: user.hobbies,
-        createdAt: user.createdAt ? user.createdAt.toISOString() : null, // ✅ ensure it's sent
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+        useravatar: user.useravatar,
       },
     });
   } catch (err) {
@@ -185,7 +186,7 @@ export const editProfile = async (req, res) => {
   console.log("🟡 Incoming body fields:", req.body);
 
   try {
-    const { userId, currentPassword, newPassword, hobbies, username, email } = req.body;
+    const { userId, currentPassword, newPassword, firstname, lastname, email, phoneNumber, address } = req.body;
 
     if (!userId) {
       return res.status(400).json({ error: "User ID is required" });
@@ -196,25 +197,38 @@ export const editProfile = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Update username if provided and changed
-    if (username && username !== user.username) {
-      // Check if new username is taken
-      const existingUser = await User.findOne({ username });
-      if (existingUser) {
-        return res.status(400).json({ error: "Username already taken" });
-      }
-      user.username = username;
-      console.log("✅ Username updated to:", username);
+    // Update firstname if provided
+    if (firstname && firstname !== user.firstname) {
+      user.firstname = firstname;
+      console.log("✅ First name updated to:", firstname);
     }
 
-    if (req.body.email && req.body.email !== user.email) {
-      // Check if the new email is already in use
-      const existingEmail = await User.findOne({ email: req.body.email });
+    // Update lastname if provided
+    if (lastname && lastname !== user.lastname) {
+      user.lastname = lastname;
+      console.log("✅ Last name updated to:", lastname);
+    }
+
+    // Update email if provided and changed
+    if (email && email !== user.email) {
+      const existingEmail = await User.findOne({ email });
       if (existingEmail) {
         return res.status(400).json({ error: "Email already in use" });
       }
       user.email = email;
       console.log("✅ Email updated to:", email);
+    }
+
+    // Update phone number
+    if (phoneNumber !== undefined) {
+      user.phoneNumber = phoneNumber || null;
+      console.log("✅ Phone number updated to:", phoneNumber);
+    }
+
+    // Update address
+    if (address !== undefined) {
+      user.address = address || null;
+      console.log("✅ Address updated to:", address);
     }
 
     // Change password if newPassword provided
@@ -239,26 +253,15 @@ export const editProfile = async (req, res) => {
       console.log("✅ Password updated");
     }
 
-    // Update hobbies if provided
-    if (hobbies !== undefined) {
-      try {
-        const parsedHobbies = typeof hobbies === "string" ? JSON.parse(hobbies) : hobbies;
-        user.hobbies = Array.isArray(parsedHobbies) ? parsedHobbies : [];
-        console.log("✅ Hobbies updated:", user.hobbies);
-      } catch (e) {
-        console.error("Error parsing hobbies:", e);
-      }
-    }
-
     // Update profile picture if provided
     if (req.file && req.file.buffer) {
       try {
-        user.profilePicture = await uploadToCloudinary(
+        user.useravatar = await uploadToCloudinary(
           req.file.buffer,
           req.file.mimetype,
           "typeventure/profile pictures"
         );
-        console.log("✅ Profile picture updated:", user.profilePicture);
+        console.log("✅ Profile picture updated:", user.useravatar);
       } catch (uploadError) {
         console.error("❌ Cloudinary upload error:", uploadError);
         return res.status(500).json({
@@ -269,16 +272,18 @@ export const editProfile = async (req, res) => {
     }
 
     await user.save();
-    console.log("✅ Profile updated successfully:", user.username);
+    console.log("✅ Profile updated successfully");
 
     res.json({
       message: "Profile updated successfully",
       user: {
         _id: user._id,
-        username: user.username,
+        firstname: user.firstname,
+        lastname: user.lastname,
         email: user.email,
-        profilePicture: user.profilePicture,
-        hobbies: user.hobbies,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+        useravatar: user.useravatar,
       },
     });
   } catch (err) {
@@ -295,11 +300,11 @@ export const deleteAccount = async (req, res) => {
   console.log("🔴 Delete account endpoint hit");
 
   try {
-    const { userId, username, password } = req.body;
+    const { userId, email, password } = req.body;
 
-    if (!userId || !username || !password) {
+    if (!userId || !email || !password) {
       return res.status(400).json({ 
-        error: "User ID, username, and password are required" 
+        error: "User ID, email, and password are required" 
       });
     }
 
@@ -309,29 +314,24 @@ export const deleteAccount = async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Verify username matches
-    if (user.username !== username) {
-      return res.status(400).json({ error: "Username does not match" });
+    // Verify email matches
+    if (user.email !== email) {
+      return res.status(400).json({ error: "Email does not match" });
     }
 
     // Verify password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ error: "Password is incorrect" });
-    };
+    }
     
-    await Score.deleteMany({ userId: userId });
-    console.log("✅ Deleted user scores");
-    
-    await UserAchievement.deleteMany({ userId: userId });
-    console.log("✅ Deleted user achievements");
-    
+    // Delete user account
     await User.findByIdAndDelete(userId);
     console.log("✅ Deleted user account");
 
     res.json({
       success: true,
-      message: "Account and all related data deleted successfully"
+      message: "Account deleted successfully"
     });
 
   } catch (err) {

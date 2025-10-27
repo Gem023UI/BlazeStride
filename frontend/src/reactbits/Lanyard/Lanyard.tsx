@@ -15,9 +15,8 @@ import {
 import { MeshLineGeometry, MeshLineMaterial } from 'meshline';
 import * as THREE from 'three';
 
-// replace with your own imports, see the usage snippet for details
 import cardGLB from './card.glb';
-import lanyard from './lanyard.png';
+import lanyard from "../../assets/banner.png";
 
 import './Lanyard.css';
 
@@ -28,13 +27,15 @@ interface LanyardProps {
   gravity?: [number, number, number];
   fov?: number;
   transparent?: boolean;
+  avatarUrl?: string;
 }
 
 export default function Lanyard({
   position = [0, 0, 30],
   gravity = [0, -40, 0],
   fov = 20,
-  transparent = true
+  transparent = true,
+  avatarUrl = ""
 }: LanyardProps) {
   return (
     <div className="lanyard-wrapper">
@@ -45,7 +46,7 @@ export default function Lanyard({
       >
         <ambientLight intensity={Math.PI} />
         <Physics gravity={gravity} timeStep={1 / 60}>
-          <Band />
+          <Band avatarUrl={avatarUrl} />
         </Physics>
         <Environment blur={0.75}>
           <Lightformer
@@ -85,10 +86,10 @@ export default function Lanyard({
 interface BandProps {
   maxSpeed?: number;
   minSpeed?: number;
+  avatarUrl?: string;
 }
 
-function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
-  // Using "any" for refs since the exact types depend on Rapier's internals
+function Band({ maxSpeed = 50, minSpeed = 0, avatarUrl = "" }: BandProps) {
   const band = useRef<any>(null);
   const fixed = useRef<any>(null);
   const j1 = useRef<any>(null);
@@ -111,6 +112,10 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
 
   const { nodes, materials } = useGLTF(cardGLB) as any;
   const texture = useTexture(lanyard);
+  
+  // Load avatar texture if provided
+  const avatarTexture = avatarUrl ? useTexture(avatarUrl) : null;
+  
   const [curve] = useState(
     () =>
       new THREE.CatmullRomCurve3([new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()])
@@ -222,7 +227,7 @@ function Band({ maxSpeed = 50, minSpeed = 0 }: BandProps) {
           >
             <mesh geometry={nodes.card.geometry}>
               <meshPhysicalMaterial
-                map={materials.base.map}
+                map={avatarTexture || materials.base.map}
                 map-anisotropy={16}
                 clearcoat={1}
                 clearcoatRoughness={0.15}

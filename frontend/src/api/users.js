@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // Add logging to debug
-const API_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:5000";
+const API_URL = import.meta.env.VITE_LOCAL_URL || "http://localhost:5000";
 
 const BASE_URL = `${API_URL}`;
 
@@ -36,11 +36,9 @@ export const loginUser = async (credentials) => {
 
 export const editProfile = async (formData) => {
   try {
-    // Grab userId from localStorage
     const userId = localStorage.getItem("userId");
     if (!userId) throw new Error("User ID not found in localStorage");
 
-    // Append userId to the form data
     formData.append("userId", userId);
 
     console.log("Editing profile at:", `${BASE_URL}/api/user/edit-profile`);
