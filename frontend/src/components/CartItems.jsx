@@ -98,8 +98,7 @@ export default function Cart() {
   return (
     <MainLayout>
         <section className="cart-page-wrapper">
-            <div className="cart-page">
-                <div className="cart-container">
+            <div className="cart-container">
                     {/* Cart Table */}
                     <div className="cart-table-container">
                         <div className="cart-table-section">
@@ -107,68 +106,76 @@ export default function Cart() {
                                 <h2>Cart Items</h2>
                             </div>
                             {cartItems.length === 0 ? (
-                            <div className="empty-cart">
-                                <p>Your cart is empty</p>
-                                <button onClick={() => navigate('/products')} className="shop-now-btn">
-                                Shop Now
-                                </button>
+                            <div className="no-cart">
+                                <div className="empty-cart">
+                                    <p>Your cart is empty</p>
+                                    <button onClick={() => navigate('/')} className="shop-now-btn">
+                                    Shop Now
+                                    </button>
+                                </div>
                             </div>
                             ) : (
                             <table className="cart-table">
                                 <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>Product</th>
-                                    <th>Quantity</th>
-                                    <th>Price</th>
-                                    <th>Actions</th>
-                                </tr>
+                                    <tr>
+                                    <th style={{ width: '8%' }}>Check</th>
+                                    <th style={{ width: '40%' }}>Product</th>
+                                    <th style={{ width: '22%' }}>Quantity</th>
+                                    <th style={{ width: '15%' }}>Price</th>
+                                    <th style={{ width: '15%' }}>Actions</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                {cartItems.map((item) => (
+                                    {cartItems.map((item) => (
                                     <tr key={item._id}>
-                                    <td>
+                                        <td style={{ textAlign: 'center' }}>
                                         <input
-                                        type="checkbox"
-                                        checked={selectedItems[item._id] || false}
-                                        onChange={() => handleCheckboxChange(item._id)}
-                                        className="cart-checkbox"
+                                            type="checkbox"
+                                            checked={selectedItems[item._id] || false}
+                                            onChange={() => handleCheckboxChange(item._id)}
+                                            className="cart-checkbox"
                                         />
-                                    </td>
-                                    <td className="product-cell">
-                                        <img src={item.productimage} alt={item.productname} />
-                                        <span>{item.productname}</span>
-                                    </td>
-                                    <td className="quantity-cell">
+                                        </td>
+                                        <td>
+                                        <div className="product-cell">
+                                            <img src={item.productimage} alt={item.productname} />
+                                            <span>{item.productname}</span>
+                                        </div>
+                                        </td>
+                                        <td style={{ textAlign: 'center' }}>
+                                        <div className="quantity-cell">
+                                            <button 
+                                            onClick={() => handleQuantityChange(item._id, -1)}
+                                            className="quantity-btn"
+                                            >   
+                                            <FontAwesomeIcon icon={faMinus} />
+                                            </button>
+                                            <span className="quantity-value">{item.quantity}</span>
+                                            <button 
+                                            onClick={() => handleQuantityChange(item._id, 1)}
+                                            className="quantity-btn"
+                                            >
+                                            <FontAwesomeIcon icon={faPlus} />
+                                            </button>
+                                        </div>
+                                        </td>
+                                        <td style={{ textAlign: 'center' }}>
+                                        <div className="price-cell">
+                                            ${(item.price * item.quantity).toFixed(2)}
+                                        </div>
+                                        </td>
+                                        <td style={{ textAlign: 'center' }}>
                                         <button 
-                                        onClick={() => handleQuantityChange(item._id, -1)}
-                                        className="quantity-btn"
+                                            onClick={() => handleDeleteClick(item._id)}
+                                            className="delete-btn"
                                         >
-                                        <FontAwesomeIcon icon={faMinus} />
+                                            <FontAwesomeIcon icon={faTrash} />
                                         </button>
-                                        <span className="quantity-value">{item.quantity}</span>
-                                        <button 
-                                        onClick={() => handleQuantityChange(item._id, 1)}
-                                        className="quantity-btn"
-                                        >
-                                        <FontAwesomeIcon icon={faPlus} />
-                                        </button>
-                                    </td>
-                                    <td className="price-cell">
-                                        ${(item.price * item.quantity).toFixed(2)}
-                                    </td>
-                                    <td className="actions-cell">
-                                        <button 
-                                        onClick={() => handleDeleteClick(item._id)}
-                                        className="delete-btn"
-                                        >
-                                        <FontAwesomeIcon icon={faTrash} />
-                                        </button>
-                                    </td>
+                                        </td>
                                     </tr>
-                                ))}
+                                    ))}
                                 </tbody>
-                            </table>
+                                </table>
                             )}
                         </div>
                     </div>
@@ -178,7 +185,9 @@ export default function Cart() {
                         {cartItems.length > 0 && (
                         <div className="order-summary-section">
                             <div className="order-summary">
-                                <h2>Order Summary</h2>
+                                <div className="order-header">
+                                    <h2>Order Summary</h2>
+                                </div>
                                 <div className="summary-items">
                                 {getSelectedItems().length === 0 ? (
                                     <p className="no-selection">No items selected</p>
@@ -224,8 +233,7 @@ export default function Cart() {
                     </div>
                     </div>
                 </div>
-                )}
-            </div>     
+                )}    
         </section>
     </MainLayout>
   );
