@@ -67,10 +67,11 @@
 .shop-now-btn {
   padding: 15px 35px;
   background-color: var(--color2);
-  color: var(--text-dark);
+  color: var(--text-light);
   border: none;
   border-radius: 16px;
   font-size: 1rem;
+  font-family: 'Poppins';
   cursor: pointer;
   transition: background-color 0.3s;
 }
@@ -92,6 +93,7 @@
   width: 100%;
   border-collapse: collapse;
   table-layout: fixed;
+  animation: slideUp 0.5s ease forwards;
 }
 
 .cart-table thead {
@@ -204,9 +206,9 @@
   width: 35%;
 }
 
-/* Order Summary Section - 40% */
 .order-summary-section {
   width: 100%;
+  animation: slideUp 0.9s ease forwards;
 }
 
 .order-summary {
@@ -264,7 +266,7 @@
 
 .summary-item-price {
   font-weight: 600;
-  color: #ff6b35;
+  color: var(--color2);
   font-size: 1.1rem;
 }
 
@@ -279,24 +281,26 @@
 
 .summary-total h3 {
   font-size: 1.5rem;
-  color: #333;
+  color: var(--text-dark);
 }
 
 .proceed-btn {
   width: 100%;
   padding: 15px;
-  background-color: #ff6b35;
-  color: white;
+  gap: 5px;
+  background-color: var(--color2);
+  color: var(--text-dark);
   border: none;
   border-radius: 5px;
   font-size: 1.1rem;
   font-weight: 600;
+  font-family: 'Poppins';
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .proceed-btn:hover:not(:disabled) {
-  background-color: #e55a2b;
+  background-color: var(--color3);
 }
 
 .proceed-btn:disabled {
@@ -304,14 +308,13 @@
   cursor: not-allowed;
 }
 
-/* Delete Modal */
 .delete-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
+  background-color: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -319,17 +322,21 @@
 }
 
 .delete-modal {
-  background: white;
+  background: rgba(255, 255, 255, 0);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   padding: 30px;
+  border: 1px solid var(--text-light);
   border-radius: 8px;
   max-width: 400px;
   width: 90%;
   text-align: center;
+  animation: slideUp 0.3s ease forwards;
 }
 
 .delete-modal h3 {
   margin-bottom: 25px;
-  color: #333;
+  color: var(--text-light);
   font-size: 1.2rem;
 }
 
@@ -341,21 +348,17 @@
 
 .delete-modal-buttons .confirm-btn {
   padding: 10px 25px;
-  background-color: #dc3545;
-  color: white;
+  background-color: var(--color2);
+  color: var(--text-light);
   border: none;
   border-radius: 5px;
   cursor: pointer;
   font-size: 1rem;
-}
-
-.delete-modal-buttons .confirm-btn:hover {
-  background-color: #c82333;
 }
 
 .delete-modal-buttons .cancel-btn {
   padding: 10px 25px;
-  background-color: #6c757d;
+  background-color: var(--color3);
   color: white;
   border: none;
   border-radius: 5px;
@@ -363,11 +366,6 @@
   font-size: 1rem;
 }
 
-.delete-modal-buttons .cancel-btn:hover {
-  background-color: #5a6268;
-}
-
-/* Responsive */
 @media (max-width: 1024px) {
   .cart-container {
     flex-direction: column;
@@ -396,5 +394,16 @@
   .product-cell img {
     width: 50px;
     height: 50px;
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

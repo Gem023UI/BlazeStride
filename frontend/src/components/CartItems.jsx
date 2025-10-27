@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faMinus, faPlus, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import MainLayout from "./layout/MainLayout";
 import "../styles/CartItems.css";
 
@@ -110,7 +110,7 @@ export default function Cart() {
                                 <div className="empty-cart">
                                     <p>Your cart is empty</p>
                                     <button onClick={() => navigate('/')} className="shop-now-btn">
-                                    Shop Now
+                                    SHOP NOW
                                     </button>
                                 </div>
                             </div>
@@ -196,7 +196,7 @@ export default function Cart() {
                                     <div key={item._id} className="summary-item">
                                         <div className="summary-item-info">
                                         <p className="summary-item-name">{item.productname}</p>
-                                        <p className="summary-item-quantity">Qty: {item.quantity}</p>
+                                        <p className="summary-item-quantity">Quantity: {item.quantity}</p>
                                         </div>
                                         <p className="summary-item-price">
                                         ${(item.price * item.quantity).toFixed(2)}
@@ -214,6 +214,7 @@ export default function Cart() {
                                 className="proceed-btn"
                                 disabled={getSelectedItems().length === 0}
                                 >
+                                <FontAwesomeIcon icon={faCreditCard} />
                                 Proceed to Payment
                                 </button>
                             </div>
