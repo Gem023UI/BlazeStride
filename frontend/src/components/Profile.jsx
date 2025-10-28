@@ -4,6 +4,7 @@ import Lanyard from "../reactbits/Lanyard/Lanyard";
 import { getUserById, editProfile, deleteAccount } from "../api/users";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faPhone, faEnvelope, faUserPen, faTrashCan, faUserCheck } from '@fortawesome/free-solid-svg-icons';
+import { Loader } from "./layout/Loader";
 import "../styles/Profile.css";
 
 const Profile = () => {
@@ -411,45 +412,40 @@ const Profile = () => {
               onClick={(e) => e.stopPropagation()}
               style={{ maxWidth: "400px" }}
             >
-              <button 
-                className="modal-close-btn"
-                onClick={() => setShowDeleteModal(false)}
-              >
-                ×
-              </button>
-
               <form onSubmit={handleDeleteAccount}>
-                <h2 style={{ color: "#dc3545", marginBottom: "20px" }}>Delete Account</h2>
+                <h2 style={{ color: "#ff1f35ff", marginBottom: "20px" }}>Delete Account</h2>
                 
                 {deleteError && <div className="error-message">{deleteError}</div>}
                 
-                <p style={{ marginBottom: "20px", color: "#666", textAlign: "center" }}>
+                <p style={{ marginBottom: "20px", color: "#ffffffff", textAlign: "center" }}>
                   This action cannot be undone. Please enter your email and password to confirm.
                 </p>
 
-                <div style={{ marginBottom: "15px" }}>
-                  <label>Email:</label>
-                  <input 
-                    type="email" 
-                    value={deleteEmail}
-                    onChange={(e) => setDeleteEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    required
-                  />
+                <div className="delete-form">
+                  <div className="delete-field" style={{ marginBottom: "15px" }}>
+                    <label>Email:</label>
+                    <input 
+                      type="email" 
+                      value={deleteEmail}
+                      onChange={(e) => setDeleteEmail(e.target.value)}
+                      placeholder="Enter your email"
+                      required
+                    />
+                  </div>
+
+                  <div className="delete-field" style={{ marginBottom: "30px" }}>
+                    <label>Password:</label>
+                    <input 
+                      type="password" 
+                      value={deletePassword}
+                      onChange={(e) => setDeletePassword(e.target.value)}
+                      placeholder="Enter your password"
+                      required
+                    />
+                  </div>
                 </div>
 
-                <div style={{ marginBottom: "30px" }}>
-                  <label>Password:</label>
-                  <input 
-                    type="password" 
-                    value={deletePassword}
-                    onChange={(e) => setDeletePassword(e.target.value)}
-                    placeholder="Enter your password"
-                    required
-                  />
-                </div>
-
-                <div style={{ display: "flex", gap: "10px" }}>
+                <div style={{ display: "flex", gap: "10px", width: "100%" }}>
                   <button 
                     type="button"
                     onClick={() => setShowDeleteModal(false)}
@@ -468,7 +464,7 @@ const Profile = () => {
                   </button>
                   <button 
                     type="submit"
-                    disabled={deleteLoading}
+                    disabled={loading}
                     style={{
                       flex: 1,
                       padding: "10px",
@@ -477,17 +473,23 @@ const Profile = () => {
                       border: "none",
                       borderRadius: "5px",
                       fontFamily: "Poppins",
-                      cursor: deleteLoading ? "not-allowed" : "pointer",
-                      opacity: deleteLoading ? 0.6 : 1
+                      cursor: loading ? "not-allowed" : "pointer",
+                      opacity: loading ? 0.6 : 1
                     }}
                   >
-                    {deleteLoading ? "Deleting..." : "Delete Account"}
+                    {loading ? "Deleting..." : "Delete Account"}
                   </button>
                 </div>
               </form>
             </div>
           </div>
         )}
+
+        {loading && (
+        <div className="loader-overlay">
+          <Loader />
+        </div>
+      )}
       </div>
     </MainLayout>
   );

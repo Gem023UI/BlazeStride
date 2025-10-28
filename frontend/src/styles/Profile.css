@@ -309,12 +309,8 @@
   transition: all 0.3s ease;
 }
 
-.done-btn:hover:not(:disabled) {
-  background-color: #6a49d9;
-}
-
 .done-btn:disabled {
-  background-color: #ccc;
+  background-color: #b7b7b7;
   cursor: not-allowed;
 }
 
@@ -334,6 +330,25 @@
   border-radius: 6px;
   margin-bottom: 20px;
   font-size: 14px;
+}
+
+.delete-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-end;
+  padding-right: 15px;
+}
+
+.delete-field label {
+  padding: 10px;
+  color: var(--text-light);
+}
+
+.delete-field input {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid red;
 }
 
 @keyframes slideUp {
