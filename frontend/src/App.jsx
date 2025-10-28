@@ -5,6 +5,7 @@ import FrontPage from './components/FrontPage.jsx';
 import LoginRegister from './components/LoginRegister.jsx';
 import Cart from './components/CartItems.jsx';
 import Profile from './components/Profile.jsx';
+import Dashboard from './components/Dashboard.jsx';
 import './App.css'
 
 function App() {
@@ -63,9 +64,10 @@ function App() {
       <div className="app-content">
         <Routes>
           <Route path="/" element={<FrontPage logoUrl={logoUrl} />} />
-          <Route path="/login" element={<LoginRegister />} />
+          <Route path="/login" element={<LoginRegister logoUrl={logoUrl} />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/dashboard" element={<Dashboard logoUrl={logoUrl} />} />
         </Routes>
         </div>
     </Router>

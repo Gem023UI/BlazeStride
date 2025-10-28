@@ -4,7 +4,7 @@ import Lanyard from "../reactbits/Lanyard/Lanyard";
 import { getUserById, editProfile, deleteAccount } from "../api/users";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faPhone, faEnvelope, faUserPen, faTrashCan, faUserCheck } from '@fortawesome/free-solid-svg-icons';
-import { Loader } from "./layout/Loader";
+import Loader from "./layout/Loader";
 import "../styles/Profile.css";
 
 const Profile = () => {

@@ -15,4 +15,5 @@
 .lanyard-wrapper canvas {
   background: transparent !important;
   background-color: transparent !important;
+  filter: brightness(100%);
 }
