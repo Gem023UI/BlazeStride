@@ -56,8 +56,12 @@ export default function Lanyard({ position = [0, 0, 30], gravity = [0, -40, 0], 
       <div className="lanyard-wrapper">
         <Canvas
           camera={{ position: position, fov: fov }}
-          gl={{ alpha: transparent }}
-          onCreated={({ gl }) => gl.setClearColor(new THREE.Color(0x000000), transparent ? 0 : 1)}>
+          gl={{ alpha: true, premultipliedAlpha: false }}
+          style={{ background: 'transparent' }}
+          onCreated={({ gl }) => {
+            gl.setClearColor(new THREE.Color(0x000000), 0);
+            gl.outputColorSpace = THREE.SRGBColorSpace;
+          }}>
           <ambientLight intensity={Math.PI} />
           <Physics gravity={gravity}>
             <Suspense fallback={null}>
@@ -135,10 +139,11 @@ function Band({ maxSpeed = 50, minSpeed = 0 }) {
 
         const data = await getUserById(userId);
 
-        if (data?.user?.profilePicture) {
+        if (data?.user?.useravatar || data?.user?.profilePicture) {
+          const avatarUrl = data.user.useravatar || data.user.profilePicture;
           const textureLoader = new THREE.TextureLoader();
           textureLoader.load(
-            data.user.profilePicture,
+            avatarUrl,
             (loadedTexture) => {
               // ROTATION (in radians)
               loadedTexture.rotation = Math.PI; // 180 degrees

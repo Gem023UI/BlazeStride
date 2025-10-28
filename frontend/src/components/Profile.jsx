@@ -3,7 +3,7 @@ import MainLayout from "./layout/MainLayout";
 import Lanyard from "../reactbits/Lanyard/Lanyard";
 import { getUserById, editProfile, deleteAccount } from "../api/users";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHouse, faPhone, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { faHouse, faPhone, faEnvelope, faUserPen, faTrashCan, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import "../styles/Profile.css";
 
 const Profile = () => {
@@ -229,13 +229,13 @@ const Profile = () => {
                 className="edit-profile-btn"
                 onClick={handleOpenEditModal}
               >
-                Edit Profile
+                <FontAwesomeIcon className="detail-svg" icon={faUserPen}/>
               </button>
               <button 
                 className="delete-profile-btn"
                 onClick={() => setShowDeleteModal(true)}
               >
-                Delete Account
+                <FontAwesomeIcon className="detail-svg" icon={faTrashCan}/>
               </button>
             </div>
           </div>
@@ -299,88 +299,90 @@ const Profile = () => {
                     <h2>Edit Profile</h2>
                     
                     <div className="form-row">
+                      <div className="form-name">
+                        <div className="form-field">
+                          <label>First Name</label>
+                          <input 
+                            type="text" 
+                            value={editFirstname} 
+                            onChange={(e) => setEditFirstname(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label>Last Name</label>
+                          <input 
+                            type="text" 
+                            value={editLastname} 
+                            onChange={(e) => setEditLastname(e.target.value)}
+                            required
+                          />
+                        </div>
+                      </div>
+                      <div className="form-contact">
+                        <div className="form-field">
+                          <label>Email</label>
+                          <input 
+                            type="email" 
+                            value={editEmail} 
+                            onChange={(e) => setEditEmail(e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div className="form-field">
+                          <label>Phone Number</label>
+                          <input 
+                            type="tel" 
+                            value={editPhoneNumber} 
+                            onChange={(e) => setEditPhoneNumber(e.target.value)}
+                            placeholder="Optional"
+                          />
+                        </div>
+                      </div>
                       <div className="form-field">
-                        <label>First Name</label>
+                        <label>Address</label>
                         <input 
                           type="text" 
-                          value={editFirstname} 
-                          onChange={(e) => setEditFirstname(e.target.value)}
-                          required
-                        />
-                      </div>
-
-                      <div className="form-field">
-                        <label>Last Name</label>
-                        <input 
-                          type="text" 
-                          value={editLastname} 
-                          onChange={(e) => setEditLastname(e.target.value)}
-                          required
+                          value={editAddress} 
+                          onChange={(e) => setEditAddress(e.target.value)}
+                          placeholder="Optional"
                         />
                       </div>
                     </div>
 
-                    <div className="form-field">
-                      <label>Email</label>
-                      <input 
-                        type="email" 
-                        value={editEmail} 
-                        onChange={(e) => setEditEmail(e.target.value)}
-                        required
-                      />
-                    </div>
-
-                    <div className="form-field">
-                      <label>Phone Number</label>
-                      <input 
-                        type="tel" 
-                        value={editPhoneNumber} 
-                        onChange={(e) => setEditPhoneNumber(e.target.value)}
-                        placeholder="Optional"
-                      />
-                    </div>
-
-                    <div className="form-field">
-                      <label>Address</label>
-                      <input 
-                        type="text" 
-                        value={editAddress} 
-                        onChange={(e) => setEditAddress(e.target.value)}
-                        placeholder="Optional"
-                      />
-                    </div>
 
                     <div className="password-section">
-                      <h3>Change Password (Optional)</h3>
-                      
-                      <div className="form-field">
-                        <label>Current Password</label>
-                        <input 
-                          type="password" 
-                          value={currentPassword}
-                          onChange={(e) => setCurrentPassword(e.target.value)}
-                          placeholder="Enter current password"
-                        />
-                      </div>
+                      <h2>Change Password (Optional)</h2>
+                      <div className="password-field">
+                        <div className="form-field">
+                          <label>Current Password</label>
+                          <input 
+                            type="password" 
+                            value={currentPassword}
+                            onChange={(e) => setCurrentPassword(e.target.value)}
+                            placeholder="Enter current password"
+                          />
+                        </div>
 
-                      <div className="form-field">
-                        <label>New Password</label>
-                        <input 
-                          type="password" 
-                          value={newPassword}
-                          onChange={(e) => setNewPassword(e.target.value)}
-                          placeholder="Enter new password"
-                        />
-                      </div>
+                        <div className="form-field">
+                          <label>New Password</label>
+                          <input 
+                            type="password" 
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            placeholder="Enter new password"
+                          />
+                        </div>
 
-                      <div className="form-field">
-                        <label>Confirm New Password</label>
-                        <input 
-                          type="password" 
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
-                          placeholder="Confirm new password"
-                        />
+                        <div className="form-field">
+                          <label>Confirm Password</label>
+                          <input 
+                            type="password" 
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Confirm new password"
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -391,7 +393,7 @@ const Profile = () => {
                   className="done-btn"
                   disabled={loading}
                 >
-                  {loading ? "Saving..." : "Save Changes"}
+                  {loading ? "SAVING  ..." : "SAVE CHANGES"}
                 </button>
               </form>
             </div>

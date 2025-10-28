@@ -9,5 +9,10 @@
   transform: scale(1);
   transform-origin: center;
   background-color: transparent !important;
-  background: transparent;
+  background: transparent !important;
+}
+
+.lanyard-wrapper canvas {
+  background: transparent !important;
+  background-color: transparent !important;
 }
