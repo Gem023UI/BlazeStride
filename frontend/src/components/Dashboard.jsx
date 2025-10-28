@@ -13,7 +13,7 @@ const Profile = ( logoUrl ) => {
 
             <div className="dashboard-section">
                 <div className="dashboard-header">
-                    <h2>Admin Dashboard</h2>
+                    <h2>ADMIN DASHBOARD</h2>
                 </div>
                 <div className="dashboard-items">
                     <div className="item-user">

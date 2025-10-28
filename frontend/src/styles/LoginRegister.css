@@ -309,6 +309,18 @@
   background-color: #fff;
 }
 
+.swal2-popup {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.swal2-title {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.swal2-content {
+  font-family: 'Poppins', sans-serif !important;
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;

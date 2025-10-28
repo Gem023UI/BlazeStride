@@ -117,7 +117,14 @@ export default function LoginRegister({ logoUrl }) {
         timer: 2000,
         showConfirmButton: false,
       });
-      setTimeout(() => navigate("../"), 2000);
+      const userRole = response.data.user.role;
+      setTimeout(() => {
+        if (userRole === "admin") {
+          navigate("/dashboard");
+        } else {
+          navigate("../");
+        }
+      }, 2000);
     } catch (err) {
       Swal.fire({
         icon: "error",
