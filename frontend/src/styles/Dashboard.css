@@ -37,3 +37,15 @@
     font-family: 'Fugaz One', cursive;
     font-size: 50px;
 }
+
+.dashboard-items {
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.item-user {
+    background-color: var(--color3);
+}

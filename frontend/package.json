@@ -19,7 +19,9 @@
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.1.0",
     "@gsap/react": "^2.1.2",
+    "@hookform/resolvers": "^5.2.2",
     "@mui/material": "^7.3.4",
+    "@react-oauth/google": "^0.12.2",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.4.0",
     "@react-three/rapier": "^2.1.0",
@@ -28,6 +30,8 @@
     "chart.js": "^4.5.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "firebase": "^12.5.0",
+    "formik": "^2.4.9",
     "gsap": "^3.13.0",
     "lucide-react": "^0.544.0",
     "meshline": "^3.3.1",
@@ -36,6 +40,7 @@
     "postprocessing": "^6.37.8",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
+    "react-hook-form": "^7.66.0",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.9.3",
     "recharts": "^3.3.0",
@@ -43,7 +48,8 @@
     "sweetalert2": "^11.23.0",
     "tailwind-merge": "^3.3.1",
     "tailwindcss": "^4.1.13",
-    "three": "^0.180.0"
+    "three": "^0.180.0",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.36.0",

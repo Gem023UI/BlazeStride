@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { signInWithPopup } from "firebase/auth";
+import { auth, googleProvider, facebookProvider } from "../../config/firebaseClient.js";
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { loginSchema, registerSchema } from '../validations/authSchemas';
 import "../styles/LoginRegister.css"
 import Loader from "./layout/Loader.jsx";
 
@@ -13,36 +17,18 @@ export default function LoginRegister({ logoUrl }) {
   const navigate = useNavigate();
   const [isActive, setIsActive] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [firstname, setFirstname] = useState("");
-  const [lastname, setLastname] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showSocialModal, setShowSocialModal] = useState(false);
+  const [selectedProvider, setSelectedProvider] = useState(null);
 
-  // REGISTER FUNCTION
-  const handleRegister = async (e) => {
-    e.preventDefault();
+  // REGISTER FUNCTION with Formik
+  const handleRegisterSubmit = async (values, { setSubmitting, resetForm }) => {
     setLoading(true);
 
-    const confirmPassword = e.target.confirmPassword.value;
-    if (password !== confirmPassword) {
-      Swal.fire({
-        icon: "warning",
-        title: "Passwords do not match",
-        timer: 2000,
-        showConfirmButton: false,
-      });
-      setLoading(false);
-      return;
-    }
-
-    const formData = new FormData();
-
     const payload = {
-      firstname: firstname.trim(),
-      lastname: lastname.trim(),
-      email: email.trim(),
-      password: password,
+      firstname: values.firstname.trim(),
+      lastname: values.lastname.trim(),
+      email: values.email.trim(),
+      password: values.password,
     };
 
     try {
@@ -61,12 +47,7 @@ export default function LoginRegister({ logoUrl }) {
         showConfirmButton: false,
       });
 
-      // Optional reset
-      setFirstname("");
-      setLastname("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
+      resetForm();
     } catch (err) {
       console.error("❌ Registration error:", err.response?.data || err);
       Swal.fire({
@@ -78,21 +59,18 @@ export default function LoginRegister({ logoUrl }) {
       });
     } finally {
       setLoading(false);
+      setSubmitting(false);
     }
   };
 
-  // LOGIN FUNCTION
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  // LOGIN FUNCTION with Formik
+  const handleLoginSubmit = async (values, { setSubmitting }) => {
     setLoading(true);
-
-    const email = e.target.email.value;
-    const password = e.target.password.value;
 
     try {
       const response = await axios.post(
         `${API_URL}/api/user/login`,
-        { email, password },
+        { email: values.email, password: values.password },
         {
           headers: { "Content-Type": "application/json" },
           withCredentials: true,
@@ -101,7 +79,6 @@ export default function LoginRegister({ logoUrl }) {
 
       console.log("✅ Login response:", response.data);
 
-      // Store token, userId in localStorage
       localStorage.setItem("token", response.data.token);
       localStorage.setItem("userId", response.data.user._id);
       localStorage.setItem("avatar", response.data.user.useravatar);
@@ -117,6 +94,7 @@ export default function LoginRegister({ logoUrl }) {
         timer: 2000,
         showConfirmButton: false,
       });
+
       const userRole = response.data.user.role;
       setTimeout(() => {
         if (userRole === "admin") {
@@ -135,97 +113,203 @@ export default function LoginRegister({ logoUrl }) {
       });
     } finally {
       setLoading(false);
+      setSubmitting(false);
     }
   };
+
+  // SOCIAL AUTH HANDLER
+  const handleSocialAuth = async (provider) => {
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, provider);
+      
+      // Get the ID token from Firebase
+      const idToken = await result.user.getIdToken();
+      
+      // Send ID token to backend for verification
+      const response = await axios.post(
+        `${API_URL}/api/user/social-auth`,
+        {
+          idToken: idToken,
+          provider: provider === googleProvider ? 'google' : 'facebook'
+        },
+        {
+          headers: { "Content-Type": "application/json" },
+          withCredentials: true,
+        }
+      );
+
+      // Store user data
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userId", response.data.user._id);
+      localStorage.setItem("avatar", response.data.user.useravatar);
+
+      console.log("💾 Stored in localStorage:");
+      console.log("  token:", localStorage.getItem("token"));
+      console.log("  userId:", localStorage.getItem("userId"));
+      console.log("  avatar:", localStorage.getItem("avatar"));
+
+      Swal.fire({
+        icon: "success",
+        title: "Login Successful!",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+
+      setShowSocialModal(false);
+      
+      setTimeout(() => {
+        if (response.data.user.role === "admin") {
+          navigate("/dashboard");
+        } else {
+          navigate("../");
+        }
+      }, 2000);
+      
+    } catch (err) {
+      console.error("❌ Social auth error:", err);
+      
+      let errorMessage = "Authentication failed. Please try again.";
+      
+      // Handle specific Firebase errors
+      if (err.code === 'auth/popup-closed-by-user') {
+        errorMessage = "Sign-in popup was closed. Please try again.";
+      } else if (err.code === 'auth/cancelled-popup-request') {
+        errorMessage = "Sign-in was cancelled.";
+      } else if (err.code === 'auth/popup-blocked') {
+        errorMessage = "Sign-in popup was blocked by your browser.";
+      } else if (err.response?.data?.error) {
+        errorMessage = err.response.data.error;
+      }
+      
+      Swal.fire({
+        icon: "error",
+        title: "Authentication Failed",
+        text: errorMessage,
+        timer: 3000,
+        showConfirmButton: false,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+const openSocialModal = (provider) => {
+  setSelectedProvider(provider);
+  setShowSocialModal(true);
+};
 
   return (
     <div className="login-register-wrapper">
       <div className={`container ${isActive ? "active" : ""}`} id="container">
         {/* LOGIN */}
         <div className="form-container sign-up">
-          <form id="loginForm" onSubmit={handleLogin}>
-            <h1>LOGIN</h1>
-            <div className="input-box">
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                required
-                disabled={loading}
-              />
-              <input
-                type="password"
-                name="password"
-                placeholder="Password"
-                required
-                disabled={loading}
-              />
-            </div>
-            <button type="submit" className="btn" disabled={loading}>
-              LOGIN
-            </button>
-          </form>
+          <Formik
+            initialValues={{ email: '', password: '' }}
+            validationSchema={loginSchema}
+            onSubmit={handleLoginSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form id="loginForm">
+                <h1>LOGIN</h1>
+                <div className="input-box">
+                  <Field
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    disabled={loading}
+                  />
+                  <ErrorMessage name="email" component="div" className="error-text" style={{ color: 'red', fontSize: '12px', marginTop: '5px' }} />
+                  
+                  <Field
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    disabled={loading}
+                  />
+                  <ErrorMessage name="password" component="div" className="error-text" style={{ color: 'red', fontSize: '12px', marginTop: '5px' }} />
+                </div>
+                <button type="submit" className="btn" disabled={loading || isSubmitting}>
+                  {loading ? 'LOGGING IN...' : 'LOGIN'}
+                </button>
+              </Form>
+            )}
+          </Formik>
         </div>
 
         {/* REGISTER */}
         <div className="form-container sign-in">
-          <form id="registerForm" onSubmit={handleRegister}>
-            <h1>REGISTER</h1>
-            <div className="input-box">
-              <div className="names">
-                <input
-                  type="text"
-                  name="firstname"
-                  placeholder="First Name"
-                  required
-                  disabled={loading}
-                  value={firstname}
-                  onChange={(e) => setFirstname(e.target.value)}
-                />
-                <input
-                  type="text"
-                  name="lastname"
-                  placeholder="Last Name"
-                  required
-                  disabled={loading}
-                  value={lastname}
-                  onChange={(e) => setLastname(e.target.value)}
-                />
-              </div>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                required
-                disabled={loading}
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <div className="passwords"> 
-                <input
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                  required
-                  disabled={loading}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-                <input
-                  type="password"
-                  name="confirmPassword"
-                  placeholder="Confirm Password"
-                  required
-                  disabled={loading}
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </div>
-            </div>
-            <button type="submit" className="btn2" disabled={loading}>
-              REGISTER
-            </button>
-          </form>
+          <Formik
+            initialValues={{
+              firstname: '',
+              lastname: '',
+              email: '',
+              password: '',
+              confirmPassword: ''
+            }}
+            validationSchema={registerSchema}
+            onSubmit={handleRegisterSubmit}
+          >
+            {({ isSubmitting }) => (
+              <Form id="registerForm">
+                <h1>REGISTER</h1>
+                <div className="input-box">
+                  <div className="names">
+                    <div>
+                      <Field
+                        type="text"
+                        name="firstname"
+                        placeholder="First Name"
+                        disabled={loading}
+                      />
+                      <ErrorMessage name="firstname" component="div" className="error-text" style={{ color: 'red', fontSize: '12px', marginTop: '5px' }} />
+                    </div>
+                    <div>
+                      <Field
+                        type="text"
+                        name="lastname"
+                        placeholder="Last Name"
+                        disabled={loading}
+                      />
+                      <ErrorMessage name="lastname" component="div" className="error-text" style={{ color: 'red', fontSize: '12px', marginTop: '5px' }} />
+                    </div>
+                  </div>
+                  
+                  <Field
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    disabled={loading}
+                  />
+                  <ErrorMessage name="email" component="div" className="error-text" style={{ color: 'red', fontSize: '12px', marginTop: '5px' }} />
+                  
+                  <div className="passwords">
+                    <div>
+                      <Field
+                        type="password"
+                        name="password"
+                        placeholder="Password"
+                        disabled={loading}
+                      />
+                      <ErrorMessage name="password" component="div" className="error-text" style={{ color: 'red', fontSize: '12px', marginTop: '5px' }} />
+                    </div>
+                    <div>
+                      <Field
+                        type="password"
+                        name="confirmPassword"
+                        placeholder="Confirm Password"
+                        disabled={loading}
+                      />
+                      <ErrorMessage name="confirmPassword" component="div" className="error-text" style={{ color: 'red', fontSize: '12px', marginTop: '5px' }} />
+                    </div>
+                  </div>
+                </div>
+                <button type="submit" className="btn2" disabled={loading || isSubmitting}>
+                  {loading ? 'REGISTERING...' : 'REGISTER'}
+                </button>
+              </Form>
+            )}
+          </Formik>
         </div>
 
         {/* TOGGLE CONTAINER */}
@@ -250,8 +334,8 @@ export default function LoginRegister({ logoUrl }) {
               <div className="social-icons">
                 <h1>WELCOME!</h1>
                 <p>Stay Updated with BlazeStride's Social Platforms</p>
-
-                <a className="icon">
+                {/* FACEBOOK */}
+                <a className="icon" onClick={() => openSocialModal(facebookProvider)} style={{ cursor: 'pointer' }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 256 256"
@@ -282,6 +366,7 @@ export default function LoginRegister({ logoUrl }) {
                   </svg>
                 </a>
 
+                {/* INSTAGRAM */}
                 <a className="icon">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -313,7 +398,8 @@ export default function LoginRegister({ logoUrl }) {
                   </svg>
                 </a>
 
-                <a className="icon">
+                {/* GOOGLE */}
+                <a className="icon" onClick={() => openSocialModal(googleProvider)} style={{ cursor: 'pointer' }}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 32 32"
@@ -325,6 +411,7 @@ export default function LoginRegister({ logoUrl }) {
                   </svg>
                 </a>
 
+                {/* X / TWITTER */}
                 <a className="icon">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -363,6 +450,61 @@ export default function LoginRegister({ logoUrl }) {
           </div>
         </div>
       </div>
+
+      {/* Social Auth Modal */}
+      {showSocialModal && (
+        <div className="loader-overlay" onClick={() => setShowSocialModal(false)}>
+          <div 
+            className="social-modal" 
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              backgroundColor: 'white',
+              padding: '30px',
+              borderRadius: '10px',
+              maxWidth: '400px',
+              width: '90%',
+              textAlign: 'center'
+            }}
+          >
+            <h2 style={{ marginBottom: '20px', color: '#333' }}>
+              Continue with {selectedProvider === googleProvider ? 'Google' : 'Facebook'}
+            </h2>
+            <p style={{ marginBottom: '30px', color: '#666' }}>
+              Sign in to BlazeStride using your {selectedProvider === googleProvider ? 'Google' : 'Facebook'} account
+            </p>
+            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+              <button 
+                onClick={() => setShowSocialModal(false)}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: '#ccc',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  fontFamily: 'Poppins'
+                }}
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={() => handleSocialAuth(selectedProvider)}
+                disabled={loading}
+                style={{
+                  padding: '10px 20px',
+                  backgroundColor: selectedProvider === googleProvider ? '#4285f4' : '#1877f2',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '5px',
+                  cursor: loading ? 'not-allowed' : 'pointer',
+                  fontFamily: 'Poppins'
+                }}
+              >
+                {loading ? 'Processing...' : 'Continue'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {loading && (
         <div className="loader-overlay">

@@ -30,6 +30,7 @@
   width: 100%;
   padding: 20px;
   transition: all 1.0s ease-in-out;
+  filter: brightness(100%);
 }
 
 .login-register-wrapper .container {

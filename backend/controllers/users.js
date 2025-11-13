@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import validator from "validator";
 import { uploadToCloudinary } from "../utils/multer.js";
 import User from "../models/users.js";
+import { auth } from '../config/firebase.js';
 
 // GET USER BY ID
 export const getUserById = async (req, res) => {
@@ -176,6 +177,124 @@ export const loginUser = async (req, res) => {
     console.error("❌ Login error:", err);
     res.status(500).json({
       error: "Login failed",
+      details: err.message,
+    });
+  }
+};
+
+// SOCIAL AUTH
+export const socialAuth = async (req, res) => {
+  console.log("🔵 Social auth endpoint hit");
+
+  try {
+    const { idToken, provider } = req.body;
+
+    if (!idToken) {
+      return res.status(400).json({ error: "ID token is required" });
+    }
+
+    // Verify the Firebase ID token
+    let decodedToken;
+    try {
+      decodedToken = await auth.verifyIdToken(idToken);
+    } catch (verifyError) {
+      console.error("❌ Token verification failed:", verifyError);
+      return res.status(401).json({ error: "Invalid authentication token" });
+    }
+
+    const { email, name, picture, uid } = decodedToken;
+
+    if (!email) {
+      return res.status(400).json({ error: "Email not found in token" });
+    }
+
+    // Split name into firstname and lastname
+    const nameParts = (name || '').split(' ');
+    const firstname = nameParts[0] || 'User';
+    const lastname = nameParts.slice(1).join(' ') || '';
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+
+    if (user) {
+      // User exists, log them in
+      const token = jwt.sign(
+        { id: user._id, firstname: user.firstname, lastname: user.lastname, email: user.email, role: user.role },
+        process.env.JWT_SECRET || "defaultsecret",
+        { expiresIn: "1d" }
+      );
+
+      user.token = token;
+      
+      // Update avatar if provided and user doesn't have one
+      if (picture && !user.useravatar) {
+        user.useravatar = picture;
+      }
+      
+      await user.save();
+
+      console.log("✅ Existing user logged in via", provider);
+
+      return res.json({
+        message: "Login successful",
+        token,
+        user: {
+          _id: user._id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          email: user.email,
+          role: user.role,
+          useravatar: user.useravatar,
+          phoneNumber: user.phoneNumber,
+          address: user.address
+        },
+      });
+    }
+
+    // User doesn't exist, create new account
+    const newUser = new User({
+      role: 'customer',
+      firstname,
+      lastname,
+      email,
+      password: await bcrypt.hash(uid + Math.random().toString(36), 10), // Use Firebase UID for password
+      useravatar: picture || "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1759649430/user_icon_ze74ys.jpg",
+      phoneNumber: null,
+      address: null
+    });
+
+    await newUser.save();
+
+    const token = jwt.sign(
+      { id: newUser._id, firstname: newUser.firstname, lastname: newUser.lastname, email: newUser.email, role: newUser.role },
+      process.env.JWT_SECRET || "defaultsecret",
+      { expiresIn: "1d" }
+    );
+
+    newUser.token = token;
+    await newUser.save();
+
+    console.log("✅ New user registered via", provider, ":", firstname, lastname);
+
+    res.status(201).json({
+      message: "Registration successful",
+      token,
+      user: {
+        _id: newUser._id,
+        firstname: newUser.firstname,
+        lastname: newUser.lastname,
+        email: newUser.email,
+        role: newUser.role,
+        useravatar: newUser.useravatar,
+        phoneNumber: newUser.phoneNumber,
+        address: newUser.address
+      },
+    });
+
+  } catch (err) {
+    console.error("❌ Social auth error:", err);
+    res.status(500).json({
+      error: "Authentication failed",
       details: err.message,
     });
   }

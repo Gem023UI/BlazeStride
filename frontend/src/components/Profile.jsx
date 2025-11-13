@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import MainLayout from "./layout/MainLayout";
 import Lanyard from "../reactbits/Lanyard/Lanyard";
 import { getUserById, editProfile, deleteAccount } from "../api/users";
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { editProfileSchema } from '../validations/authSchemas';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHouse, faPhone, faEnvelope, faUserPen, faTrashCan, faUserCheck } from '@fortawesome/free-solid-svg-icons';
 import Loader from "./layout/Loader";
@@ -15,17 +18,24 @@ const Profile = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
   const [avatar, setAvatar] = useState("");
+
+  const {
+    register,
+    handleSubmit: handleFormSubmit,
+    formState: { errors, isSubmitting },
+    setValue,
+    watch,
+    reset
+  } = useForm({
+    resolver: yupResolver(editProfileSchema),
+    mode: 'onBlur'
+  });
+
+  const watchNewPassword = watch('newPassword');
+  const watchCurrentPassword = watch('currentPassword');
   
   // Edit modal states
   const [showEditModal, setShowEditModal] = useState(false);
-  const [editFirstname, setEditFirstname] = useState("");
-  const [editLastname, setEditLastname] = useState("");
-  const [editEmail, setEditEmail] = useState("");
-  const [editPhoneNumber, setEditPhoneNumber] = useState("");
-  const [editAddress, setEditAddress] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState("");
   
@@ -77,14 +87,16 @@ const Profile = () => {
   }, []);
 
   const handleOpenEditModal = () => {
-    setEditFirstname(firstname);
-    setEditLastname(lastname);
-    setEditEmail(email);
-    setEditPhoneNumber(phoneNumber);
-    setEditAddress(address);
-    setCurrentPassword("");
-    setNewPassword("");
-    setConfirmPassword("");
+    reset({
+      firstname: firstname,
+      lastname: lastname,
+      email: email,
+      phoneNumber: phoneNumber || '',
+      address: address || '',
+      currentPassword: '',
+      newPassword: '',
+      confirmPassword: ''
+    });
     setSelectedFile(null);
     setPreviewUrl(avatar);
     setMessage("");
@@ -104,64 +116,46 @@ const Profile = () => {
     }
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (data) => {
     setLoading(true);
     setMessage("");
     setError("");
 
     try {
-      // Validate password if attempting to change
-      if (newPassword || confirmPassword) {
-        if (!currentPassword) {
-          setError("Current password is required to change password");
-          setLoading(false);
-          return;
-        }
-        if (newPassword !== confirmPassword) {
-          setError("New passwords do not match");
-          setLoading(false);
-          return;
-        }
-      }
-
       const formData = new FormData();
       const userId = localStorage.getItem("userId");
       formData.append("userId", userId);
-      formData.append("firstname", editFirstname);
-      formData.append("lastname", editLastname);
-      formData.append("email", editEmail);
-      formData.append("phoneNumber", editPhoneNumber || "");
-      formData.append("address", editAddress || "");
+      formData.append("firstname", data.firstname);
+      formData.append("lastname", data.lastname);
+      formData.append("email", data.email);
+      formData.append("phoneNumber", data.phoneNumber || "");
+      formData.append("address", data.address || "");
       
       if (selectedFile) {
         formData.append("avatar", selectedFile);
       }
       
-      if (currentPassword && newPassword) {
-        formData.append("currentPassword", currentPassword);
-        formData.append("newPassword", newPassword);
+      if (data.currentPassword && data.newPassword) {
+        formData.append("currentPassword", data.currentPassword);
+        formData.append("newPassword", data.newPassword);
       }
 
       const response = await editProfile(formData);
       
-      // Update localStorage with new avatar
       if (response.user.useravatar) {
         localStorage.setItem("avatar", response.user.useravatar);
         setAvatar(response.user.useravatar);
         window.dispatchEvent(new Event('avatarUpdated'));
       }
       
-      // Update displayed user data
-      setFirstname(editFirstname);
-      setLastname(editLastname);
-      setEmail(editEmail);
-      setPhoneNumber(editPhoneNumber);
-      setAddress(editAddress);
+      setFirstname(data.firstname);
+      setLastname(data.lastname);
+      setEmail(data.email);
+      setPhoneNumber(data.phoneNumber);
+      setAddress(data.address);
 
       setMessage("Profile updated successfully!");
       
-      // Wait 1.5 seconds to show success message, then close modal
       setTimeout(() => {
         setShowEditModal(false);
       }, 1500);
@@ -268,7 +262,7 @@ const Profile = () => {
                 ×
               </button>
 
-              <form onSubmit={handleSubmit}>
+              <form onSubmit={handleFormSubmit(handleSubmit)}>
                 <div className="form-content">
                   <div className="form-picture">
                     {message && <div className="success-message">{message}</div>}
@@ -305,19 +299,17 @@ const Profile = () => {
                           <label>First Name</label>
                           <input 
                             type="text" 
-                            value={editFirstname} 
-                            onChange={(e) => setEditFirstname(e.target.value)}
-                            required
+                            {...register('firstname')}
                           />
+                          {errors.firstname && <span className="error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.firstname.message}</span>}
                         </div>
                         <div className="form-field">
                           <label>Last Name</label>
                           <input 
                             type="text" 
-                            value={editLastname} 
-                            onChange={(e) => setEditLastname(e.target.value)}
-                            required
+                            {...register('lastname')}
                           />
+                          {errors.lastname && <span className="error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.lastname.message}</span>}
                         </div>
                       </div>
                       <div className="form-contact">
@@ -325,32 +317,30 @@ const Profile = () => {
                           <label>Email</label>
                           <input 
                             type="email" 
-                            value={editEmail} 
-                            onChange={(e) => setEditEmail(e.target.value)}
-                            required
+                            {...register('email')}
                           />
+                          {errors.email && <span className="error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.email.message}</span>}
                         </div>
                         <div className="form-field">
                           <label>Phone Number</label>
                           <input 
                             type="tel" 
-                            value={editPhoneNumber} 
-                            onChange={(e) => setEditPhoneNumber(e.target.value)}
+                            {...register('phoneNumber')}
                             placeholder="Optional"
                           />
+                          {errors.phoneNumber && <span className="error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.phoneNumber.message}</span>}
                         </div>
                       </div>
                       <div className="form-field">
                         <label>Address</label>
                         <input 
                           type="text" 
-                          value={editAddress} 
-                          onChange={(e) => setEditAddress(e.target.value)}
+                          {...register('address')}
                           placeholder="Optional"
                         />
+                        {errors.address && <span className="error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.address.message}</span>}
                       </div>
                     </div>
-
 
                     <div className="password-section">
                       <h2>Change Password (Optional)</h2>
@@ -359,30 +349,30 @@ const Profile = () => {
                           <label>Current Password</label>
                           <input 
                             type="password" 
-                            value={currentPassword}
-                            onChange={(e) => setCurrentPassword(e.target.value)}
+                            {...register('currentPassword')}
                             placeholder="Enter current password"
                           />
+                          {errors.currentPassword && <span className="error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.currentPassword.message}</span>}
                         </div>
 
                         <div className="form-field">
                           <label>New Password</label>
                           <input 
                             type="password" 
-                            value={newPassword}
-                            onChange={(e) => setNewPassword(e.target.value)}
+                            {...register('newPassword')}
                             placeholder="Enter new password"
                           />
+                          {errors.newPassword && <span className="error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.newPassword.message}</span>}
                         </div>
 
                         <div className="form-field">
                           <label>Confirm Password</label>
                           <input 
                             type="password" 
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            {...register('confirmPassword')}
                             placeholder="Confirm new password"
                           />
+                          {errors.confirmPassword && <span className="error-text" style={{ color: 'red', fontSize: '12px' }}>{errors.confirmPassword.message}</span>}
                         </div>
                       </div>
                     </div>
@@ -392,9 +382,9 @@ const Profile = () => {
                 <button 
                   type="submit" 
                   className="done-btn"
-                  disabled={loading}
+                  disabled={loading || isSubmitting}
                 >
-                  {loading ? "SAVING  ..." : "SAVE CHANGES"}
+                  {loading || isSubmitting ? "SAVING..." : "SAVE CHANGES"}
                 </button>
               </form>
             </div>

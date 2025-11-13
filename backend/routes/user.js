@@ -3,7 +3,8 @@ import multer from "multer";
 import upload from "../utils/multer.js";
 import { 
   registerUser, 
-  loginUser, 
+  loginUser,
+  socialAuth,
   editProfile,
   getUserById,
   deleteAccount
@@ -31,6 +32,8 @@ const handleMulterError = (err, req, res, next) => {
 router.post("/register", registerUser);
 
 router.post("/login", loginUser);
+
+router.post("/social-auth", socialAuth);
 
 router.get("/profile/:id", getUserById);
 
