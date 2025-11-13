@@ -23,3 +23,11 @@ Thumbs.db
 # Temporary files
 tmp/
 temp/
+
+#Firebase Credentials
+backend/BlazeStrideFirebase.json
+BlazeStrideFirebase.json
+
+# Service account keys
+**/firebase-adminsdk-*.json
+**/*ServiceAccount*.json
