@@ -310,6 +310,88 @@
   background-color: #fff;
 }
 
+/* Firebase Social Auth Overlay */
+.firebase-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+.social-modal {
+  background-color: white;
+  padding: 30px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.social-modal h2 {
+  margin-bottom: 20px;
+  color: #333;
+  font-family: 'Poppins', sans-serif;
+}
+
+.social-modal p {
+  margin-bottom: 30px;
+  color: #666;
+  font-family: 'Poppins', sans-serif;
+}
+
+.social-modal-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.social-modal button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  transition: opacity 0.2s;
+}
+
+.social-modal button:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.social-modal button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.social-cancel-btn {
+  background-color: #ccc;
+  color: #333;
+}
+
+.social-continue-btn {
+  color: white;
+}
+
 .swal2-popup {
   font-family: 'Poppins', sans-serif !important;
 }

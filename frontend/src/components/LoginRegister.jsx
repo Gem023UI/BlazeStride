@@ -453,50 +453,30 @@ const openSocialModal = (provider) => {
 
       {/* Social Auth Modal */}
       {showSocialModal && (
-        <div className="loader-overlay" onClick={() => setShowSocialModal(false)}>
+        <div className="firebase-overlay" onClick={() => setShowSocialModal(false)}>
           <div 
             className="social-modal" 
             onClick={(e) => e.stopPropagation()}
-            style={{
-              backgroundColor: 'white',
-              padding: '30px',
-              borderRadius: '10px',
-              maxWidth: '400px',
-              width: '90%',
-              textAlign: 'center'
-            }}
           >
-            <h2 style={{ marginBottom: '20px', color: '#333' }}>
+            <h2>
               Continue with {selectedProvider === googleProvider ? 'Google' : 'Facebook'}
             </h2>
-            <p style={{ marginBottom: '30px', color: '#666' }}>
+            <p>
               Sign in to BlazeStride using your {selectedProvider === googleProvider ? 'Google' : 'Facebook'} account
             </p>
-            <div style={{ display: 'flex', gap: '10px', justifyContent: 'center' }}>
+            <div className="social-modal-buttons">
               <button 
                 onClick={() => setShowSocialModal(false)}
-                style={{
-                  padding: '10px 20px',
-                  backgroundColor: '#ccc',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: 'pointer',
-                  fontFamily: 'Poppins'
-                }}
+                className="social-cancel-btn"
               >
                 Cancel
               </button>
               <button 
                 onClick={() => handleSocialAuth(selectedProvider)}
                 disabled={loading}
+                className="social-continue-btn"
                 style={{
-                  padding: '10px 20px',
-                  backgroundColor: selectedProvider === googleProvider ? '#4285f4' : '#1877f2',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '5px',
-                  cursor: loading ? 'not-allowed' : 'pointer',
-                  fontFamily: 'Poppins'
+                  backgroundColor: selectedProvider === googleProvider ? '#4285f4' : '#1877f2'
                 }}
               >
                 {loading ? 'Processing...' : 'Continue'}
