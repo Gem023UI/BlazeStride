@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import dotenv from "dotenv";
 import Products from "../models/products.js";
 
-dotenv.config();
+dotenv.config({ path: "../.env" });
 
 const products = [
   {
@@ -14,7 +14,8 @@ const products = [
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks1_kyngav.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks2_h0xpex.png'
-    ]
+    ],
+    stock: 50
   },
   {
     productname: 'Adidas Adizero Adios Pro 3',
@@ -25,7 +26,8 @@ const products = [
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks1_kyngav.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks2_h0xpex.png'
-    ]
+    ],
+    stock: 50
   },
   {
     productname: 'ASICS Gel-Nimbus 25',
@@ -36,7 +38,8 @@ const products = [
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks1_kyngav.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks2_h0xpex.png'
-    ]
+    ],
+    stock: 50
   },
   {
     productname: 'New Balance FuelCell SuperComp Elite v3',
@@ -47,7 +50,8 @@ const products = [
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks1_kyngav.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks2_h0xpex.png'
-    ]
+    ],
+    stock: 50
   },
   {
     productname: 'Brooks Ghost 15',
@@ -58,7 +62,8 @@ const products = [
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks1_kyngav.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks2_h0xpex.png'
-    ]
+    ],
+    stock: 50
   },
   {
     productname: 'Saucony Endorphin Speed 3',
@@ -69,7 +74,8 @@ const products = [
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks1_kyngav.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks2_h0xpex.png'
-    ]
+    ],
+    stock: 50
   },
   {
     productname: 'Hoka Clifton 9',
@@ -80,7 +86,8 @@ const products = [
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks1_kyngav.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks2_h0xpex.png'
-    ]
+    ],
+    stock: 50
   },
   {
     productname: 'Nike Vaporfly 3',
@@ -91,7 +98,8 @@ const products = [
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks1_kyngav.png',
       'https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks2_h0xpex.png'
-    ]
+    ],
+    stock: 50
   }
 ];
 

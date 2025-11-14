@@ -36,6 +36,12 @@ const productSchema = new mongoose.Schema({
       },
       message: 'Product must have at least one image'
     }
+  },
+  stock: {
+    type: Number,
+    required: [true, 'Stock is required'],
+    min: [0, 'Stock cannot be negative'],
+    default: 0
   }
 }, {
   timestamps: true

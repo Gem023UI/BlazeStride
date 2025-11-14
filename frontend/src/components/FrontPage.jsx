@@ -139,12 +139,25 @@ export default function LandingSection({ logoUrl }) {
     console.log('Current cart before add:', cart);
     
     const existingItemIndex = cart.findIndex(item => item._id === product._id);
-    
+
     if (existingItemIndex > -1) {
-      cart[existingItemIndex].quantity = (cart[existingItemIndex].quantity || 1) + 1;
+      const currentQuantity = cart[existingItemIndex].quantity || 1;
+      if (currentQuantity >= product.stock) {
+        setToastMessage('Cannot add more items. Stock limit reached.');
+        setToastType('alert-error');
+        setTimeout(() => setToastMessage(''), 2000);
+        return;
+      }
+      cart[existingItemIndex].quantity = currentQuantity + 1;
       setToastMessage('Increased product quantity in your cart.');
       setToastType('alert-info');
     } else {
+      if (product.stock < 1) {
+        setToastMessage('This product is out of stock.');
+        setToastType('alert-error');
+        setTimeout(() => setToastMessage(''), 2000);
+        return;
+      }
       cart.push({
         _id: product._id,
         productname: product.productname,
@@ -165,7 +178,6 @@ export default function LandingSection({ logoUrl }) {
     console.log('Dispatching cartUpdated event with count:', cart.length);
     window.dispatchEvent(event);
     
-    // alert('Product added to cart!');
     setTimeout(() => setToastMessage(''), 5000);
   };
     

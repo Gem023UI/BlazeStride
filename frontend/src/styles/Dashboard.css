@@ -48,4 +48,8 @@
 
 .item-user {
     background-color: var(--color3);
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid white;
+    border-radius: 8px;
 }

@@ -5,7 +5,7 @@ import { faUsers, faBoxOpen, faTruckFast } from '@fortawesome/free-solid-svg-ico
 import Loader from "./layout/Loader";
 import "../styles/Dashboard.css";
 
-const Profile = ( logoUrl ) => {
+const Dashboard = ( logoUrl ) => {
 
   return (
     <MainLayout>
@@ -19,17 +19,17 @@ const Profile = ( logoUrl ) => {
                     <div className="item-user">
                         <p>Total Users:</p>
                         <FontAwesomeIcon className="detail-svg" icon={faUsers}/>
-                        <p>10</p>
+                        <p className="quantity">10</p>
                     </div>
                     <div className="item-product">
                         <p>Total Products:</p>
                         <FontAwesomeIcon className="detail-svg" icon={faBoxOpen}/>
-                        <p>10</p>
+                        <p className="quantity">10</p>
                     </div>
                     <div className="item-order">
                         <p>Total Orders:</p>
                         <FontAwesomeIcon className="detail-svg" icon={faTruckFast}/>
-                        <p>10</p>
+                        <p className="quantity">10</p>
                     </div>
                 </div>
                 
@@ -42,4 +42,4 @@ const Profile = ( logoUrl ) => {
   );
 };
 
-export default Profile;
+export default Dashboard;
