@@ -1,3 +1,4 @@
+import { fetchProducts } from "../api/products";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -11,6 +12,24 @@ export default function Cart() {
   const [selectedItems, setSelectedItems] = useState({});
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [toastMessage, setToastMessage] = useState('');
+  const [toastType, setToastType] = useState('alert-success');
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const daily = await fetchProducts("daily");
+        const tempo = await fetchProducts("tempo");
+        const marathon = await fetchProducts("marathon");
+        const race = await fetchProducts("race");
+        setProducts([...daily, ...tempo, ...marathon, ...race]);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    loadProducts();
+  }, []);
 
   useEffect(() => {
     loadCart();
@@ -41,16 +60,26 @@ export default function Cart() {
     }));
   };
 
-  const handleQuantityChange = (productId, change) => {
-    const updatedCart = cartItems.map(item => {
-      if (item._id === productId) {
-        const newQuantity = Math.max(1, item.quantity + change);
-        return { ...item, quantity: newQuantity };
+ const handleQuantityChange = (productId, change, isDirectInput = false) => {
+  const product = products.find(p => p._id === productId);
+  
+  const updatedCart = cartItems.map(item => {
+    if (item._id === productId) {
+      const newQuantity = isDirectInput ? change : Math.max(1, item.quantity + change);
+      
+      if (product && newQuantity > product.stock) {
+        setToastMessage(`Cannot add more. Only ${product.stock} items available in stock.`);
+        setToastType('alert-error');
+        setTimeout(() => setToastMessage(''), 5000);
+        return { ...item, quantity: Math.min(item.quantity, product.stock) };
       }
-      return item;
-    });
-    updateCart(updatedCart);
-  };
+      
+      return { ...item, quantity: Math.max(1, newQuantity) };
+    }
+    return item;
+  });
+  updateCart(updatedCart);
+};
 
   const handleDeleteClick = (productId) => {
     setItemToDelete(productId);
@@ -91,7 +120,8 @@ export default function Cart() {
       alert('Please select at least one item to proceed');
       return;
     }
-    // Navigate to payment or checkout page
+    // Pass selected items to checkout page
+    localStorage.setItem('checkoutItems', JSON.stringify(selected));
     navigate('/checkout');
   };
 
@@ -236,6 +266,11 @@ export default function Cart() {
                 </div>
                 )}    
         </section>
+        {toastMessage && (
+          <div className={`custom-toast ${toastType}`}>
+            <span>{toastMessage}</span>
+          </div>
+        )}
     </MainLayout>
   );
 }

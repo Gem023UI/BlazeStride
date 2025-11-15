@@ -6,6 +6,8 @@ import LoginRegister from './components/LoginRegister.jsx';
 import Cart from './components/CartItems.jsx';
 import Profile from './components/Profile.jsx';
 import Dashboard from './components/Dashboard.jsx';
+import SubmitOrder from "./components/SubmitOrder.jsx"
+import OrdersList from './components/OrdersList.jsx';
 import './App.css'
 
 function App() {
@@ -68,6 +70,8 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard logoUrl={logoUrl} />} />
+          <Route path="/checkout" element={<SubmitOrder />} />
+          <Route path="/orders" element={<OrdersList />} />
         </Routes>
         </div>
     </Router>

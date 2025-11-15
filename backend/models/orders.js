@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose';
 
-const orderSchema = mongoose.Schema({
+const OrderSchema = new mongoose.Schema({
     shippingInfo: {
         address: {
             type: String,
@@ -27,6 +27,10 @@ const orderSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         required: true,
         ref: 'User'
+    },
+    receiverName: {
+    type: String,
+    required: true
     },
     orderItems: [
         {
@@ -64,7 +68,6 @@ const orderSchema = mongoose.Schema({
     paidAt: {
         type: Date
     },
-
     itemsPrice: {
         type: Number,
         required: true,
@@ -99,4 +102,6 @@ const orderSchema = mongoose.Schema({
     }
 })
 
-module.exports = mongoose.model('Order', orderSchema)
+const Order = mongoose.model("Order", OrderSchema);
+
+export default Order;
