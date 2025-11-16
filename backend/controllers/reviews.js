@@ -34,7 +34,7 @@ export const createOrUpdateReview = async (req, res) => {
     }
 
     // Validate review description (including bad words check)
-    const validation = await validateReviewDescription(reviewDescription);
+    const validation = validateReviewDescription(reviewDescription);
     if (!validation.isValid) {
       return res.status(400).json({ message: validation.message });
     }
@@ -79,12 +79,17 @@ export const createOrUpdateReview = async (req, res) => {
       }
 
       for (const file of req.files) {
-        const imageUrl = await uploadToCloudinary(
-          file.buffer, 
-          file.mimetype, 
-          'blazestride/reviews'
-        );
-        reviewImages.push(imageUrl);
+        try {
+          const imageUrl = await uploadToCloudinary(
+            file.buffer, 
+            file.mimetype, 
+            'blazestride/reviews'
+          );
+          reviewImages.push(imageUrl);
+        } catch (uploadError) {
+          console.error("Error uploading image:", uploadError);
+          return res.status(500).json({ message: "Failed to upload images" });
+        }
       }
     }
 
@@ -99,6 +104,7 @@ export const createOrUpdateReview = async (req, res) => {
       // Update existing review
       existingReview.rating = rating;
       existingReview.reviewDescription = reviewDescription;
+      // Only update images if new ones were uploaded
       if (reviewImages.length > 0) {
         existingReview.reviewImages = reviewImages;
       }
@@ -122,7 +128,7 @@ export const createOrUpdateReview = async (req, res) => {
         order: orderId,
         rating,
         reviewDescription,
-        reviewImages
+        reviewImages: reviewImages || []
       });
 
       await newReview.save();
@@ -137,7 +143,11 @@ export const createOrUpdateReview = async (req, res) => {
     }
   } catch (error) {
     console.error("Error creating/updating review:", error);
-    res.status(500).json({ message: error.message });
+    console.error("Error details:", error.stack);
+    res.status(500).json({ 
+      message: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
 

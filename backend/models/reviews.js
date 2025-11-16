@@ -44,7 +44,7 @@ const reviewSchema = new mongoose.Schema({
     type: [String],
     validate: {
       validator: function(v) {
-        return v.length <= 5;
+        return !v || v.length <= 5;
       },
       message: 'Cannot upload more than 5 images'
     },

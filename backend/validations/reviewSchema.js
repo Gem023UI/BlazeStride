@@ -1,14 +1,17 @@
-let filter;
+const badWordsList = [
+  'fuck', 'shit', 'bitch', 'ass', 'damn', 'hell', 'dick', 'pussy', 'cock',
+  'bastard', 'cunt', 'whore', 'slut', 'piss', 'fag', 'nigger', 'retard', 'tangina'
+];
 
-const initFilter = async () => {
-  if (!filter) {
-    const Filter = (await import('bad-words')).default;
-    filter = new Filter();
-  }
-  return filter;
+const containsBadWords = (text) => {
+  const lowerText = text.toLowerCase();
+  return badWordsList.some(word => {
+    const regex = new RegExp(`\\b${word.toLowerCase()}\\b`, 'i');
+    return regex.test(lowerText);
+  });
 };
 
-export const validateReviewDescription = async (description) => {
+export const validateReviewDescription = (description) => {
   if (!description) {
     return { isValid: false, message: 'Review description is required' };
   }
@@ -21,8 +24,7 @@ export const validateReviewDescription = async (description) => {
     return { isValid: false, message: 'Review cannot exceed 1000 characters' };
   }
 
-  const badWordsFilter = await initFilter();
-  if (badWordsFilter.isProfane(description)) {
+  if (containsBadWords(description)) {
     return { isValid: false, message: 'Review contains inappropriate language' };
   }
 

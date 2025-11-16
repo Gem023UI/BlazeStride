@@ -12,6 +12,7 @@ import OrderDetails from "./components/OrderDetails.jsx";
 import Orders from "./components/Orders.jsx";
 import Products from "./components/Products.jsx";
 import Users from "./components/Users.jsx";
+import Reviews from "./components/Reviews.jsx";
 import "./App.css"
 
 function App() {
@@ -78,6 +79,7 @@ function App() {
           <Route path="/orders" element={<Orders />} />
           <Route path="/users" element={<Users />} />
           <Route path="/products" element={<Products />} />
+          <Route path="/reviews" element={<Reviews />} />
         </Routes>
         </div>
     </Router>

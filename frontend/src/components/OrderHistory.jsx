@@ -88,9 +88,10 @@ export default function OrderHistory() {
     const reviewsData = {};
     for (const order of ordersData) {
       for (const item of order.orderItems) {
-        const review = await checkExistingReview(order._id, item.product);
+        const productId = typeof item.product === 'string' ? item.product : item.product._id;
+        const review = await checkExistingReview(order._id, productId);
         if (review) {
-          reviewsData[`${order._id}-${item.product}`] = review;
+          reviewsData[`${order._id}-${productId}`] = review;
         }
       }
     }
@@ -98,11 +99,12 @@ export default function OrderHistory() {
   };
 
   const handleReviewClick = async (order, item) => {
-    const review = await checkExistingReview(order._id, item.product);
+    const productId = typeof item.product === 'string' ? item.product : item.product._id;
+    const review = await checkExistingReview(order._id, productId);
     setExistingReview(review);
     setSelectedOrderItem({
       orderId: order._id,
-      productId: item.product,
+      productId: productId,
       productName: item.name,
       productImage: item.image,
     });
@@ -171,7 +173,7 @@ export default function OrderHistory() {
                               handleReviewClick(order, item);
                             }}
                           >
-                            {reviewsMap[`${order._id}-${item.product}`] ? "Update Review" : "Review"}
+                            {reviewsMap[`${order._id}-${typeof item.product === 'string' ? item.product : item.product._id}`] ? "Update Review" : "Review"}
                           </button>
                         )}
                       </div>
