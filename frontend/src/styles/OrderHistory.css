@@ -203,6 +203,35 @@
   font-size: 24px;
 }
 
+.review-btn {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 14px;
+  transition: all 0.2s;
+  margin-left: 15px;
+  white-space: nowrap;
+}
+
+.review-btn:hover {
+  background: #0056b3;
+  transform: translateY(-2px);
+}
+
+.order-item {
+display: flex;
+align-items: center;
+gap: 15px;
+padding: 15px;
+background: #f8f9fa;
+border-radius: 8px;
+flex-wrap: wrap;
+}
+
 @media (max-width: 768px) {
   .order-header {
     flex-direction: column;
@@ -218,5 +247,11 @@
   .item-image {
     width: 100%;
     height: auto;
+  }
+
+  .review-btn {
+    width: 100%;
+    margin-left: 0;
+    margin-top: 10px;
   }
 }

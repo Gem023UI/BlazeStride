@@ -623,6 +623,69 @@ html, body {
   z-index: 9999;
 }
 
+.product-rating-display {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.rating-count {
+  font-size: 13px;
+  color: #666;
+}
+
+.review-summary {
+  padding: 20px;
+  background: white;
+  border-radius: 12px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.average-rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.average-rating h2 {
+  font-size: 48px;
+  font-weight: 700;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.average-rating p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.review-date {
+  font-size: 12px !important;
+  color: #999 !important;
+  margin-top: 10px !important;
+}
+
+.more-reviews {
+  text-align: center;
+  padding: 20px;
+  color: var(--text-dark);
+  font-weight: 500;
+  font-size: 14px;
+  background: white;
+  border-radius: 12px;
+  margin-top: 15px;
+}
+
 /* Toast types */
 .alert-success {
   background-color: #16a34a; /* green */

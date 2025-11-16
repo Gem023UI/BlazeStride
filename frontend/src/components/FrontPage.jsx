@@ -3,6 +3,8 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { fetchProducts } from "../api/products";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { fetchProductReviews } from "../api/reviews";
+import { Rating } from '@mui/material';
 import { 
   faCalendarCheck, 
   faClock, 
@@ -34,7 +36,8 @@ export default function LandingSection({ logoUrl }) {
   const [toastMessage, setToastMessage] = useState('');
   const [toastType, setToastType] = useState('alert-success');
 
-
+  const [productReviews, setProductReviews] = useState([]);
+  const [productAverageRating, setProductAverageRating] = useState(0);
 
   useEffect(() => {
     if (showProductModal) {
@@ -180,6 +183,25 @@ export default function LandingSection({ logoUrl }) {
     
     setTimeout(() => setToastMessage(''), 5000);
   };
+
+  const loadProductReviews = async (productId) => {
+    try {
+      const reviews = await fetchProductReviews(productId);
+      setProductReviews(reviews);
+      
+      // Calculate average rating
+      if (reviews.length > 0) {
+        const avgRating = reviews.reduce((acc, review) => acc + review.rating, 0) / reviews.length;
+        setProductAverageRating(avgRating);
+      } else {
+        setProductAverageRating(0);
+      }
+    } catch (error) {
+      console.error("Error loading reviews:", error);
+      setProductReviews([]);
+      setProductAverageRating(0);
+    }
+  };
     
   return (
     <MainLayout>
@@ -231,18 +253,32 @@ export default function LandingSection({ logoUrl }) {
                 <div 
                   key={product._id}
                   className="front-product-card"
-                  onClick={() => {
+                  onClick={async () => {
                     setSelectedProduct(product);
+                    await loadProductReviews(product._id);
                     setShowProductModal(true);
                   }}
                 >
                   <img src={product.productimage[0]} alt={product.productname} />
                   <div className="front-product-details">
                     <h3>{product.productname}</h3>
+                    <div className="product-rating-display">
+                      <Rating 
+                        value={product.averageRating || 0} 
+                        readOnly 
+                        size="small" 
+                        precision={0.5}
+                      />
+                      <span className="rating-count">
+                        ({product.reviewCount || 0})
+                      </span>
+                    </div>
                     <p>${product.price}</p>
                     <div className="front-product-btn">
-                      <button className="info-btn" onClick={() => {
+                      <button className="info-btn" onClick={(e) => {
+                        e.stopPropagation();
                         setSelectedProduct(product);
+                        loadProductReviews(product._id);
                         setShowProductModal(true);
                       }}>
                         <FontAwesomeIcon icon={faCircleInfo} />
@@ -268,18 +304,32 @@ export default function LandingSection({ logoUrl }) {
                 <div 
                   key={product._id}
                   className="front-product-card"
-                  onClick={() => {
+                  onClick={async () => {
                     setSelectedProduct(product);
+                    await loadProductReviews(product._id);
                     setShowProductModal(true);
                   }}
                 >
                   <img src={product.productimage[0]} alt={product.productname} />
                   <div className="front-product-details">
                     <h3>{product.productname}</h3>
+                    <div className="product-rating-display">
+                      <Rating 
+                        value={product.averageRating || 0} 
+                        readOnly 
+                        size="small" 
+                        precision={0.5}
+                      />
+                      <span className="rating-count">
+                        ({product.reviewCount || 0})
+                      </span>
+                    </div>
                     <p>${product.price}</p>
                     <div className="front-product-btn">
-                      <button className="info-btn" onClick={() => {
+                      <button className="info-btn" onClick={(e) => {
+                        e.stopPropagation();
                         setSelectedProduct(product);
+                        loadProductReviews(product._id);
                         setShowProductModal(true);
                       }}>
                         <FontAwesomeIcon icon={faCircleInfo} />
@@ -305,18 +355,32 @@ export default function LandingSection({ logoUrl }) {
                 <div 
                   key={product._id}
                   className="front-product-card"
-                  onClick={() => {
+                  onClick={async () => {
                     setSelectedProduct(product);
+                    await loadProductReviews(product._id);
                     setShowProductModal(true);
                   }}
                 >
                   <img src={product.productimage[0]} alt={product.productname} />
                   <div className="front-product-details">
                     <h3>{product.productname}</h3>
+                    <div className="product-rating-display">
+                      <Rating 
+                        value={product.averageRating || 0} 
+                        readOnly 
+                        size="small" 
+                        precision={0.5}
+                      />
+                      <span className="rating-count">
+                        ({product.reviewCount || 0})
+                      </span>
+                    </div>
                     <p>${product.price}</p>
                     <div className="front-product-btn">
-                      <button className="info-btn" onClick={() => {
+                      <button className="info-btn" onClick={(e) => {
+                        e.stopPropagation();
                         setSelectedProduct(product);
+                        loadProductReviews(product._id);
                         setShowProductModal(true);
                       }}>
                         <FontAwesomeIcon icon={faCircleInfo} />
@@ -343,18 +407,32 @@ export default function LandingSection({ logoUrl }) {
                 <div 
                   key={product._id}
                   className="front-product-card"
-                  onClick={() => {
+                  onClick={async () => {
                     setSelectedProduct(product);
+                    await loadProductReviews(product._id);
                     setShowProductModal(true);
                   }}
                 >
                   <img src={product.productimage[0]} alt={product.productname} />
                   <div className="front-product-details">
                     <h3>{product.productname}</h3>
+                    <div className="product-rating-display">
+                      <Rating 
+                        value={product.averageRating || 0} 
+                        readOnly 
+                        size="small" 
+                        precision={0.5}
+                      />
+                      <span className="rating-count">
+                        ({product.reviewCount || 0})
+                      </span>
+                    </div>
                     <p>${product.price}</p>
                     <div className="front-product-btn">
-                      <button className="info-btn" onClick={() => {
+                      <button className="info-btn" onClick={(e) => {
+                        e.stopPropagation();
                         setSelectedProduct(product);
+                        loadProductReviews(product._id);
                         setShowProductModal(true);
                       }}>
                         <FontAwesomeIcon icon={faCircleInfo} />
@@ -409,22 +487,59 @@ export default function LandingSection({ logoUrl }) {
                   <FontAwesomeIcon className="customerIcon" icon={faUsers} />
                   <h3>REVIEWS</h3>
                 </div>
-                <div className="review-section">
-                  <div className="review-items">
-                    <div className="review-avatar">
-                      <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761398407/pioneer1_uvhbaj.png" alt="review-avatar" />
-                    </div>
-                    <div className="review-info">
-                      <h4 className="reviewer-name">Alex M.</h4>
-                      <div className="review-rating">★★★★☆</div>
-                      <p className="review-text">"The Brooks Ghost 14 has transformed my daily runs! The cushioning is perfect, providing just the right amount of support without feeling bulky. I've noticed a significant improvement in my pace and overall comfort. Highly recommend for any runner looking for a reliable shoe!"</p>
-                      <div className="review-media">
-                        <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761345062/brooks_qkbdxd.png" alt="review-1" />
-                        <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks1_kyngav.png" alt="review-2" />
-                        <img src="https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761408863/brooks2_h0xpex.png" alt="review-3" />
-                      </div>
-                    </div>
+                
+                <div className="review-summary">
+                  <div className="average-rating">
+                    <h2>{productAverageRating.toFixed(1)}</h2>
+                    <Rating value={productAverageRating} readOnly precision={0.1} size="large" />
+                    <p>{productReviews.length} {productReviews.length === 1 ? 'review' : 'reviews'}</p>
                   </div>
+                </div>
+
+                <div className="review-section">
+                  {productReviews.length === 0 ? (
+                    <div className="no-reviews">
+                      <p>No reviews yet. Be the first to review this product!</p>
+                    </div>
+                  ) : (
+                    productReviews.slice(0, 3).map((review) => (
+                      <div key={review._id} className="review-items">
+                        <div className="review-avatar">
+                          <img 
+                            src={review.user?.useravatar || "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761398407/pioneer1_uvhbaj.png"} 
+                            alt="reviewer" 
+                          />
+                        </div>
+                        <div className="review-info">
+                          <h4 className="reviewer-name">
+                            {review.firstname} {review.lastname.charAt(0)}.
+                          </h4>
+                          <Rating value={review.rating} readOnly size="small" />
+                          <p className="review-text">{review.reviewDescription}</p>
+                          {review.reviewImages && review.reviewImages.length > 0 && (
+                            <div className="review-media">
+                              {review.reviewImages.slice(0, 3).map((img, index) => (
+                                <img key={index} src={img} alt={`review-${index}`} />
+                              ))}
+                            </div>
+                          )}
+                          <p className="review-date">
+                            {new Date(review.createdAt).toLocaleDateString('en-US', {
+                              year: 'numeric',
+                              month: 'long',
+                              day: 'numeric'
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                  
+                  {productReviews.length > 3 && (
+                    <p className="more-reviews">
+                      + {productReviews.length - 3} more {productReviews.length - 3 === 1 ? 'review' : 'reviews'}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>

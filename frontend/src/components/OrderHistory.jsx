@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import MainLayout from "./layout/MainLayout";
+import { fetchReviewByOrderAndProduct } from "../api/reviews";
+import ReviewModal from "../components/ReviewModal";
+import { Rating } from '@mui/material';
 import { fetchUserOrders } from "../api/orders";
 import "../styles/OrderHistory.css";
 
@@ -9,36 +12,41 @@ export default function OrderHistory() {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
 
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [selectedOrderItem, setSelectedOrderItem] = useState(null);
+  const [existingReview, setExistingReview] = useState(null);
+  const [reviewsMap, setReviewsMap] = useState({});
+
   useEffect(() => {
     loadOrders();
   }, []);
 
   const loadOrders = async () => {
     try {
-        setLoading(true);
-        
-        // Check if user is logged in
-        const user = JSON.parse(localStorage.getItem("user") || "{}");
-        const userId = user._id || user.id || localStorage.getItem("userId");
-        
-        if (!userId) {
+      setLoading(true);
+      
+      const user = JSON.parse(localStorage.getItem("user") || "{}");
+      const userId = user._id || user.id || localStorage.getItem("userId");
+      
+      if (!userId) {
         alert("Please login to view your orders");
         navigate("/login");
         return;
-        }
+      }
 
-        const data = await fetchUserOrders();
-        setOrders(data);
+      const data = await fetchUserOrders();
+      setOrders(data);
+      await loadReviewsForOrders(data);
     } catch (error) {
-        console.error("Error loading orders:", error);
-        if (error.response?.status === 401) {
+      console.error("Error loading orders:", error);
+      if (error.response?.status === 401) {
         alert("Session expired. Please login again.");
         navigate("/login");
-        } else {
+      } else {
         alert("Failed to load orders. Please try again.");
-        }
+      }
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -65,6 +73,40 @@ export default function OrderHistory() {
       default:
         return "status-processing";
     }
+  };
+
+  const checkExistingReview = async (orderId, productId) => {
+    try {
+      const review = await fetchReviewByOrderAndProduct(orderId, productId);
+      return review;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const loadReviewsForOrders = async (ordersData) => {
+    const reviewsData = {};
+    for (const order of ordersData) {
+      for (const item of order.orderItems) {
+        const review = await checkExistingReview(order._id, item.product);
+        if (review) {
+          reviewsData[`${order._id}-${item.product}`] = review;
+        }
+      }
+    }
+    setReviewsMap(reviewsData);
+  };
+
+  const handleReviewClick = async (order, item) => {
+    const review = await checkExistingReview(order._id, item.product);
+    setExistingReview(review);
+    setSelectedOrderItem({
+      orderId: order._id,
+      productId: item.product,
+      productName: item.name,
+      productImage: item.image,
+    });
+    setShowReviewModal(true);
   };
 
   return (
@@ -121,6 +163,17 @@ export default function OrderHistory() {
                         <div className="item-price">
                           ${(item.price * item.quantity).toFixed(2)}
                         </div>
+                        {order.orderStatus === "Received" && (
+                          <button
+                            className="review-btn"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleReviewClick(order, item);
+                            }}
+                          >
+                            {reviewsMap[`${order._id}-${item.product}`] ? "Update Review" : "Review"}
+                          </button>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -138,6 +191,24 @@ export default function OrderHistory() {
             </div>
           )}
         </div>
+
+        {showReviewModal && selectedOrderItem && (
+          <ReviewModal
+            orderItem={selectedOrderItem}
+            existingReview={existingReview}
+            onClose={() => {
+              setShowReviewModal(false);
+              setSelectedOrderItem(null);
+              setExistingReview(null);
+            }}
+            onSubmitSuccess={() => {
+              loadOrders();
+              setShowReviewModal(false);
+              setSelectedOrderItem(null);
+              setExistingReview(null);
+            }}
+          />
+        )}
       </section>
     </MainLayout>
   );
