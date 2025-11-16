@@ -1,14 +1,16 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Hyperspeed from './reactbits/Hyperspeed/Hyperspeed.jsx';
-import FrontPage from './components/FrontPage.jsx';
-import LoginRegister from './components/LoginRegister.jsx';
-import Cart from './components/CartItems.jsx';
-import Profile from './components/Profile.jsx';
-import Dashboard from './components/Dashboard.jsx';
+import Hyperspeed from "./reactbits/Hyperspeed/Hyperspeed.jsx";
+import FrontPage from "./components/FrontPage.jsx";
+import LoginRegister from "./components/LoginRegister.jsx";
+import Cart from "./components/CartItems.jsx";
+import Profile from "./components/Profile.jsx";
+import Dashboard from "./components/Dashboard.jsx";
 import SubmitOrder from "./components/SubmitOrder.jsx"
-import OrdersList from './components/OrdersList.jsx';
-import './App.css'
+import OrdersList from "./components/OrdersList.jsx";
+import OrderHistory from "./components/OrderHistory.jsx";
+import OrderDetails from "./components/OrderDetails.jsx";
+import "./App.css"
 
 function App() {
   const [count, setCount] = useState(0)
@@ -72,6 +74,8 @@ function App() {
           <Route path="/dashboard" element={<Dashboard logoUrl={logoUrl} />} />
           <Route path="/checkout" element={<SubmitOrder />} />
           <Route path="/orders" element={<OrdersList />} />
+          <Route path="/myorders" element={<OrderHistory />} />
+          <Route path="/orderdetails" element={<OrderDetails />} />
         </Routes>
         </div>
     </Router>

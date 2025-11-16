@@ -43,7 +43,7 @@ console.log("✅ Product routes registered");
 
 console.log("🔧 Registering routes...");
 app.use("/api/orders", orderRoutes);
-console.log("✅ Product routes registered");
+console.log("✅ Order routes registered");
 
 // Test endpoint to verify server is running
 app.get("/api/test", (req, res) => {

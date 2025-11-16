@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MainLayout from "./layout/MainLayout";
+import { fetchUserOrders, updateOrderStatus } from "../api/orders";
 import "../styles/OrdersList.css";
 
 export default function OrdersList() {
@@ -16,37 +17,19 @@ export default function OrdersList() {
 
   const fetchOrders = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/orders", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      const data = await response.json();
-      setOrders(data);
+        const data = await fetchUserOrders();
+        setOrders(data);
     } catch (error) {
-      console.error("Error fetching orders:", error);
+        console.error("Error fetching orders:", error);
     }
   };
 
   const handleStatusChange = async (orderId, newStatus) => {
     try {
-      const response = await fetch(
-        `http://localhost:5000/api/orders/${orderId}/status`,
-        {
-          method: "PATCH",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ orderStatus: newStatus }),
-        }
-      );
-
-      if (response.ok) {
+        await updateOrderStatus(orderId, newStatus);
         fetchOrders();
-      }
     } catch (error) {
-      console.error("Error updating status:", error);
+        console.error("Error updating status:", error);
     }
   };
 

@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import MainLayout from "./layout/MainLayout";
 import { orderValidationSchema } from "../validations/orderSchema";
+import { createOrder } from "../api/orders";
 import "../styles/SubmitOrder.css";
 
 export default function SubmitOrder() {
@@ -63,7 +64,7 @@ export default function SubmitOrder() {
           postalCode: formData.zipCode,
           country: "Philippines",
         },
-        user: user._id || user.id,
+        user: user._id || localStorage.getItem("userId"),
         orderItems: orderItems.map((item) => ({
           name: item.productname,
           quantity: item.quantity,
@@ -83,20 +84,7 @@ export default function SubmitOrder() {
       };
 
       // Submit order to backend
-      const response = await fetch("http://localhost:5000/api/orders", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        body: JSON.stringify(orderData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to create order");
-      }
-
-      const result = await response.json();
+      const result = await createOrder(orderData);
 
       // Remove ordered items from cart
       const cart = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -109,7 +97,7 @@ export default function SubmitOrder() {
       );
 
       alert("Order placed successfully! Check your email for confirmation.");
-      navigate("/orders");
+      navigate("/myorders");
     } catch (error) {
       console.error("Error creating order:", error);
       alert("Failed to place order. Please try again.");
