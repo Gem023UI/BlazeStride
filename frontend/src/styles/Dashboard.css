@@ -168,6 +168,7 @@
   padding: 1.5rem;
   background: #f8f9fa;
   border-radius: 10px;
+  pointer-events: auto;
 }
 
 .chart-header {
@@ -224,6 +225,27 @@
   height: 100%;
   color: #7f8c8d;
   font-size: 1.1rem;
+}
+
+/* Fix for orders section structure */
+.orders-section {
+  cursor: default; /* Override the pointer cursor for the section */
+}
+
+.orders-section > div:first-child {
+  cursor: pointer; /* Only the first div (stats) is clickable */
+}
+
+.orders-section .chart-container {
+  cursor: default; /* Chart is not clickable */
+}
+
+.dashboard-section:hover {
+  transform: none; /* Disable transform on hover for orders section */
+}
+
+.orders-section > div:first-child:hover {
+  opacity: 0.9; /* Add subtle hover effect to clickable part */
 }
 
 /* Responsive Design */

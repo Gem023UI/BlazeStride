@@ -104,111 +104,111 @@ const Dashboard = () => {
     }
   };
 
-  const processSalesData = async (orders) => {
+    const processSalesData = async (orders) => {
     try {
-      const ordersData = orders || (await fetchAllOrders()).orders;
-      const now = new Date();
-      let filteredOrders = [];
-      let labels = [];
-      let salesByPeriod = {};
+        const ordersData = orders || (await fetchAllOrders()).orders;
+        const now = new Date();
+        let filteredOrders = [];
+        let labels = [];
+        let salesByPeriod = {};
 
-      if (dateRange === 'week') {
+        if (dateRange === 'week') {
         // Last 7 days
         for (let i = 6; i >= 0; i--) {
-          const date = new Date(now);
-          date.setDate(date.getDate() - i);
-          const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-          labels.push(dateStr);
-          salesByPeriod[dateStr] = 0;
+            const date = new Date(now);
+            date.setDate(date.getDate() - i);
+            const dateStr = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            labels.push(dateStr);
+            salesByPeriod[dateStr] = 0;
         }
 
         filteredOrders = ordersData.filter(order => {
-          const orderDate = new Date(order.createdAt);
-          const diffTime = now - orderDate;
-          const diffDays = diffTime / (1000 * 60 * 60 * 24);
-          return diffDays <= 7;
+            const orderDate = new Date(order.createdAt);
+            const diffTime = now - orderDate;
+            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+            return diffDays <= 7;
         });
 
         filteredOrders.forEach(order => {
-          if (order.status !== 'cancelled') {
+            if (order.orderStatus !== 'Cancelled') {
             const orderDate = new Date(order.createdAt);
             const dateStr = orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             if (salesByPeriod[dateStr] !== undefined) {
-              salesByPeriod[dateStr] += order.totalPrice;
+                salesByPeriod[dateStr] += order.totalPrice || 0;
             }
-          }
+            }
         });
 
-      } else if (dateRange === 'month') {
+        } else if (dateRange === 'month') {
         // Last 30 days grouped by week
         const weeks = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
         labels = weeks;
         weeks.forEach(week => salesByPeriod[week] = 0);
 
         filteredOrders = ordersData.filter(order => {
-          const orderDate = new Date(order.createdAt);
-          const diffTime = now - orderDate;
-          const diffDays = diffTime / (1000 * 60 * 60 * 24);
-          return diffDays <= 30;
+            const orderDate = new Date(order.createdAt);
+            const diffTime = now - orderDate;
+            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+            return diffDays <= 30;
         });
 
         filteredOrders.forEach(order => {
-          if (order.status !== 'cancelled') {
+            if (order.orderStatus !== 'Cancelled') {
             const orderDate = new Date(order.createdAt);
             const diffTime = now - orderDate;
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             const weekIndex = Math.floor(diffDays / 7);
             if (weekIndex < 4) {
-              salesByPeriod[weeks[3 - weekIndex]] += order.totalPrice;
+                salesByPeriod[weeks[3 - weekIndex]] += order.totalPrice || 0;
             }
-          }
+            }
         });
 
-      } else if (dateRange === 'year') {
+        } else if (dateRange === 'year') {
         // Last 12 months
         for (let i = 11; i >= 0; i--) {
-          const date = new Date(now);
-          date.setMonth(date.getMonth() - i);
-          const monthStr = date.toLocaleDateString('en-US', { month: 'short' });
-          labels.push(monthStr);
-          salesByPeriod[monthStr] = 0;
+            const date = new Date(now);
+            date.setMonth(date.getMonth() - i);
+            const monthStr = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+            labels.push(monthStr);
+            salesByPeriod[monthStr] = 0;
         }
 
         filteredOrders = ordersData.filter(order => {
-          const orderDate = new Date(order.createdAt);
-          const diffTime = now - orderDate;
-          const diffDays = diffTime / (1000 * 60 * 60 * 24);
-          return diffDays <= 365;
+            const orderDate = new Date(order.createdAt);
+            const diffTime = now - orderDate;
+            const diffDays = diffTime / (1000 * 60 * 60 * 24);
+            return diffDays <= 365;
         });
 
         filteredOrders.forEach(order => {
-          if (order.status !== 'cancelled') {
+            if (order.orderStatus !== 'Cancelled') {
             const orderDate = new Date(order.createdAt);
-            const monthStr = orderDate.toLocaleDateString('en-US', { month: 'short' });
+            const monthStr = orderDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
             if (salesByPeriod[monthStr] !== undefined) {
-              salesByPeriod[dateStr] += order.totalPrice;
+                salesByPeriod[monthStr] += order.totalPrice || 0;
             }
-          }
+            }
         });
-      }
+        }
 
-      setSalesData({
+        setSalesData({
         labels,
         datasets: [
-          {
+            {
             label: 'Sales (₱)',
             data: labels.map(label => salesByPeriod[label] || 0),
             backgroundColor: 'rgba(54, 162, 235, 0.6)',
             borderColor: 'rgba(54, 162, 235, 1)',
             borderWidth: 1,
-          },
+            },
         ],
-      });
+        });
 
     } catch (error) {
-      console.error("Error processing sales data:", error);
+        console.error("Error processing sales data:", error);
     }
-  };
+    };
 
   const chartOptions = {
     responsive: true,
@@ -336,88 +336,90 @@ const Dashboard = () => {
         </div>
 
         {/* Orders Section */}
-        <div className="dashboard-section orders-section" onClick={() => navigate('/orders')}>
-          <div className="section-header">
+        <div className="dashboard-section orders-section">
+        <div onClick={() => navigate('/orders')}>
+            <div className="section-header">
             <h3>
-              <FontAwesomeIcon icon={faTruckFast} /> Orders Management
+                <FontAwesomeIcon icon={faTruckFast} /> Orders Management
             </h3>
             <span className="click-hint">Click to view details →</span>
-          </div>
-          <div className="stats-grid">
+            </div>
+            <div className="stats-grid">
             <div className="stat-card total">
-              <div className="stat-icon">
+                <div className="stat-icon">
                 <FontAwesomeIcon icon={faTruckFast} />
-              </div>
-              <div className="stat-info">
+                </div>
+                <div className="stat-info">
                 <p className="stat-label">Total Orders</p>
                 <p className="stat-value">{totalOrders}</p>
-              </div>
+                </div>
             </div>
             <div className="stat-card pending">
-              <div className="stat-info">
+                <div className="stat-info">
                 <p className="stat-label">Pending</p>
                 <p className="stat-value">{pendingOrders}</p>
-              </div>
+                </div>
             </div>
             <div className="stat-card processing">
-              <div className="stat-info">
+                <div className="stat-info">
                 <p className="stat-label">Processing</p>
                 <p className="stat-value">{processingOrders}</p>
-              </div>
+                </div>
             </div>
             <div className="stat-card shipped">
-              <div className="stat-info">
+                <div className="stat-info">
                 <p className="stat-label">Shipped</p>
                 <p className="stat-value">{shippedOrders}</p>
-              </div>
+                </div>
             </div>
             <div className="stat-card delivered">
-              <div className="stat-info">
+                <div className="stat-info">
                 <p className="stat-label">Delivered</p>
                 <p className="stat-value">{deliveredOrders}</p>
-              </div>
+                </div>
             </div>
             <div className="stat-card cancelled">
-              <div className="stat-info">
+                <div className="stat-info">
                 <p className="stat-label">Cancelled</p>
                 <p className="stat-value">{cancelledOrders}</p>
-              </div>
+                </div>
             </div>
-          </div>
+            </div>
+        </div>
 
-          {/* Sales Chart */}
-          <div className="chart-container" onClick={(e) => e.stopPropagation()}>
+        {/* Sales Chart - Outside the clickable div */}
+        <div className="chart-container">
             <div className="chart-header">
-              <h4>Sales Analytics</h4>
-              <div className="date-range-selector">
+            <h4>Sales Analytics</h4>
+            <div className="date-range-selector">
                 <button 
-                  className={dateRange === 'week' ? 'active' : ''} 
-                  onClick={() => setDateRange('week')}
+                className={dateRange === 'week' ? 'active' : ''} 
+                onClick={() => setDateRange('week')}
                 >
-                  Week
+                Week
                 </button>
                 <button 
-                  className={dateRange === 'month' ? 'active' : ''} 
-                  onClick={() => setDateRange('month')}
+                className={dateRange === 'month' ? 'active' : ''} 
+                onClick={() => setDateRange('month')}
                 >
-                  Month
+                Month
                 </button>
                 <button 
-                  className={dateRange === 'year' ? 'active' : ''} 
-                  onClick={() => setDateRange('year')}
+                className={dateRange === 'year' ? 'active' : ''} 
+                onClick={() => setDateRange('year')}
                 >
-                  Year
+                Year
                 </button>
-              </div>
+            </div>
             </div>
             <div className="chart-wrapper">
-              {salesData.labels && salesData.labels.length > 0 ? (
+            {salesData.labels && salesData.labels.length > 0 ? (
                 <Bar data={salesData} options={chartOptions} />
-              ) : (
+            ) : (
                 <div className="no-data">No sales data available</div>
-              )}
+            )}
             </div>
-          </div>
+        </div>
         </div>
       </div>
     </MainLayout>
