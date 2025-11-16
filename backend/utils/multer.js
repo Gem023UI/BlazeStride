@@ -62,5 +62,23 @@ export const uploadToCloudinary = async (fileBuffer, mimetype, folderName = 'upl
   }
 };
 
+// Add this function to handle Cloudinary deletions
+export const deleteFromCloudinary = async (imageUrl) => {
+  try {
+    // Extract public_id from Cloudinary URL
+    const urlParts = imageUrl.split('/');
+    const filename = urlParts[urlParts.length - 1];
+    const publicId = `typeventure/products/${filename.split('.')[0]}`;
+
+    // Delete from Cloudinary
+    const result = await cloudinary.uploader.destroy(publicId);
+    console.log("🗑️ Deleted from Cloudinary:", publicId);
+    return result;
+  } catch (error) {
+    console.error("❌ Error deleting from Cloudinary:", error);
+    throw error;
+  }
+};
+
 export { cloudinary };
 export default upload;
