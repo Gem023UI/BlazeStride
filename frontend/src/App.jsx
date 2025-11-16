@@ -7,14 +7,14 @@ import Cart from "./components/CartItems.jsx";
 import Profile from "./components/Profile.jsx";
 import Dashboard from "./components/Dashboard.jsx";
 import SubmitOrder from "./components/SubmitOrder.jsx"
-import OrdersList from "./components/OrdersList.jsx";
 import OrderHistory from "./components/OrderHistory.jsx";
 import OrderDetails from "./components/OrderDetails.jsx";
+import Orders from "./components/Orders.jsx";
+import Products from "./components/Products.jsx";
+import Users from "./components/Users.jsx";
 import "./App.css"
 
 function App() {
-  const [count, setCount] = useState(0)
-
   const [logoUrl] = useState(
     "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1761189861/logo_sy4dgl.png"
   );
@@ -73,9 +73,11 @@ function App() {
           <Route path="/profile" element={<Profile />} />
           <Route path="/dashboard" element={<Dashboard logoUrl={logoUrl} />} />
           <Route path="/checkout" element={<SubmitOrder />} />
-          <Route path="/orders" element={<OrdersList />} />
           <Route path="/myorders" element={<OrderHistory />} />
           <Route path="/orderdetails" element={<OrderDetails />} />
+          <Route path="/orders" element={<Orders />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/products" element={<Products />} />
         </Routes>
         </div>
     </Router>

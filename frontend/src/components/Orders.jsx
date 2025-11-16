@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import MainLayout from "./layout/MainLayout";
 import { fetchUserOrders, updateOrderStatus } from "../api/orders";
-import "../styles/OrdersList.css";
+import "../styles/Orders.css";
 
-export default function OrdersList() {
+export default function Orders() {
   const [orders, setOrders] = useState([]);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showModal, setShowModal] = useState(false);
