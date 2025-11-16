@@ -85,16 +85,37 @@ export const createOrder = async (req, res) => {
 // Get all orders for a user
 export const getUserOrders = async (req, res) => {
   try {
-    const userId = req.body.userId || req.query.userId || req.user?.id;
+    // Get userId from query params, body, or headers
+    let userId = req.query.userId || req.body.userId;
+    
+    // If using auth middleware, get from req.user
+    if (!userId && req.user) {
+      userId = req.user.id || req.user._id;
+    }
+
+    // Log for debugging
+    console.log("Fetching orders for userId:", userId);
+
+    if (!userId) {
+      return res.status(400).json({ 
+        message: "User ID is required",
+        received: { query: req.query, body: req.body }
+      });
+    }
     
     const orders = await Order.find({ user: userId })
       .sort({ createdAt: -1 })
       .populate("orderItems.product", "productname");
     
+    console.log(`Found ${orders.length} orders for user ${userId}`);
+    
     res.json(orders);
   } catch (error) {
     console.error("Error fetching orders:", error);
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ 
+      message: error.message,
+      stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
 

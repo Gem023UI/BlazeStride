@@ -22,7 +22,17 @@ export const createOrder = async (orderData) => {
 export const fetchUserOrders = async () => {
   try {
     const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const userId = user._id || user.id || localStorage.getItem("userId");
+
+    console.log("Fetching orders for user:", userId);
+
+    if (!userId) {
+      throw new Error("User ID not found. Please login again.");
+    }
+
     const response = await axios.get(API_URL, {
+      params: { userId }, // Send userId as query parameter
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -38,7 +48,17 @@ export const fetchUserOrders = async () => {
 export const fetchOrderById = async (orderId) => {
   try {
     const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const userId = user._id || user.id || localStorage.getItem("userId");
+
+    console.log("Fetching order details:", orderId);
+
+    if (!userId) {
+      throw new Error("User ID not found. Please login again.");
+    }
+
     const response = await axios.get(`${API_URL}/${orderId}`, {
+      params: { userId }, // Send userId as query parameter
       headers: {
         Authorization: `Bearer ${token}`,
       },

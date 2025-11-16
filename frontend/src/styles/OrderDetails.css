@@ -1,0 +1,255 @@
+@import url('https://fonts.googleapis.com/css2?family=BBH+Sans+Hegarty&family=Fugaz+One&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+:root {
+  --color1: #FFFFFF; /* Primary */
+  --color2: #fe42b9; /* Accent */
+  --color3: #41b9ff; /* Secondary */
+  --text-light: white;
+  --text-dark: #121212;
+}
+
+.order-details-wrapper {
+  padding: 40px 20px;
+  min-height: calc(100vh - 200px);
+}
+
+.order-details-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.back-btn {
+  padding: 10px 20px;
+  background: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 14px;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: background 0.3s;
+}
+
+.back-btn:hover {
+  background: #5a6268;
+}
+
+.details-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  padding: 30px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.header-left h1 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 28px;
+}
+
+.order-number {
+  margin: 0 0 5px 0;
+  color: #007bff;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.order-date {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.order-status-badge {
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.details-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.section {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section h2 {
+  margin: 0 0 20px 0;
+  color: #333;
+  font-size: 22px;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+/* Products Section */
+.products-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.product-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.product-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-info h3 {
+  margin: 0 0 10px 0;
+  color: #333;
+  font-size: 18px;
+}
+
+.product-quantity,
+.product-price {
+  margin: 5px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.product-subtotal {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 5px;
+}
+
+.product-subtotal span:first-child {
+  color: #666;
+  font-size: 14px;
+}
+
+.subtotal-amount {
+  font-weight: bold;
+  color: #007bff;
+  font-size: 20px;
+}
+
+/* Shipping Section */
+.info-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-item label {
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.info-item p {
+  margin: 0;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Summary Section */
+.summary-details {
+  max-width: 400px;
+  margin-left: auto;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #e0e0e0;
+  font-size: 16px;
+}
+
+.summary-row span:first-child {
+  color: #666;
+}
+
+.summary-row span:last-child {
+  color: #333;
+  font-weight: 500;
+}
+
+.total-row {
+  border-bottom: none;
+  padding-top: 20px;
+  margin-top: 10px;
+  border-top: 2px solid #333;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.total-price {
+  color: #007bff !important;
+  font-size: 24px !important;
+}
+
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  font-size: 18px;
+  color: #666;
+}
+
+@media (max-width: 768px) {
+  .details-header {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .product-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .product-subtotal {
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  .info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .summary-details {
+    max-width: 100%;
+  }
+}
