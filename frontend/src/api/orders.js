@@ -91,7 +91,7 @@ export const updateOrderStatus = async (orderId, status) => {
 };
 
 // Get all orders (Admin)
-export const fetchAllOrders = async () => {
+export const fetchAllOrdersAdmin = async () => {
   try {
     const token = localStorage.getItem("token");
     const response = await axios.get(`${API_URL}/admin/all`, {

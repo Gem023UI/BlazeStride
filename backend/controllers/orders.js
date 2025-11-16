@@ -146,11 +146,59 @@ export const updateOrderStatus = async (req, res) => {
       req.params.id,
       { orderStatus },
       { new: true, runValidators: true }
-    );
+    )
+    .populate("user", "email firstname lastname")
+    .populate("orderItems.product", "productname");
 
     if (!order) {
       return res.status(404).json({ message: "Order not found" });
     }
+
+    // Send status update email
+    const statusColors = {
+      "To Confirm": "#856404",
+      "To Ship": "#0c5460",
+      "To Deliver": "#155724",
+      "Received": "#0f5132",
+      "Cancelled": "#7b0101ff"
+    };
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: order.user.email,
+      subject: `Order Status Update - Order #${order._id.toString().substring(0, 8).toUpperCase()}`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+          <h2 style="color: #333;">Order Status Update</h2>
+          <p>Dear ${order.user.firstname} ${order.user.lastname},</p>
+          <p>Your order status has been updated.</p>
+          
+          <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+            <p><strong>Order Number:</strong> ${order._id.toString().substring(0, 8).toUpperCase()}</p>
+            <p><strong>New Status:</strong> <span style="color: ${statusColors[orderStatus] || '#333'}; font-weight: bold;">${orderStatus}</span></p>
+            <p><strong>Updated At:</strong> ${new Date().toLocaleString()}</p>
+          </div>
+
+          <h3>Order Summary:</h3>
+          <ul>
+            ${order.orderItems.map(item => `
+              <li>${item.name} - Quantity: ${item.quantity} - $${(item.price * item.quantity).toFixed(2)}</li>
+            `).join("")}
+          </ul>
+          
+          <p><strong>Total Amount: $${order.totalPrice.toFixed(2)}</strong></p>
+          
+          ${orderStatus === "Received" ? 
+            `<p style="color: #0f5132; font-weight: bold;">Thank you for your purchase! We hope to serve you again.</p>` : 
+            `<p>We will keep you updated on your order progress.</p>`
+          }
+          
+          <p>Thank you for shopping with us!</p>
+        </div>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
 
     res.json(order);
   } catch (error) {
