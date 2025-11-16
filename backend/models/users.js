@@ -46,6 +46,11 @@ const userSchema = new mongoose.Schema({
   useravatar: {
     type: String,
     default: null
+  },
+  status: {
+    type: String,
+    enum: ['active', 'deactivated'],
+    default: 'active'
   }
 }, {
   timestamps: true

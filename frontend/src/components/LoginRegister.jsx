@@ -104,13 +104,26 @@ export default function LoginRegister({ logoUrl }) {
         }
       }, 2000);
     } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "Login Failed",
-        text: err.response?.data?.error || "Invalid credentials.",
-        timer: 2000,
-        showConfirmButton: false,
-      });
+      console.error("❌ Login error:", err);
+      
+      // Check if the error is due to deactivated account
+      if (err.response?.data?.error === "Account Deactivated") {
+        Swal.fire({
+          icon: "warning",
+          title: "Account Deactivated",
+          text: err.response?.data?.message || "Your account has been deactivated. Please contact support.",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#d33"
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Login Failed",
+          text: err.response?.data?.error || err.response?.data?.message || "Invalid credentials.",
+          timer: 2000,
+          showConfirmButton: false,
+        });
+      }
     } finally {
       setLoading(false);
       setSubmitting(false);
@@ -171,6 +184,19 @@ export default function LoginRegister({ logoUrl }) {
       
       let errorMessage = "Authentication failed. Please try again.";
       
+      // Check if the error is due to deactivated account
+      if (err.response?.data?.error === "Account Deactivated") {
+        setShowSocialModal(false);
+        Swal.fire({
+          icon: "warning",
+          title: "Account Deactivated",
+          text: err.response?.data?.message || "Your account has been deactivated. Please contact support.",
+          confirmButtonText: "OK",
+          confirmButtonColor: "#d33"
+        });
+        return;
+      }
+      
       // Handle specific Firebase errors
       if (err.code === 'auth/popup-closed-by-user') {
         errorMessage = "Sign-in popup was closed. Please try again.";
@@ -194,10 +220,10 @@ export default function LoginRegister({ logoUrl }) {
     }
   };
 
-const openSocialModal = (provider) => {
-  setSelectedProvider(provider);
-  setShowSocialModal(true);
-};
+  const openSocialModal = (provider) => {
+    setSelectedProvider(provider);
+    setShowSocialModal(true);
+  };
 
   return (
     <div className="login-register-wrapper">

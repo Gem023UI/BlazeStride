@@ -7,7 +7,9 @@ import {
   socialAuth,
   editProfile,
   getUserById,
-  deleteAccount
+  deleteAccount,
+  getAllUsers,
+  updateUserByAdmin
 } from "../controllers/users.js";
 
 const router = express.Router();
@@ -44,5 +46,14 @@ router.put("/edit-profile",
 );
 
 router.delete("/delete-account", deleteAccount);
+
+// Admin routes
+router.get("/all", getAllUsers);
+
+router.put("/update-user", 
+  upload.single("avatar"), 
+  handleMulterError,
+  updateUserByAdmin
+);
 
 export default router;

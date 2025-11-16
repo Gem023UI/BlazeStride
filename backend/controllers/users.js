@@ -38,6 +38,114 @@ export const getUserById = async (req, res) => {
   }
 };
 
+// GET ALL USERS
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.find().select('-password -token').sort({ createdAt: -1 });
+
+    console.log("📦 FETCHED ALL USERS:", users.length);
+
+    res.json({
+      users: users.map(user => ({
+        _id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+        useravatar: user.useravatar,
+        role: user.role,
+        status: user.status,
+        createdAt: user.createdAt
+      }))
+    });
+  } catch (err) {
+    console.error("❌ Get all users error:", err);
+    res.status(500).json({
+      error: "Failed to fetch users",
+      details: err.message,
+    });
+  }
+};
+
+// UPDATE USER
+export const updateUserByAdmin = async (req, res) => {
+  console.log("🟡 Update user by admin endpoint hit");
+
+  try {
+    const { userId, firstname, lastname, email, phoneNumber, address, role, status } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Update fields
+    if (firstname) user.firstname = firstname;
+    if (lastname) user.lastname = lastname;
+    
+    // Check if email is being changed and if it's already in use
+    if (email && email !== user.email) {
+      const existingEmail = await User.findOne({ email });
+      if (existingEmail) {
+        return res.status(400).json({ error: "Email already in use" });
+      }
+      user.email = email;
+    }
+
+    if (phoneNumber !== undefined) user.phoneNumber = phoneNumber || null;
+    if (address !== undefined) user.address = address || null;
+    if (role) user.role = role;
+    if (status) user.status = status;
+
+    // Update profile picture if provided
+    if (req.file && req.file.buffer) {
+      try {
+        user.useravatar = await uploadToCloudinary(
+          req.file.buffer,
+          req.file.mimetype,
+          "typeventure/profile pictures"
+        );
+        console.log("✅ Profile picture updated:", user.useravatar);
+      } catch (uploadError) {
+        console.error("❌ Cloudinary upload error:", uploadError);
+        return res.status(500).json({
+          error: "Failed to upload profile picture",
+          details: uploadError.message,
+        });
+      }
+    }
+
+    await user.save();
+    console.log("✅ User updated successfully by admin");
+
+    res.json({
+      message: "User updated successfully",
+      user: {
+        _id: user._id,
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        address: user.address,
+        useravatar: user.useravatar,
+        role: user.role,
+        status: user.status
+      },
+    });
+  } catch (err) {
+    console.error("❌ Update user error:", err);
+    res.status(500).json({
+      error: "User update failed",
+      details: err.message,
+    });
+  }
+};
+
 // REGISTER
 export const registerUser = async (req, res) => {
   console.log("🔵 Register endpoint hit");
@@ -93,7 +201,8 @@ export const registerUser = async (req, res) => {
       password: hashedPassword,
       phoneNumber,
       address,
-      useravatar
+      useravatar,
+      status: 'active'
     });
 
     await newUser.save();
@@ -133,12 +242,21 @@ export const loginUser = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    if (!user.password) {
-      return res.status(400).json({ error: "Account has no password set" });
-    }
-
+    
     if (!user) {
       return res.status(400).json({ error: "No existing email" });
+    }
+
+    // ✅ Check if account is deactivated
+    if (user.status === 'deactivated') {
+      return res.status(403).json({ 
+        error: "Account Deactivated",
+        message: "Your account has been deactivated. Please contact support for assistance." 
+      });
+    }
+
+    if (!user.password) {
+      return res.status(400).json({ error: "Account has no password set" });
     }
 
     const isMatch = await bcrypt.compare(password.trim(), user.password);
@@ -169,7 +287,8 @@ export const loginUser = async (req, res) => {
         role: user.role,
         useravatar: user.useravatar,
         phoneNumber: user.phoneNumber,
-        address: user.address
+        address: user.address,
+        status: user.status
       },
     });
 
@@ -217,6 +336,14 @@ export const socialAuth = async (req, res) => {
     let user = await User.findOne({ email });
 
     if (user) {
+      // ✅ Check if account is deactivated
+      if (user.status === 'deactivated') {
+        return res.status(403).json({ 
+          error: "Account Deactivated",
+          message: "Your account has been deactivated. Please contact support for assistance." 
+        });
+      }
+
       // User exists, log them in
       const token = jwt.sign(
         { id: user._id, firstname: user.firstname, lastname: user.lastname, email: user.email, role: user.role },
@@ -246,7 +373,8 @@ export const socialAuth = async (req, res) => {
           role: user.role,
           useravatar: user.useravatar,
           phoneNumber: user.phoneNumber,
-          address: user.address
+          address: user.address,
+          status: user.status
         },
       });
     }
@@ -257,10 +385,11 @@ export const socialAuth = async (req, res) => {
       firstname,
       lastname,
       email,
-      password: await bcrypt.hash(uid + Math.random().toString(36), 10), // Use Firebase UID for password
+      password: await bcrypt.hash(uid + Math.random().toString(36), 10),
       useravatar: picture || "https://res.cloudinary.com/dxnb2ozgw/image/upload/v1759649430/user_icon_ze74ys.jpg",
       phoneNumber: null,
-      address: null
+      address: null,
+      status: 'active' // Add this line
     });
 
     await newUser.save();
@@ -287,7 +416,8 @@ export const socialAuth = async (req, res) => {
         role: newUser.role,
         useravatar: newUser.useravatar,
         phoneNumber: newUser.phoneNumber,
-        address: newUser.address
+        address: newUser.address,
+        status: newUser.status
       },
     });
 
