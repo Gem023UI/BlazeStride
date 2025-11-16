@@ -6,6 +6,7 @@ import {
   updateOrderStatus,
   getAllOrders,
   deleteOrder,
+  getAllOrdersChart,
 } from "../controllers/orders.js";
 
 const router = express.Router();
@@ -27,5 +28,7 @@ router.get("/admin/all", getAllOrders);
 
 // Delete order (admin route - add auth middleware if needed)
 router.delete("/:id", deleteOrder);
+
+router.get("/all", getAllOrdersChart);
 
 export default router;

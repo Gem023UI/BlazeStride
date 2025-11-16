@@ -70,6 +70,21 @@ export const fetchOrderById = async (orderId) => {
   }
 };
 
+export const fetchAllOrders = async () => {
+  try {
+    const response = await axios.get(`${API_URL}/all`, {
+      headers: {
+        "Authorization": `Bearer ${localStorage.getItem("token")}`
+      },
+      withCredentials: true,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching all orders:", error);
+    throw error;
+  }
+};
+
 // Update order status
 export const updateOrderStatus = async (orderId, status) => {
   try {

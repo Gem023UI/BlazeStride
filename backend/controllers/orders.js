@@ -222,6 +222,22 @@ export const getAllOrders = async (req, res) => {
   }
 };
 
+export const getAllOrdersChart = async (req, res) => {
+  try {
+    const orders = await Order.find()
+      .populate('userId', 'firstname lastname email')
+      .populate('items.productId', 'productname productimage price')
+      .sort({ createdAt: -1 });
+
+    res.json({
+      orders: orders
+    });
+  } catch (error) {
+    console.error("Error fetching all orders:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Delete order
 export const deleteOrder = async (req, res) => {
   try {
