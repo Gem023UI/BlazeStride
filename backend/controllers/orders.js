@@ -225,12 +225,21 @@ export const getAllOrders = async (req, res) => {
 export const getAllOrdersChart = async (req, res) => {
   try {
     const orders = await Order.find()
-      .populate('userId', 'firstname lastname email')
-      .populate('items.productId', 'productname productimage price')
+      .populate('user', 'firstname lastname email')
+      .populate('orderItems.product', 'productname productimage price')
       .sort({ createdAt: -1 });
 
     res.json({
-      orders: orders
+      orders: orders.map(order => ({
+        _id: order._id,
+        user: order.user,
+        orderItems: order.orderItems,
+        totalPrice: order.totalPrice,
+        orderStatus: order.orderStatus,
+        createdAt: order.createdAt,
+        shippingInfo: order.shippingInfo,
+        receiverName: order.receiverName
+      }))
     });
   } catch (error) {
     console.error("Error fetching all orders:", error);

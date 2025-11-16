@@ -134,7 +134,7 @@ const Dashboard = () => {
             const orderDate = new Date(order.createdAt);
             const dateStr = orderDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             if (salesByPeriod[dateStr] !== undefined) {
-              salesByPeriod[dateStr] += order.totalAmount;
+              salesByPeriod[dateStr] += order.totalPrice;
             }
           }
         });
@@ -159,7 +159,7 @@ const Dashboard = () => {
             const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
             const weekIndex = Math.floor(diffDays / 7);
             if (weekIndex < 4) {
-              salesByPeriod[weeks[3 - weekIndex]] += order.totalAmount;
+              salesByPeriod[weeks[3 - weekIndex]] += order.totalPrice;
             }
           }
         });
@@ -186,7 +186,7 @@ const Dashboard = () => {
             const orderDate = new Date(order.createdAt);
             const monthStr = orderDate.toLocaleDateString('en-US', { month: 'short' });
             if (salesByPeriod[monthStr] !== undefined) {
-              salesByPeriod[monthStr] += order.totalAmount;
+              salesByPeriod[dateStr] += order.totalPrice;
             }
           }
         });
