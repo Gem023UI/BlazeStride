@@ -1,4 +1,5 @@
 import Order from "../models/orders.js";
+import Product from "../models/products.js";
 import nodemailer from "nodemailer";
 
 // Email configuration
@@ -15,11 +16,40 @@ const transporter = nodemailer.createTransport({
   }
 });
 
+const updateProductStock = async (orderItems) => {
+  try {
+    for (const item of orderItems) {
+      const product = await Product.findById(item.product);
+      
+      if (!product) {
+        throw new Error(`Product ${item.product} not found`);
+      }
+      
+      if (product.stock < item.quantity) {
+        throw new Error(`Insufficient stock for ${item.name}. Available: ${product.stock}, Requested: ${item.quantity}`);
+      }
+      
+      product.stock -= item.quantity;
+      await product.save();
+    }
+  } catch (error) {
+    throw error;
+  }
+};
+
 // Create Order
 export const createOrder = async (req, res) => {
   try {
     const order = new Order(req.body);
     await order.save();
+
+    try {
+      await updateProductStock(order.orderItems);
+    } catch (stockError) {
+      // If stock update fails, delete the order
+      await Order.findByIdAndDelete(order._id);
+      return res.status(400).json({ message: stockError.message });
+    }
 
     // Populate order details for email
     await order.populate("user", "email firstname lastname");
