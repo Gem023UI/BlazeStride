@@ -237,13 +237,50 @@ export const updateOrderStatus = async (req, res) => {
   }
 };
 
-// Get all orders (Admin)
+// Get all orders (Admin) with filters
 export const getAllOrders = async (req, res) => {
   try {
-    const orders = await Order.find()
+    const { search, status, date } = req.query;
+    
+    // Build filter object
+    let filter = {};
+    
+    // Status filter
+    if (status && status !== 'all') {
+      filter.orderStatus = status;
+    }
+    
+    // Date filter (filter by specific day)
+    if (date) {
+      const startDate = new Date(date);
+      startDate.setHours(0, 0, 0, 0);
+      const endDate = new Date(date);
+      endDate.setHours(23, 59, 59, 999);
+      
+      filter.createdAt = {
+        $gte: startDate,
+        $lte: endDate
+      };
+    }
+    
+    let orders = await Order.find(filter)
       .sort({ createdAt: -1 })
       .populate("user", "firstname lastname email")
       .populate("orderItems.product", "productname");
+    
+    // Search filter (search by order ID, user name, or email)
+    if (search && search.trim() !== '') {
+      const searchLower = search.toLowerCase().trim();
+      orders = orders.filter(order => {
+        const orderId = order._id.toString().substring(0, 8).toLowerCase();
+        const userName = `${order.user?.firstname || ''} ${order.user?.lastname || ''}`.toLowerCase();
+        const userEmail = order.user?.email?.toLowerCase() || '';
+        
+        return orderId.includes(searchLower) || 
+               userName.includes(searchLower) || 
+               userEmail.includes(searchLower);
+      });
+    }
     
     res.json(orders);
   } catch (error) {

@@ -10,14 +10,23 @@ export default function AdminOrders() {
   const [loading, setLoading] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [dateFilter, setDateFilter] = useState("");
+
   useEffect(() => {
     fetchOrders();
-  }, []);
+  }, [searchTerm, statusFilter, dateFilter]);
 
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const data = await fetchAllOrdersAdmin();
+      const filters = {
+        search: searchTerm,
+        status: statusFilter,
+        date: dateFilter
+      };
+      const data = await fetchAllOrdersAdmin(filters);
       setOrders(data);
     } catch (error) {
       console.error("Error fetching orders:", error);
@@ -65,6 +74,53 @@ export default function AdminOrders() {
               {successMessage}
             </div>
           )}
+
+          {/* Filter Section */}
+          <div className="filter-section">
+            <div className="filter-group">
+              <input
+                type="text"
+                placeholder="Search by Order No. or Customer Name..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="search-input"
+              />
+            </div>
+            
+            <div className="filter-group">
+              <select
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="filter-select"
+              >
+                <option value="all">All Status</option>
+                <option value="To Confirm">To Confirm</option>
+                <option value="To Ship">To Ship</option>
+                <option value="To Deliver">To Deliver</option>
+                <option value="Received">Received</option>
+              </select>
+            </div>
+            
+            <div className="filter-group">
+              <input
+                type="date"
+                value={dateFilter}
+                onChange={(e) => setDateFilter(e.target.value)}
+                className="date-input"
+              />
+            </div>
+            
+            <button
+              className="clear-filters-btn"
+              onClick={() => {
+                setSearchTerm("");
+                setStatusFilter("all");
+                setDateFilter("");
+              }}
+            >
+              Clear Filters
+            </button>
+          </div>
 
           {loading && (
             <div className="loading-overlay">

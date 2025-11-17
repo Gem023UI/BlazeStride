@@ -105,18 +105,26 @@ export const updateOrderStatus = async (orderId, status) => {
   }
 };
 
-// Get all orders (Admin)
-export const fetchAllOrdersAdmin = async () => {
+// Get all orders (Admin) - with filters
+export const fetchAllOrdersAdmin = async (filters = {}) => {
   try {
     const token = localStorage.getItem("token");
+    
+    // Build query parameters
+    const params = {};
+    if (filters.search) params.search = filters.search;
+    if (filters.status) params.status = filters.status;
+    if (filters.date) params.date = filters.date;
+    
     const response = await axios.get(`${API_URL}/admin/all`, {
+      params,
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
     return response.data;
   } catch (error) {
-    console.error("Error fetching all orders:", error);
+    console.error("Error fetching all orders (admin):", error);
     throw error;
   }
 };
