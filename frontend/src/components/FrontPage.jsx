@@ -1,7 +1,7 @@
 import React from "react";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { fetchProducts } from "../api/products";
+import { fetchProducts, fetchFilteredProducts } from "../api/products";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { fetchProductReviews } from "../api/reviews";
 import { Rating } from '@mui/material';
@@ -45,6 +45,14 @@ export default function LandingSection({ logoUrl }) {
     category: '',
     minPrice: '',
     maxPrice: ''
+  });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pagination, setPagination] = useState({
+    currentPage: 1,
+    totalPages: 1,
+    totalProducts: 0,
+    hasNextPage: false,
+    hasPrevPage: false
   });
 
   useEffect(() => {
@@ -114,17 +122,19 @@ export default function LandingSection({ logoUrl }) {
     }));
   };
 
-  const applyFilters = async () => {
+  const applyFilters = async (page = 1) => {
     try {
-      const filterParams = {};
+      const filterParams = { page, limit: 12 };
       
       if (filters.searchTerm) filterParams.searchTerm = filters.searchTerm;
       if (filters.category) filterParams.category = filters.category;
       if (filters.minPrice) filterParams.minPrice = filters.minPrice;
       if (filters.maxPrice) filterParams.maxPrice = filters.maxPrice;
       
-      const results = await fetchProducts(filterParams);
-      setFilteredProducts(results);
+      const response = await fetchFilteredProducts(filterParams);
+      setFilteredProducts(response.products);
+      setPagination(response.pagination);
+      setCurrentPage(page);
       setFilterActive(true);
     } catch (error) {
       console.error("Error applying filters:", error);
@@ -140,6 +150,19 @@ export default function LandingSection({ logoUrl }) {
     });
     setFilterActive(false);
     setFilteredProducts([]);
+    setCurrentPage(1);
+    setPagination({
+      currentPage: 1,
+      totalPages: 1,
+      totalProducts: 0,
+      hasNextPage: false,
+      hasPrevPage: false
+    });
+  };
+
+  const handlePageChange = (newPage) => {
+    applyFilters(newPage);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleSearch = (query) => {
@@ -327,7 +350,7 @@ export default function LandingSection({ logoUrl }) {
                   className="filter-input filter-price"
                 />
                 <div className="filter-buttons">
-                  <button onClick={applyFilters} className="filter-apply-btn">
+                  <button onClick={() => applyFilters(1)} className="filter-apply-btn">
                     Apply Filters
                   </button>
                   <button onClick={clearFilters} className="filter-clear-btn">
@@ -340,59 +363,107 @@ export default function LandingSection({ logoUrl }) {
 
           {filterActive ? (
             /* FILTERED RESULTS */
-            <div className="front-product-section">
-              <div className="front-product-info">
-                <h2>FILTERED RESULTS</h2>
-                <p>{filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found</p>
-              </div>
-              <div className="front-product-grid">
-                {filteredProducts.length === 0 ? (
-                  <p className="no-products">No products match your filters.</p>
-                ) : (
-                  filteredProducts.map((product) => (
-                    <div 
-                      key={product._id}
-                      className="front-product-card"
-                      onClick={async () => {
-                        setSelectedProduct(product);
-                        await loadProductReviews(product._id);
-                        setShowProductModal(true);
-                      }}
-                    >
-                      <img src={product.productimage[0]} alt={product.productname} />
-                      <div className="front-product-details">
-                        <h3>{product.productname}</h3>
-                        <div className="product-rating-display">
-                          <Rating 
-                            value={product.averageRating || 0} 
-                            readOnly 
-                            size="small" 
-                            precision={0.5}
-                          />
-                          <span className="rating-count">
-                            ({product.reviewCount || 0})
-                          </span>
-                        </div>
-                        <p>${product.price}</p>
-                        <div className="front-product-btn">
-                          <button className="info-btn" onClick={(e) => {
-                            e.stopPropagation();
-                            setSelectedProduct(product);
-                            loadProductReviews(product._id);
-                            setShowProductModal(true);
-                          }}>
-                            <FontAwesomeIcon icon={faCircleInfo} />
-                          </button>
-                          <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
-                            <FontAwesomeIcon icon={faCartPlus} />
-                          </button>
-                        </div>
+          <div className="front-product-section">
+            <div className="front-product-info">
+              <h2>FILTERED RESULTS</h2>
+              <p>{pagination.totalProducts} product{pagination.totalProducts !== 1 ? 's' : ''} found</p>
+            </div>
+            <div className="front-product-grid">
+              {filteredProducts.length === 0 ? (
+                <p className="no-products">No products match your filters.</p>
+              ) : (
+                filteredProducts.map((product) => (
+                  <div 
+                    key={product._id}
+                    className="front-product-card"
+                    onClick={async () => {
+                      setSelectedProduct(product);
+                      await loadProductReviews(product._id);
+                      setShowProductModal(true);
+                    }}
+                  >
+                    <img src={product.productimage[0]} alt={product.productname} />
+                    <div className="front-product-details">
+                      <h3>{product.productname}</h3>
+                      <div className="product-rating-display">
+                        <Rating 
+                          value={product.averageRating || 0} 
+                          readOnly 
+                          size="small" 
+                          precision={0.5}
+                        />
+                        <span className="rating-count">
+                          ({product.reviewCount || 0})
+                        </span>
+                      </div>
+                      <p>${product.price}</p>
+                      <div className="front-product-btn">
+                        <button className="info-btn" onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedProduct(product);
+                          loadProductReviews(product._id);
+                          setShowProductModal(true);
+                        }}>
+                          <FontAwesomeIcon icon={faCircleInfo} />
+                        </button>
+                        <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
+                          <FontAwesomeIcon icon={faCartPlus} />
+                        </button>
                       </div>
                     </div>
-                  ))
-                )}
-              </div>
+                  </div>
+                ))
+              )}
             </div>
+            
+            {/* Pagination Controls */}
+            {pagination.totalPages > 1 && (
+              <div className="pagination-container">
+                <button 
+                  className="pagination-btn" 
+                  onClick={() => handlePageChange(currentPage - 1)}
+                  disabled={!pagination.hasPrevPage}
+                >
+                  Previous
+                </button>
+                
+                <div className="pagination-pages">
+                  {[...Array(pagination.totalPages)].map((_, index) => {
+                    const pageNum = index + 1;
+                    if (
+                      pageNum === 1 || 
+                      pageNum === pagination.totalPages || 
+                      (pageNum >= currentPage - 1 && pageNum <= currentPage + 1)
+                    ) {
+                      return (
+                        <button
+                          key={pageNum}
+                          className={`pagination-number ${currentPage === pageNum ? 'active' : ''}`}
+                          onClick={() => handlePageChange(pageNum)}
+                        >
+                          {pageNum}
+                        </button>
+                      );
+                    } else if (
+                      pageNum === currentPage - 2 || 
+                      pageNum === currentPage + 2
+                    ) {
+                      return <span key={pageNum} className="pagination-ellipsis">...</span>;
+                    }
+                    return null;
+                  })}
+                </div>
+                
+                <button 
+                  className="pagination-btn" 
+                  onClick={() => handlePageChange(currentPage + 1)}
+                  disabled={!pagination.hasNextPage}
+                >
+                  Next
+                </button>
+              </div>
+            )}
+          </div>
           ) : (
             <>
               {/* DAILY PRODUCTS */}

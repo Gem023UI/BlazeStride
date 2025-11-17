@@ -5,13 +5,17 @@ import {
   getProductById,
   createProduct,
   updateProduct,
-  deleteProduct
+  deleteProduct,
+  getFilteredProducts,
 } from "../controllers/products.js";
 
 const router = express.Router();
 
 // Get all products (with filters)
 router.get("/", getAllProducts);
+
+// Get filtered products for front page
+router.get("/filter/search", getFilteredProducts);
 
 // Get product by ID
 router.get("/:id", getProductById);

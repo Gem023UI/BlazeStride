@@ -33,6 +33,54 @@ export const getAllProducts = async (req, res) => {
   }
 };
 
+// Get filtered products for front page with pagination
+export const getFilteredProducts = async (req, res) => {
+  try {
+    const { category, search, minPrice, maxPrice, page = 1, limit = 12 } = req.query;
+    let filter = {};
+    
+    // Category filter - support array of categories
+    if (category) {
+      filter.category = { $in: Array.isArray(category) ? category : [category] };
+    }
+    
+    // Search filter (product name)
+    if (search) {
+      filter.productname = { $regex: search, $options: 'i' };
+    }
+    
+    // Price range filter
+    if (minPrice || maxPrice) {
+      filter.price = {};
+      if (minPrice) filter.price.$gte = parseFloat(minPrice);
+      if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
+    }
+    
+    // Calculate pagination
+    const skip = (parseInt(page) - 1) * parseInt(limit);
+    const total = await Product.countDocuments(filter);
+    
+    const products = await Product.find(filter)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(parseInt(limit));
+
+    res.json({
+      products,
+      pagination: {
+        currentPage: parseInt(page),
+        totalPages: Math.ceil(total / parseInt(limit)),
+        totalProducts: total,
+        hasNextPage: skip + products.length < total,
+        hasPrevPage: parseInt(page) > 1
+      }
+    });
+  } catch (error) {
+    console.error("Error fetching filtered products:", error);
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // Get product by ID
 export const getProductById = async (req, res) => {
   try {

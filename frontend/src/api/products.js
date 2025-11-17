@@ -38,6 +38,38 @@ export const fetchProductById = async (id) => {
   }
 };
 
+export const fetchFilteredProducts = async (filters = {}) => {
+  try {
+    const params = new URLSearchParams();
+    
+    if (filters.category) {
+      params.append('category', filters.category);
+    }
+    if (filters.searchTerm) {
+      params.append('search', filters.searchTerm);
+    }
+    if (filters.minPrice) {
+      params.append('minPrice', filters.minPrice);
+    }
+    if (filters.maxPrice) {
+      params.append('maxPrice', filters.maxPrice);
+    }
+    if (filters.page) {
+      params.append('page', filters.page);
+    }
+    if (filters.limit) {
+      params.append('limit', filters.limit);
+    }
+
+    const url = `${API_URL}/filter/search?${params.toString()}`;
+    const res = await axios.get(url);
+    return res.data;
+  } catch (error) {
+    console.error("Error fetching filtered products:", error);
+    throw error;
+  }
+};
+
 export const createProduct = async (productData) => {
   try {
     const response = await axios.post(API_URL, productData, {
