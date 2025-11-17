@@ -17,7 +17,6 @@ import {
   faChevronLeft,
   faChevronRight,
    } from '@fortawesome/free-solid-svg-icons';
-import SearchBar from "../components/layout/SearchBar"
 import MainLayout from "./layout/MainLayout";
 import "../styles/FrontPage.css";
 
@@ -39,6 +38,15 @@ export default function LandingSection({ logoUrl }) {
   const [productReviews, setProductReviews] = useState([]);
   const [productAverageRating, setProductAverageRating] = useState(0);
 
+  const [filterActive, setFilterActive] = useState(false);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [filters, setFilters] = useState({
+    searchTerm: '',
+    category: '',
+    minPrice: '',
+    maxPrice: ''
+  });
+
   useEffect(() => {
     if (showProductModal) {
       document.body.style.overflow = 'hidden';
@@ -50,10 +58,12 @@ export default function LandingSection({ logoUrl }) {
   useEffect(() => {
     const loadProducts = async () => {
       try {
-        setDailyProducts(await fetchProducts("daily"));
-        setTempoProducts(await fetchProducts("tempo"));
-        setMarathonProducts(await fetchProducts("marathon"));
-        setRaceProducts(await fetchProducts("race"));
+        const allProducts = await fetchProducts();
+        
+        setDailyProducts(allProducts.filter(p => p.category.includes("daily")));
+        setTempoProducts(allProducts.filter(p => p.category.includes("tempo")));
+        setMarathonProducts(allProducts.filter(p => p.category.includes("marathon")));
+        setRaceProducts(allProducts.filter(p => p.category.includes("race")));
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -94,6 +104,42 @@ export default function LandingSection({ logoUrl }) {
       (prev - 1 + selectedProduct.productimage.length) %
       selectedProduct.productimage.length
     );
+  };
+
+  const handleFilterChange = (e) => {
+    const { name, value } = e.target;
+    setFilters(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const applyFilters = async () => {
+    try {
+      const filterParams = {};
+      
+      if (filters.searchTerm) filterParams.searchTerm = filters.searchTerm;
+      if (filters.category) filterParams.category = filters.category;
+      if (filters.minPrice) filterParams.minPrice = filters.minPrice;
+      if (filters.maxPrice) filterParams.maxPrice = filters.maxPrice;
+      
+      const results = await fetchProducts(filterParams);
+      setFilteredProducts(results);
+      setFilterActive(true);
+    } catch (error) {
+      console.error("Error applying filters:", error);
+    }
+  };
+
+  const clearFilters = async () => {
+    setFilters({
+      searchTerm: '',
+      category: '',
+      minPrice: '',
+      maxPrice: ''
+    });
+    setFilterActive(false);
+    setFilteredProducts([]);
   };
 
   const handleSearch = (query) => {
@@ -209,9 +255,6 @@ export default function LandingSection({ logoUrl }) {
 
         <div className="front-page">
           <div className="front-info-1">
-            <div className="front-searchbar">
-              <SearchBar onSearch={handleSearch} placeholder="Running gears, apparel.." />
-            </div>
             <div className="front-logo-container">
               <img src={logoUrl} alt="BlazeStride-Logo" className="front-logo" />
               <div className="front-logo-text">
@@ -242,210 +285,321 @@ export default function LandingSection({ logoUrl }) {
             </div>
           </div>
 
-          {/* DAILY PRODUCTS */}
-          <div className="front-product-section">
-            <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faCalendarCheck}/> DAILY</h2>
-              <p>Stay on track with our daily running essentials.</p>
-            </div>
-            <div className="front-product-grid">
-              {dailyProducts.map((product) => (
-                <div 
-                  key={product._id}
-                  className="front-product-card"
-                  onClick={async () => {
-                    setSelectedProduct(product);
-                    await loadProductReviews(product._id);
-                    setShowProductModal(true);
-                  }}
+          {/* FILTER SECTION */}
+          <div className="filter-section">
+            <div className="filter-container">
+              <h2 className="filter-title">FILTER PRODUCTS</h2>
+              <div className="filter-inputs">
+                <input
+                  type="text"
+                  name="searchTerm"
+                  placeholder="Search product name..."
+                  value={filters.searchTerm}
+                  onChange={handleFilterChange}
+                  className="filter-input"
+                />
+                <select
+                  name="category"
+                  value={filters.category}
+                  onChange={handleFilterChange}
+                  className="filter-select"
                 >
-                  <img src={product.productimage[0]} alt={product.productname} />
-                  <div className="front-product-details">
-                    <h3>{product.productname}</h3>
-                    <div className="product-rating-display">
-                      <Rating 
-                        value={product.averageRating || 0} 
-                        readOnly 
-                        size="small" 
-                        precision={0.5}
-                      />
-                      <span className="rating-count">
-                        ({product.reviewCount || 0})
-                      </span>
-                    </div>
-                    <p>${product.price}</p>
-                    <div className="front-product-btn">
-                      <button className="info-btn" onClick={(e) => {
-                        e.stopPropagation();
-                        setSelectedProduct(product);
-                        loadProductReviews(product._id);
-                        setShowProductModal(true);
-                      }}>
-                        <FontAwesomeIcon icon={faCircleInfo} />
-                      </button>
-                      <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
-                        <FontAwesomeIcon icon={faCartPlus} />
-                      </button>
-                    </div>
-                  </div>
+                  <option value="">All Categories</option>
+                  <option value="daily">Daily</option>
+                  <option value="tempo">Tempo</option>
+                  <option value="marathon">Marathon</option>
+                  <option value="race">Race</option>
+                </select>
+                <input
+                  type="number"
+                  name="minPrice"
+                  placeholder="Min Price"
+                  value={filters.minPrice}
+                  onChange={handleFilterChange}
+                  className="filter-input filter-price"
+                />
+                <input
+                  type="number"
+                  name="maxPrice"
+                  placeholder="Max Price"
+                  value={filters.maxPrice}
+                  onChange={handleFilterChange}
+                  className="filter-input filter-price"
+                />
+                <div className="filter-buttons">
+                  <button onClick={applyFilters} className="filter-apply-btn">
+                    Apply Filters
+                  </button>
+                  <button onClick={clearFilters} className="filter-clear-btn">
+                    Clear
+                  </button>
                 </div>
-              ))}
+              </div>
             </div>
           </div>
 
-          {/* TEMPO PRODUCTS */}
-          <div className="front-product-section">
-            <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faClock}/> TEMPO</h2>
-              <p>Ensure consistent tempo during your runs.</p>
-            </div>
-            <div className="front-product-grid">
-              {tempoProducts.map((product) => (
-                <div 
-                  key={product._id}
-                  className="front-product-card"
-                  onClick={async () => {
-                    setSelectedProduct(product);
-                    await loadProductReviews(product._id);
-                    setShowProductModal(true);
-                  }}
-                >
-                  <img src={product.productimage[0]} alt={product.productname} />
-                  <div className="front-product-details">
-                    <h3>{product.productname}</h3>
-                    <div className="product-rating-display">
-                      <Rating 
-                        value={product.averageRating || 0} 
-                        readOnly 
-                        size="small" 
-                        precision={0.5}
-                      />
-                      <span className="rating-count">
-                        ({product.reviewCount || 0})
-                      </span>
-                    </div>
-                    <p>${product.price}</p>
-                    <div className="front-product-btn">
-                      <button className="info-btn" onClick={(e) => {
-                        e.stopPropagation();
+          {filterActive ? (
+            /* FILTERED RESULTS */
+            <div className="front-product-section">
+              <div className="front-product-info">
+                <h2>FILTERED RESULTS</h2>
+                <p>{filteredProducts.length} product{filteredProducts.length !== 1 ? 's' : ''} found</p>
+              </div>
+              <div className="front-product-grid">
+                {filteredProducts.length === 0 ? (
+                  <p className="no-products">No products match your filters.</p>
+                ) : (
+                  filteredProducts.map((product) => (
+                    <div 
+                      key={product._id}
+                      className="front-product-card"
+                      onClick={async () => {
                         setSelectedProduct(product);
-                        loadProductReviews(product._id);
+                        await loadProductReviews(product._id);
                         setShowProductModal(true);
-                      }}>
-                        <FontAwesomeIcon icon={faCircleInfo} />
-                      </button>
-                      <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
-                        <FontAwesomeIcon icon={faCartPlus} />
-                      </button>
+                      }}
+                    >
+                      <img src={product.productimage[0]} alt={product.productname} />
+                      <div className="front-product-details">
+                        <h3>{product.productname}</h3>
+                        <div className="product-rating-display">
+                          <Rating 
+                            value={product.averageRating || 0} 
+                            readOnly 
+                            size="small" 
+                            precision={0.5}
+                          />
+                          <span className="rating-count">
+                            ({product.reviewCount || 0})
+                          </span>
+                        </div>
+                        <p>${product.price}</p>
+                        <div className="front-product-btn">
+                          <button className="info-btn" onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProduct(product);
+                            loadProductReviews(product._id);
+                            setShowProductModal(true);
+                          }}>
+                            <FontAwesomeIcon icon={faCircleInfo} />
+                          </button>
+                          <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
+                            <FontAwesomeIcon icon={faCartPlus} />
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))
+                )}
+              </div>
+            </div>
+          ) : (
+            <>
+              {/* DAILY PRODUCTS */}
+              <div className="front-product-section">
+                <div className="front-product-info">
+                  <h2><FontAwesomeIcon icon={faCalendarCheck}/> DAILY</h2>
+                  <p>Stay on track with our daily running essentials.</p>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          {/* MARATHON PRODUCTS */}
-          <div className="front-product-section">
-            <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faPersonRunning}/> MARATHON</h2>
-              <p>Finish strong with our marathon essentials.</p>
-            </div>
-            <div className="front-product-grid">
-              {marathonProducts.map((product) => (
-                <div 
-                  key={product._id}
-                  className="front-product-card"
-                  onClick={async () => {
-                    setSelectedProduct(product);
-                    await loadProductReviews(product._id);
-                    setShowProductModal(true);
-                  }}
-                >
-                  <img src={product.productimage[0]} alt={product.productname} />
-                  <div className="front-product-details">
-                    <h3>{product.productname}</h3>
-                    <div className="product-rating-display">
-                      <Rating 
-                        value={product.averageRating || 0} 
-                        readOnly 
-                        size="small" 
-                        precision={0.5}
-                      />
-                      <span className="rating-count">
-                        ({product.reviewCount || 0})
-                      </span>
-                    </div>
-                    <p>${product.price}</p>
-                    <div className="front-product-btn">
-                      <button className="info-btn" onClick={(e) => {
-                        e.stopPropagation();
+                <div className="front-product-grid">
+                  {dailyProducts.map((product) => (
+                    <div 
+                      key={product._id}
+                      className="front-product-card"
+                      onClick={async () => {
                         setSelectedProduct(product);
-                        loadProductReviews(product._id);
+                        await loadProductReviews(product._id);
                         setShowProductModal(true);
-                      }}>
-                        <FontAwesomeIcon icon={faCircleInfo} />
-                      </button>
-                      <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
-                        <FontAwesomeIcon icon={faCartPlus} />
-                      </button>
+                      }}
+                    >
+                      <img src={product.productimage[0]} alt={product.productname} />
+                      <div className="front-product-details">
+                        <h3>{product.productname}</h3>
+                        <div className="product-rating-display">
+                          <Rating 
+                            value={product.averageRating || 0} 
+                            readOnly 
+                            size="small" 
+                            precision={0.5}
+                          />
+                          <span className="rating-count">
+                            ({product.reviewCount || 0})
+                          </span>
+                        </div>
+                        <p>${product.price}</p>
+                        <div className="front-product-btn">
+                          <button className="info-btn" onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProduct(product);
+                            loadProductReviews(product._id);
+                            setShowProductModal(true);
+                          }}>
+                            <FontAwesomeIcon icon={faCircleInfo} />
+                          </button>
+                          <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
+                            <FontAwesomeIcon icon={faCartPlus} />
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
 
-
-          {/* RACE PRODUCTS */}
-          <div className="front-product-section">
-            <div className="front-product-info">
-              <h2><FontAwesomeIcon icon={faShoePrints}/> RACE</h2>
-              <p>Sprint to the finish line with our race-day gears.</p>
-            </div>
-            <div className="front-product-grid">
-              {raceProducts.map((product) => (
-                <div 
-                  key={product._id}
-                  className="front-product-card"
-                  onClick={async () => {
-                    setSelectedProduct(product);
-                    await loadProductReviews(product._id);
-                    setShowProductModal(true);
-                  }}
-                >
-                  <img src={product.productimage[0]} alt={product.productname} />
-                  <div className="front-product-details">
-                    <h3>{product.productname}</h3>
-                    <div className="product-rating-display">
-                      <Rating 
-                        value={product.averageRating || 0} 
-                        readOnly 
-                        size="small" 
-                        precision={0.5}
-                      />
-                      <span className="rating-count">
-                        ({product.reviewCount || 0})
-                      </span>
-                    </div>
-                    <p>${product.price}</p>
-                    <div className="front-product-btn">
-                      <button className="info-btn" onClick={(e) => {
-                        e.stopPropagation();
+              {/* TEMPO PRODUCTS */}
+              <div className="front-product-section">
+                <div className="front-product-info">
+                  <h2><FontAwesomeIcon icon={faClock}/> TEMPO</h2>
+                  <p>Ensure consistent tempo during your runs.</p>
+                </div>
+                <div className="front-product-grid">
+                  {tempoProducts.map((product) => (
+                    <div 
+                      key={product._id}
+                      className="front-product-card"
+                      onClick={async () => {
                         setSelectedProduct(product);
-                        loadProductReviews(product._id);
+                        await loadProductReviews(product._id);
                         setShowProductModal(true);
-                      }}>
-                        <FontAwesomeIcon icon={faCircleInfo} />
-                      </button>
-                      <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
-                        <FontAwesomeIcon icon={faCartPlus} />
-                      </button>
+                      }}
+                    >
+                      <img src={product.productimage[0]} alt={product.productname} />
+                      <div className="front-product-details">
+                        <h3>{product.productname}</h3>
+                        <div className="product-rating-display">
+                          <Rating 
+                            value={product.averageRating || 0} 
+                            readOnly 
+                            size="small" 
+                            precision={0.5}
+                          />
+                          <span className="rating-count">
+                            ({product.reviewCount || 0})
+                          </span>
+                        </div>
+                        <p>${product.price}</p>
+                        <div className="front-product-btn">
+                          <button className="info-btn" onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProduct(product);
+                            loadProductReviews(product._id);
+                            setShowProductModal(true);
+                          }}>
+                            <FontAwesomeIcon icon={faCircleInfo} />
+                          </button>
+                          <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
+                            <FontAwesomeIcon icon={faCartPlus} />
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
+              </div>
+
+              {/* MARATHON PRODUCTS */}
+              <div className="front-product-section">
+                <div className="front-product-info">
+                  <h2><FontAwesomeIcon icon={faPersonRunning}/> MARATHON</h2>
+                  <p>Finish strong with our marathon essentials.</p>
+                </div>
+                <div className="front-product-grid">
+                  {marathonProducts.map((product) => (
+                    <div 
+                      key={product._id}
+                      className="front-product-card"
+                      onClick={async () => {
+                        setSelectedProduct(product);
+                        await loadProductReviews(product._id);
+                        setShowProductModal(true);
+                      }}
+                    >
+                      <img src={product.productimage[0]} alt={product.productname} />
+                      <div className="front-product-details">
+                        <h3>{product.productname}</h3>
+                        <div className="product-rating-display">
+                          <Rating 
+                            value={product.averageRating || 0} 
+                            readOnly 
+                            size="small" 
+                            precision={0.5}
+                          />
+                          <span className="rating-count">
+                            ({product.reviewCount || 0})
+                          </span>
+                        </div>
+                        <p>${product.price}</p>
+                        <div className="front-product-btn">
+                          <button className="info-btn" onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProduct(product);
+                            loadProductReviews(product._id);
+                            setShowProductModal(true);
+                          }}>
+                            <FontAwesomeIcon icon={faCircleInfo} />
+                          </button>
+                          <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
+                            <FontAwesomeIcon icon={faCartPlus} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* RACE PRODUCTS */}
+              <div className="front-product-section">
+                <div className="front-product-info">
+                  <h2><FontAwesomeIcon icon={faShoePrints}/> RACE</h2>
+                  <p>Sprint to the finish line with our race-day gears.</p>
+                </div>
+                <div className="front-product-grid">
+                  {raceProducts.map((product) => (
+                    <div 
+                      key={product._id}
+                      className="front-product-card"
+                      onClick={async () => {
+                        setSelectedProduct(product);
+                        await loadProductReviews(product._id);
+                        setShowProductModal(true);
+                      }}
+                    >
+                      <img src={product.productimage[0]} alt={product.productname} />
+                      <div className="front-product-details">
+                        <h3>{product.productname}</h3>
+                        <div className="product-rating-display">
+                          <Rating 
+                            value={product.averageRating || 0} 
+                            readOnly 
+                            size="small" 
+                            precision={0.5}
+                          />
+                          <span className="rating-count">
+                            ({product.reviewCount || 0})
+                          </span>
+                        </div>
+                        <p>${product.price}</p>
+                        <div className="front-product-btn">
+                          <button className="info-btn" onClick={(e) => {
+                            e.stopPropagation();
+                            setSelectedProduct(product);
+                            loadProductReviews(product._id);
+                            setShowProductModal(true);
+                          }}>
+                            <FontAwesomeIcon icon={faCircleInfo} />
+                          </button>
+                          <button className="cart-btn" onClick={(e) => handleAddToCart(e, product)}>
+                            <FontAwesomeIcon icon={faCartPlus} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </>
+          )}
         </div>
 
         {/* View Product Modal */}
