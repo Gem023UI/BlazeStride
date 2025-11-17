@@ -1,17 +1,17 @@
-const badWordsList = [
-  'fuck', 'shit', 'bitch', 'ass', 'damn', 'hell', 'dick', 'pussy', 'cock',
-  'bastard', 'cunt', 'whore', 'slut', 'piss', 'fag', 'nigger', 'retard', 'tangina'
-];
+let filter;
 
-const containsBadWords = (text) => {
-  const lowerText = text.toLowerCase();
-  return badWordsList.some(word => {
-    const regex = new RegExp(`\\b${word.toLowerCase()}\\b`, 'i');
-    return regex.test(lowerText);
-  });
+// Dynamically import bad-words
+const initFilter = async () => {
+  if (!filter) {
+    const badWordsModule = await import('bad-words');
+    // Try different ways to access the Filter constructor
+    const Filter = badWordsModule.default || badWordsModule.Filter || badWordsModule;
+    filter = new Filter();
+  }
+  return filter;
 };
 
-export const validateReviewDescription = (description) => {
+export const validateReviewDescription = async (description) => {
   if (!description) {
     return { isValid: false, message: 'Review description is required' };
   }
@@ -24,9 +24,21 @@ export const validateReviewDescription = (description) => {
     return { isValid: false, message: 'Review cannot exceed 1000 characters' };
   }
 
-  if (containsBadWords(description)) {
-    return { isValid: false, message: 'Review contains inappropriate language' };
-  }
+  try {
+    // Censor bad words automatically
+    const badWordsFilter = await initFilter();
+    const censoredDescription = badWordsFilter.clean(description);
 
-  return { isValid: true };
+    return { 
+      isValid: true, 
+      censoredDescription: censoredDescription 
+    };
+  } catch (error) {
+    console.error("Bad words filter error:", error);
+    // If bad-words fails, just return original description
+    return { 
+      isValid: true, 
+      censoredDescription: description 
+    };
+  }
 };

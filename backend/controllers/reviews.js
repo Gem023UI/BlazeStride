@@ -34,10 +34,12 @@ export const createOrUpdateReview = async (req, res) => {
     }
 
     // Validate review description (including bad words check)
-    const validation = validateReviewDescription(reviewDescription);
+    const validation = await validateReviewDescription(reviewDescription);
     if (!validation.isValid) {
       return res.status(400).json({ message: validation.message });
     }
+
+    const finalDescription = validation.censoredDescription;
 
     // Verify order exists and belongs to user
     const order = await Order.findOne({ _id: orderId, user: userId })
@@ -103,8 +105,7 @@ export const createOrUpdateReview = async (req, res) => {
     if (existingReview) {
       // Update existing review
       existingReview.rating = rating;
-      existingReview.reviewDescription = reviewDescription;
-      // Only update images if new ones were uploaded
+      existingReview.reviewDescription = finalDescription;
       if (reviewImages.length > 0) {
         existingReview.reviewImages = reviewImages;
       }
@@ -127,7 +128,7 @@ export const createOrUpdateReview = async (req, res) => {
         productname: product.productname,
         order: orderId,
         rating,
-        reviewDescription,
+        reviewDescription: finalDescription,
         reviewImages: reviewImages || []
       });
 
