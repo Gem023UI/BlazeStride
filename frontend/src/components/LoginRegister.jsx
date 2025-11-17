@@ -346,7 +346,6 @@ export default function LoginRegister({ logoUrl }) {
               <img src={logoUrl} alt="blazestride" className="trademark" />
               <h1>GREETINGS!</h1>
               <div className="hotlines">
-                <p>Keep Moving, in Both Money and Mind</p>
                 <p>For any inquiries, please contact us at:</p>
                 <p>blazestride@gmail.com</p>
               </div>

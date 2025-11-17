@@ -330,7 +330,7 @@ export const socialAuth = async (req, res) => {
     // Split name into firstname and lastname
     const nameParts = (name || '').split(' ');
     const firstname = nameParts[0] || 'User';
-    const lastname = nameParts.slice(1).join(' ') || '';
+    const lastname = nameParts.slice(1).join(' ') || 'User';
 
     // Check if user exists
     let user = await User.findOne({ email });
