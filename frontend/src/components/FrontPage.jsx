@@ -311,7 +311,7 @@ export default function LandingSection({ logoUrl }) {
           {/* FILTER SECTION */}
           <div className="filter-section">
             <div className="filter-container">
-              <h2 className="filter-title">FILTER PRODUCTS</h2>
+              <h2 className="filter-title">SEARCH OUR PRODUCTS</h2>
               <div className="filter-inputs">
                 <input
                   type="text"

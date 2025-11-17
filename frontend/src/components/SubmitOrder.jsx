@@ -109,7 +109,7 @@ export default function SubmitOrder() {
 
   return (
     <MainLayout>
-      <section className="cart-page-wrapper">
+      <section className="submit-order-page-wrapper">
         <div className="submit-order-container">
           <h1 className="page-title">Submit Order</h1>
 

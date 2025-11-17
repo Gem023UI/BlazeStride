@@ -8,6 +8,10 @@
   --text-dark: #121212;
 }
 
+.submit-order-page-wrapper {
+  font-family: 'Poppins';
+}
+
 .submit-order-container {
   max-width: 1400px;
   margin: 0 auto;
