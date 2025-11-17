@@ -1,6 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-.review-modal-overlay {
+.review-modal-wrapper .review-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -14,7 +14,7 @@
   animation: fadeIn 0.3s;
 }
 
-.review-modal-content {
+.review-modal-wrapper .review-modal-content {
   background: white;
   padding: 40px;
   border-radius: 16px;
@@ -27,7 +27,7 @@
   animation: slideUp 0.3s;
 }
 
-.review-close-btn {
+.review-modal-wrapper .review-close-btn {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -45,19 +45,19 @@
   transition: all 0.2s;
 }
 
-.review-close-btn:hover {
+.review-modal-wrapper .review-close-btn:hover {
   background: #f0f0f0;
   color: #333;
 }
 
-.review-modal-content h2 {
+.review-modal-wrapper .review-modal-content h2 {
   margin-bottom: 30px;
   color: #333;
   font-size: 28px;
   font-weight: 600;
 }
 
-.review-product-info {
+.review-modal-wrapper .review-product-info {
   display: flex;
   align-items: center;
   gap: 15px;
@@ -67,24 +67,24 @@
   margin-bottom: 30px;
 }
 
-.review-product-info img {
+.review-modal-wrapper .review-product-info img {
   width: 80px;
   height: 80px;
   object-fit: cover;
   border-radius: 8px;
 }
 
-.review-product-info h3 {
+.review-modal-wrapper .review-product-info h3 {
   color: #333;
   font-size: 18px;
   font-weight: 500;
 }
 
-.form-group {
+.review-modal-wrapper .form-group {
   margin-bottom: 25px;
 }
 
-.form-group label {
+.review-modal-wrapper .form-group label {
   display: block;
   margin-bottom: 10px;
   color: #333;
@@ -92,7 +92,7 @@
   font-size: 16px;
 }
 
-.form-group textarea {
+.review-modal-wrapper .form-group textarea {
   width: 100%;
   padding: 12px;
   border: 2px solid #e0e0e0;
@@ -103,29 +103,29 @@
   transition: border-color 0.2s;
 }
 
-.form-group textarea:focus {
+.review-modal-wrapper .form-group textarea:focus {
   outline: none;
   border-color: #007bff;
 }
 
-.char-count {
+.review-modal-wrapper .char-count {
   text-align: right;
   font-size: 12px;
   color: #666;
   margin-top: 5px;
 }
 
-.error-message {
+.review-modal-wrapper .error-message {
   color: #dc3545;
   font-size: 13px;
   margin-top: 5px;
 }
 
-.image-upload-section {
+.review-modal-wrapper .image-upload-section {
   margin-top: 10px;
 }
 
-.upload-btn {
+.review-modal-wrapper .upload-btn {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -139,18 +139,18 @@
   margin-bottom: 20px;
 }
 
-.upload-btn:hover {
+.review-modal-wrapper .upload-btn:hover {
   background: #0056b3;
   transform: translateY(-2px);
 }
 
-.image-previews {
+.review-modal-wrapper .image-previews {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 15px;
 }
 
-.image-preview-item {
+.review-modal-wrapper .image-preview-item {
   position: relative;
   aspect-ratio: 1;
   border-radius: 8px;
@@ -158,13 +158,13 @@
   border: 2px solid #e0e0e0;
 }
 
-.image-preview-item img {
+.review-modal-wrapper .image-preview-item img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
-.remove-image-btn {
+.review-modal-wrapper .remove-image-btn {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -181,12 +181,12 @@
   transition: all 0.2s;
 }
 
-.remove-image-btn:hover {
+.review-modal-wrapper .remove-image-btn:hover {
   background: #dc3545;
   transform: scale(1.1);
 }
 
-.submit-review-btn {
+.review-modal-wrapper .submit-review-btn {
   width: 100%;
   padding: 14px;
   background: #007bff;
@@ -200,12 +200,12 @@
   margin-top: 20px;
 }
 
-.submit-review-btn:hover:not(:disabled) {
+.review-modal-wrapper .submit-review-btn:hover:not(:disabled) {
   background: #0056b3;
   transform: translateY(-2px);
 }
 
-.submit-review-btn:disabled {
+.review-modal-wrapper .submit-review-btn:disabled {
   background: #ccc;
   cursor: not-allowed;
 }

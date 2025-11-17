@@ -29,6 +29,9 @@ ChartJS.register(
   Legend
 );
 
+ChartJS.defaults.maintainAspectRatio = false;
+ChartJS.defaults.responsive = true;
+
 const Dashboard = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -55,7 +58,9 @@ const Dashboard = () => {
 
   // Sales chart data
   const [salesData, setSalesData] = useState([]);
-  const [dateRange, setDateRange] = useState('week'); // 'week', 'month', 'year'
+  const [dateRange, setDateRange] = useState('week');
+
+  const [showChartModal, setShowChartModal] = useState(false);
 
   useEffect(() => {
     fetchDashboardData();
@@ -231,6 +236,9 @@ const Dashboard = () => {
           }
         }
       }
+    },
+    layout: {
+      padding: 0
     }
   };
 
@@ -337,89 +345,99 @@ const Dashboard = () => {
 
         {/* Orders Section */}
         <div className="dashboard-section orders-section">
-        <div onClick={() => navigate('/orders')}>
-            <div className="section-header">
+          <div className="section-header" onClick={() => navigate('/orders')}>
             <h3>
-                <FontAwesomeIcon icon={faTruckFast} /> Orders Management
+              <FontAwesomeIcon icon={faTruckFast} /> Orders Management
             </h3>
             <span className="click-hint">Click to view details →</span>
-            </div>
+          </div>
+          
+          <div className="stats-section">
             <div className="stats-grid">
-            <div className="stat-card total">
+              <div className="stat-card total">
                 <div className="stat-icon">
-                <FontAwesomeIcon icon={faTruckFast} />
+                  <FontAwesomeIcon icon={faTruckFast} />
                 </div>
                 <div className="stat-info">
-                <p className="stat-label">Total Orders</p>
-                <p className="stat-value">{totalOrders}</p>
+                  <p className="stat-label">Total Orders</p>
+                  <p className="stat-value">{totalOrders}</p>
                 </div>
-            </div>
-            <div className="stat-card pending">
+              </div>
+              <div className="stat-card pending">
                 <div className="stat-info">
-                <p className="stat-label">Pending</p>
-                <p className="stat-value">{pendingOrders}</p>
+                  <p className="stat-label">Pending</p>
+                  <p className="stat-value">{pendingOrders}</p>
                 </div>
-            </div>
-            <div className="stat-card processing">
+              </div>
+              <div className="stat-card processing">
                 <div className="stat-info">
-                <p className="stat-label">Processing</p>
-                <p className="stat-value">{processingOrders}</p>
+                  <p className="stat-label">Processing</p>
+                  <p className="stat-value">{processingOrders}</p>
                 </div>
-            </div>
-            <div className="stat-card shipped">
+              </div>
+              <div className="stat-card shipped">
                 <div className="stat-info">
-                <p className="stat-label">Shipped</p>
-                <p className="stat-value">{shippedOrders}</p>
+                  <p className="stat-label">Shipped</p>
+                  <p className="stat-value">{shippedOrders}</p>
                 </div>
-            </div>
-            <div className="stat-card delivered">
+              </div>
+              <div className="stat-card delivered">
                 <div className="stat-info">
-                <p className="stat-label">Delivered</p>
-                <p className="stat-value">{deliveredOrders}</p>
+                  <p className="stat-label">Delivered</p>
+                  <p className="stat-value">{deliveredOrders}</p>
                 </div>
-            </div>
-            <div className="stat-card cancelled">
+              </div>
+              <div className="stat-card cancelled">
                 <div className="stat-info">
-                <p className="stat-label">Cancelled</p>
-                <p className="stat-value">{cancelledOrders}</p>
+                  <p className="stat-label">Cancelled</p>
+                  <p className="stat-value">{cancelledOrders}</p>
                 </div>
+              </div>
             </div>
-            </div>
-        </div>
+          </div>
 
-        {/* Sales Chart - Outside the clickable div */}
-        <div className="chart-container">
+          {/* Sales Analytics Buttons */}
+          <div className="chart-container">
             <div className="chart-header">
-            <h4>Sales Analytics</h4>
-            <div className="date-range-selector">
+              <h4>Sales Analytics</h4>
+              <div className="date-range-selector">
                 <button 
-                className={dateRange === 'week' ? 'active' : ''} 
-                onClick={() => setDateRange('week')}
+                  onClick={(e) => { e.stopPropagation(); setDateRange('week'); setShowChartModal(true); }}
                 >
-                Week
+                  Week
                 </button>
                 <button 
-                className={dateRange === 'month' ? 'active' : ''} 
-                onClick={() => setDateRange('month')}
+                  onClick={(e) => { e.stopPropagation(); setDateRange('month'); setShowChartModal(true); }}
                 >
-                Month
+                  Month
                 </button>
                 <button 
-                className={dateRange === 'year' ? 'active' : ''} 
-                onClick={() => setDateRange('year')}
+                  onClick={(e) => { e.stopPropagation(); setDateRange('year'); setShowChartModal(true); }}
                 >
-                Year
+                  Year
                 </button>
+              </div>
             </div>
+          </div>
+
+          {/* Chart Modal */}
+          {showChartModal && (
+            <div className="chart-modal-overlay" onClick={() => setShowChartModal(false)}>
+              <div className="chart-modal" onClick={(e) => e.stopPropagation()}>
+                <div className="chart-modal-header">
+                  <h3>Sales Analytics - {dateRange === 'week' ? 'Last 7 Days' : dateRange === 'month' ? 'Last 30 Days' : 'Last 12 Months'}</h3>
+                  <button className="close-btn" onClick={() => setShowChartModal(false)}>×</button>
+                </div>
+                <div className="chart-modal-body">
+                  {salesData.labels && salesData.labels.length > 0 ? (
+                    <Bar data={salesData} options={chartOptions} />
+                  ) : (
+                    <div className="no-data">No sales data available</div>
+                  )}
+                </div>
+              </div>
             </div>
-            <div className="chart-wrapper">
-            {salesData.labels && salesData.labels.length > 0 ? (
-                <Bar data={salesData} options={chartOptions} />
-            ) : (
-                <div className="no-data">No sales data available</div>
-            )}
-            </div>
-        </div>
+          )}
         </div>
       </div>
     </MainLayout>

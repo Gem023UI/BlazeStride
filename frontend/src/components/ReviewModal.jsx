@@ -84,95 +84,97 @@ export default function ReviewModal({ orderItem, existingReview, onClose, onSubm
   };
 
   return (
-    <div className="review-modal-overlay" onClick={onClose}>
-      <div className="review-modal-content" onClick={(e) => e.stopPropagation()}>
-        <button className="review-close-btn" onClick={onClose}>
-          <FontAwesomeIcon icon={faX} />
-        </button>
+    <div className="review-modal-wrapper">
+      <div className="review-modal-overlay" onClick={onClose}>
+        <div className="review-modal-content" onClick={(e) => e.stopPropagation()}>
+          <button className="review-close-btn" onClick={onClose}>
+            <FontAwesomeIcon icon={faX} />
+          </button>
 
-        <h2>{existingReview ? "Update Your Review" : "Write a Review"}</h2>
+          <h2>{existingReview ? "Update Your Review" : "Write a Review"}</h2>
 
-        <div className="review-product-info">
-          <img src={orderItem.productImage} alt={orderItem.productName} />
-          <h3>{orderItem.productName}</h3>
-        </div>
-
-        <form onSubmit={formik.handleSubmit}>
-          <div className="form-group">
-            <label>Rating *</label>
-            <Rating
-              name="rating"
-              value={formik.values.rating}
-              onChange={(event, newValue) => {
-                formik.setFieldValue("rating", newValue);
-              }}
-              size="large"
-            />
-            {formik.touched.rating && formik.errors.rating && (
-              <div className="error-message">{formik.errors.rating}</div>
-            )}
+          <div className="review-product-info">
+            <img src={orderItem.productImage} alt={orderItem.productName} />
+            <h3>{orderItem.productName}</h3>
           </div>
 
-          <div className="form-group">
-            <label>Review Description *</label>
-            <textarea
-              name="reviewDescription"
-              value={formik.values.reviewDescription}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              placeholder="Share your experience with this product..."
-              rows="5"
-            />
-            <div className="char-count">
-              {formik.values.reviewDescription.length}/1000 characters
-            </div>
-            {formik.touched.reviewDescription && formik.errors.reviewDescription && (
-              <div className="error-message">{formik.errors.reviewDescription}</div>
-            )}
-          </div>
-
-          <div className="form-group">
-            <label>Upload Images (Optional - Max 5 images, 5MB each)</label>
-            <div className="image-upload-section">
-              {imagePreviews.length < 5 && (
-                <label className="upload-btn">
-                  <FontAwesomeIcon icon={faUpload} />
-                  <span>Choose Images</span>
-                  <input
-                    type="file"
-                    accept="image/jpeg,image/jpg,image/png"
-                    multiple
-                    onChange={handleImageChange}
-                    style={{ display: "none" }}
-                  />
-                </label>
+          <form onSubmit={formik.handleSubmit}>
+            <div className="form-group">
+              <label>Rating *</label>
+              <Rating
+                name="rating"
+                value={formik.values.rating}
+                onChange={(event, newValue) => {
+                  formik.setFieldValue("rating", newValue);
+                }}
+                size="large"
+              />
+              {formik.touched.rating && formik.errors.rating && (
+                <div className="error-message">{formik.errors.rating}</div>
               )}
+            </div>
 
-              <div className="image-previews">
-                {imagePreviews.map((preview, index) => (
-                  <div key={index} className="image-preview-item">
-                    <img src={preview} alt={`Preview ${index + 1}`} />
-                    <button
-                      type="button"
-                      className="remove-image-btn"
-                      onClick={() => removeImage(index)}
-                    >
-                      <FontAwesomeIcon icon={faTrash} />
-                    </button>
-                  </div>
-                ))}
+            <div className="form-group">
+              <label>Review Description *</label>
+              <textarea
+                name="reviewDescription"
+                value={formik.values.reviewDescription}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                placeholder="Share your experience with this product..."
+                rows="5"
+              />
+              <div className="char-count">
+                {formik.values.reviewDescription.length}/1000 characters
+              </div>
+              {formik.touched.reviewDescription && formik.errors.reviewDescription && (
+                <div className="error-message">{formik.errors.reviewDescription}</div>
+              )}
+            </div>
+
+            <div className="form-group">
+              <label>Upload Images (Optional - Max 5 images, 5MB each)</label>
+              <div className="image-upload-section">
+                {imagePreviews.length < 5 && (
+                  <label className="upload-btn">
+                    <FontAwesomeIcon icon={faUpload} />
+                    <span>Choose Images</span>
+                    <input
+                      type="file"
+                      accept="image/jpeg,image/jpg,image/png"
+                      multiple
+                      onChange={handleImageChange}
+                      style={{ display: "none" }}
+                    />
+                  </label>
+                )}
+
+                <div className="image-previews">
+                  {imagePreviews.map((preview, index) => (
+                    <div key={index} className="image-preview-item">
+                      <img src={preview} alt={`Preview ${index + 1}`} />
+                      <button
+                        type="button"
+                        className="remove-image-btn"
+                        onClick={() => removeImage(index)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          <button
-            type="submit"
-            className="submit-review-btn"
-            disabled={loading || !formik.isValid}
-          >
-            {loading ? "Submitting..." : existingReview ? "Update Review" : "Submit Review"}
-          </button>
-        </form>
+            <button
+              type="submit"
+              className="submit-review-btn"
+              disabled={loading || !formik.isValid}
+            >
+              {loading ? "Submitting..." : existingReview ? "Update Review" : "Submit Review"}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   );

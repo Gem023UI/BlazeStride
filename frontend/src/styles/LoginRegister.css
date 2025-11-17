@@ -8,17 +8,6 @@
   --text-light: white;
 }
 
-.login-register-wrapper .loader,
-.login-register-wrapper .loader * {
-  all: unset;
-  display: inline-block;
-}
-
-.login-register-wrapper * {
-  font-family: "Poppins", sans-serif;
-  box-sizing: border-box;
-}
-
 .login-register-wrapper {
   position: fixed;
   z-index: 0;
@@ -31,6 +20,17 @@
   padding: 20px;
   transition: all 1.0s ease-in-out;
   filter: brightness(100%);
+}
+
+.login-register-wrapper .loader,
+.login-register-wrapper .loader * {
+  all: unset;
+  display: inline-block;
+}
+
+.login-register-wrapper * {
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
 }
 
 .login-register-wrapper .container {
@@ -287,7 +287,6 @@
   transform: translateX(200%);
 }
 
-.login-register-wrapper .input-box,
 .login-register-wrapper .dropdown-btn {
   width: 100%;
   max-width: 300px;
@@ -310,8 +309,7 @@
   background-color: #fff;
 }
 
-/* Firebase Social Auth Overlay */
-.firebase-overlay {
+.login-register-wrapper .firebase-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -324,7 +322,7 @@
   z-index: 10000;
 }
 
-.social-modal {
+.login-register-wrapper .social-modal {
   background-color: white;
   padding: 30px;
   border-radius: 10px;
@@ -346,25 +344,25 @@
   }
 }
 
-.social-modal h2 {
+.login-register-wrapper .social-modal h2 {
   margin-bottom: 20px;
   color: #333;
   font-family: 'Poppins', sans-serif;
 }
 
-.social-modal p {
+.login-register-wrapper .social-modal p {
   margin-bottom: 30px;
   color: #666;
   font-family: 'Poppins', sans-serif;
 }
 
-.social-modal-buttons {
+.login-register-wrapper .social-modal-buttons {
   display: flex;
   gap: 10px;
   justify-content: center;
 }
 
-.social-modal button {
+.login-register-wrapper .social-modal button {
   padding: 10px 20px;
   border: none;
   border-radius: 5px;
@@ -374,33 +372,33 @@
   transition: opacity 0.2s;
 }
 
-.social-modal button:hover:not(:disabled) {
+.login-register-wrapper .social-modal button:hover:not(:disabled) {
   opacity: 0.9;
 }
 
-.social-modal button:disabled {
+.login-register-wrapper .social-modal button:disabled {
   cursor: not-allowed;
   opacity: 0.6;
 }
 
-.social-cancel-btn {
+.login-register-wrapper .social-cancel-btn {
   background-color: #ccc;
   color: #333;
 }
 
-.social-continue-btn {
+.login-register-wrapper .social-continue-btn {
   color: white;
 }
 
-.swal2-popup {
+.login-register-wrapper .swal2-popup {
   font-family: 'Poppins', sans-serif !important;
 }
 
-.swal2-title {
+.login-register-wrapper .swal2-title {
   font-family: 'Poppins', sans-serif !important;
 }
 
-.swal2-content {
+.login-register-wrapper .swal2-content {
   font-family: 'Poppins', sans-serif !important;
 }
 
