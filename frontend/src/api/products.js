@@ -113,3 +113,20 @@ export const deleteProduct = async (productId) => {
     throw error;
   }
 };
+
+export const bulkDeleteProducts = async (productIds) => {
+  try {
+    const response = await axios.post(`${API_URL}/bulk-delete`, 
+      { productIds },
+      {
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        },
+      }
+    );
+    return response.data;
+  } catch (error) {
+    console.error("Error bulk deleting products:", error);
+    throw error;
+  }
+};

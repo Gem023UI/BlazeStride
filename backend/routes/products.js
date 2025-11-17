@@ -6,6 +6,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  bulkDeleteProducts, // Add this line
   getFilteredProducts,
 } from "../controllers/products.js";
 
@@ -25,6 +26,9 @@ router.post("/", upload.array("productimages", 10), createProduct);
 
 // Update product (with multiple images)
 router.put("/:id", upload.array("productimages", 10), updateProduct);
+
+// Bulk delete products
+router.post("/bulk-delete", bulkDeleteProducts);
 
 // Delete product
 router.delete("/:id", deleteProduct);

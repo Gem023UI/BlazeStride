@@ -1,4 +1,5 @@
 import Product from "../models/products.js";
+import Review from "../models/reviews.js"; // Add this line
 import upload, { uploadToCloudinary, deleteFromCloudinary } from "../utils/multer.js";
 
 // Get all products with filters
@@ -306,9 +307,13 @@ export const deleteProduct = async (req, res) => {
       }
     }
 
-    // Delete product from database
-    await Product.findByIdAndDelete(id);
-    console.log("✅ Product deleted successfully");
+          // Delete all reviews associated with this product
+      await Review.deleteMany({ product: id });
+      console.log("🗑️ Associated reviews deleted");
+
+      // Delete product from database
+      await Product.findByIdAndDelete(id);
+      console.log("✅ Product deleted successfully");
 
     res.json({
       message: "Product and all associated images deleted successfully",
@@ -317,6 +322,64 @@ export const deleteProduct = async (req, res) => {
     console.error("❌ Delete product error:", error);
     res.status(500).json({
       message: "Failed to delete product",
+      error: error.message,
+    });
+  }
+};
+
+// Bulk delete products
+export const bulkDeleteProducts = async (req, res) => {
+  console.log("🔴 Bulk delete endpoint hit");
+  
+  try {
+    const { productIds } = req.body;
+
+    if (!productIds || !Array.isArray(productIds) || productIds.length === 0) {
+      return res.status(400).json({ message: "Product IDs array is required" });
+    }
+
+    let deletedCount = 0;
+    let errors = [];
+
+    for (const id of productIds) {
+      try {
+        const product = await Product.findById(id);
+        if (!product) {
+          errors.push({ id, error: "Product not found" });
+          continue;
+        }
+
+        // Delete all images from Cloudinary
+        for (const image of product.productimage) {
+          try {
+            await deleteFromCloudinary(image);
+          } catch (err) {
+            console.error("Error deleting image:", err);
+          }
+        }
+
+        // Delete all reviews associated with this product
+        await Review.deleteMany({ product: id });
+
+        // Delete product from database
+        await Product.findByIdAndDelete(id);
+        deletedCount++;
+      } catch (err) {
+        errors.push({ id, error: err.message });
+      }
+    }
+
+    console.log(`✅ Bulk delete completed: ${deletedCount} products deleted`);
+
+    res.json({
+      message: `Successfully deleted ${deletedCount} product(s)`,
+      deletedCount,
+      errors: errors.length > 0 ? errors : undefined
+    });
+  } catch (error) {
+    console.error("❌ Bulk delete error:", error);
+    res.status(500).json({
+      message: "Failed to bulk delete products",
       error: error.message,
     });
   }

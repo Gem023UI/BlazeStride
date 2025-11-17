@@ -4,7 +4,8 @@ import {
   fetchProducts, 
   createProduct, 
   updateProduct, 
-  deleteProduct 
+  deleteProduct,
+  bulkDeleteProducts
 } from "../api/products";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { productSchema } from '../validations/productSchema';
@@ -14,6 +15,8 @@ import "../styles/Products.css";
 export default function Products() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
+  const [selectedProducts, setSelectedProducts] = useState([]);
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -232,6 +235,69 @@ export default function Products() {
     setImageFiles([]);
   };
 
+const handleCheckboxChange = (productId) => {
+  setSelectedProducts(prev => {
+    if (prev.includes(productId)) {
+      const newSelection = prev.filter(id => id !== productId);
+      if (newSelection.length === 0) {
+        setIsSelectionMode(false);
+      }
+      return newSelection;
+    } else {
+      setIsSelectionMode(true);
+      return [...prev, productId];
+    }
+  });
+};
+
+const handleSelectAll = (e) => {
+  if (e.target.checked) {
+    setSelectedProducts(filteredProducts.map(p => p._id));
+    setIsSelectionMode(true);
+  } else {
+    setSelectedProducts([]);
+    setIsSelectionMode(false);
+  }
+};
+
+const handleBulkDelete = async () => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: `This will permanently delete ${selectedProducts.length} product(s), all their images, and all associated reviews!`,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#d33",
+    cancelButtonColor: "#3085d6",
+    confirmButtonText: "Yes, delete them!",
+    cancelButtonText: "Cancel"
+  });
+
+  if (result.isConfirmed) {
+    try {
+      await bulkDeleteProducts(selectedProducts);
+      Swal.fire({
+        icon: "success",
+        title: "Deleted!",
+        text: `${selectedProducts.length} product(s) have been deleted successfully`,
+        timer: 2000,
+        showConfirmButton: false,
+      });
+      setSelectedProducts([]);
+      setIsSelectionMode(false);
+      fetchAllProducts();
+    } catch (error) {
+      console.error("Bulk delete error:", error);
+      Swal.fire({
+        icon: "error",
+        title: "Delete Failed",
+        text: error.response?.data?.message || "Failed to delete products",
+        timer: 2000,
+        showConfirmButton: false,
+      });
+    }
+  }
+};
+
   if (loading) {
     return (
       <MainLayout>
@@ -253,9 +319,12 @@ export default function Products() {
               <span className="stat-value">{products.length}</span>
             </div>
           </div>
-          <button className="create-product-btn" onClick={handleCreateProduct}>
-            + Create Product
-          </button>
+   <button 
+  className={isSelectionMode ? "bulk-delete-btn" : "create-product-btn"}
+  onClick={isSelectionMode ? handleBulkDelete : handleCreateProduct}
+>
+  {isSelectionMode ? `Delete Selected (${selectedProducts.length})` : "+ Create Product"}
+   </button>
         </div>
 
         {/* Filters Section */}
@@ -317,26 +386,40 @@ export default function Products() {
 
         <div className="products-table-container">
           <table className="products-table">
-            <thead>
-              <tr>
-                <th>Product Image</th>
-                <th>Product Name</th>
-                <th>Category</th>
-                <th>Price</th>
-                <th>Stock</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
+           <thead>
+     <tr>
+       <th>
+      <input
+        type="checkbox"
+        onChange={handleSelectAll}
+        checked={selectedProducts.length === filteredProducts.length && filteredProducts.length > 0}
+      />
+       </th>
+        <th>Product Image</th>
+         <th>Product Name</th>
+        <th>Category</th>
+        <th>Price</th>
+        <th>Stock</th>
+        <th>Actions</th>
+          </tr>
+        </thead>
             <tbody>
               {filteredProducts.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="no-products">
+                  <td colSpan="7" className="no-products">
                     No products found
                   </td>
                 </tr>
               ) : (
                 filteredProducts.map((product) => (
                   <tr key={product._id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedProducts.includes(product._id)}
+                        onChange={() => handleCheckboxChange(product._id)}
+                      />
+                    </td>
                     <td>
                       <img
                         src={product.productimage[0]}
