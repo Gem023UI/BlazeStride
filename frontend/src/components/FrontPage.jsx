@@ -317,7 +317,7 @@ export default function LandingSection({ logoUrl }) {
               </div>
             </div>
             <div className="front-description">
-              <p className="description-1">Ignite your run. Outpace your limits — without burning your wallet.</p>
+              <p className="description-1">Ignite your run. Outpace your limits — all without burning your wallet.</p>
             </div>
           </div>
 
